@@ -3,7 +3,7 @@ import 'package:fitup/screens/create_bet_screen.dart';
 import 'package:flutter/material.dart';
 
 class MyHomeScreen extends StatelessWidget {
-  const MyHomeScreen({Key? key}) : super(key: key);
+  const MyHomeScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
