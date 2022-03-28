@@ -1,0 +1,25 @@
+name: fitup
+description: A new Flutter project.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:       # Required for every Flutter project
+    sdk: flutter # Required for every Flutter project
+
+  cupertino_icons: ^1.0.2 # Only required if you use Cupertino (iOS style) icons
+  firebase_core: ^1.13.1
+  cloud_firestore: ^3.1.10
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter # Required for a Flutter project that includes tests
+
+flutter:
+
+  uses-material-design: true # Required if you use the Material icon font
