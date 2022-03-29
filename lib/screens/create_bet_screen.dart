@@ -12,7 +12,7 @@ class CreateBetScreen extends StatefulWidget {
 
 class _CreateBetScreenState extends State<CreateBetScreen> {
   String dropdownActionValue = "Push-ups";
-  String dropdownDurationValue = "1 Day";
+  String dropdownDurationValue = "1";
   TimeOfDay _time = TimeOfDay(hour: 8, minute: 0);
   int _value = 0;
 
@@ -95,11 +95,11 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
     return DropdownButton(
       value: dropdownDurationValue,
       icon: const Icon(Icons.arrow_downward),
-      items: <String>["1 Day", "2 Days", "3 Days", "1 Week"]
+      items: <String>["1", "2", "3", "4", "5", "6", "7"]
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value),
+          child: Text("${value} days"),
         );
       }).toList(),
       onChanged: (String newValue) {
