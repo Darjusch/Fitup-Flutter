@@ -53,7 +53,6 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                     Text("Time: ${data['time']}"),
-                    // TODO calculate days left instead
                     int.parse(data['duration']) - (DateTime
                         .now()
                         .difference(data['startDate'].toDate())
