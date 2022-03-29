@@ -25,8 +25,13 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
           Text("Time: ${widget.data['time']}"),
           Text("Value: ${widget.data['value']}€"),
           widget.data['images'] != null
-              ? Image.network("${widget.data['images']}", width: 250, height: 250,)
+              ? SizedBox(
+              height: 400,
+              width: 400,
+              child: ListView(children: [for (var image in widget.data['images']) Image.network("${image}", width: 100, height: 100,)]))
               : Text("No Images uploaded yet"),
+
+//          Image.network("${widget.data['images'][0]}", width: 250, height: 250,)
         ],
       ),
     );

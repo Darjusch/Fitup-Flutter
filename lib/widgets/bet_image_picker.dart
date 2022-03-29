@@ -89,10 +89,11 @@ class _BetImagePickerState extends State<BetImagePicker> {
 
   // Save imageUrl in Firestore
   void saveImageURL(imageUrl) async {
+    print(widget.docId);
     FirebaseFirestore.instance
         .collection('bets')
         .doc(widget.docId)
-        .update({"images": imageUrl})
+        .update({"images": FieldValue.arrayUnion([imageUrl])})
         .then((value) => print("ImageUrl updated"))
         .catchError((error) => print("Failed up update ImageUrl: $error"));
   }

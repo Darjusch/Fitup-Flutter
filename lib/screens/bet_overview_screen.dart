@@ -12,8 +12,7 @@ class BetHistoryScreen extends StatefulWidget {
 
 class _BetHistoryScreenState extends State<BetHistoryScreen> {
   final Stream<QuerySnapshot> _betsStream =
-      FirebaseFirestore.instance.collection('bets').snapshots();
-  String docId;
+      FirebaseFirestore.instance.collection('bets').snapshots(includeMetadataChanges: true);
 
   @override
   Widget build(BuildContext context) {
@@ -35,18 +34,17 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
 
             return ListView(
               children: snapshot.data.docs.map((DocumentSnapshot document) {
-                docId = document.id;
                 Map<String, dynamic> data =
                     document.data() as Map<String, dynamic>;
                 return ListTile(
                   trailing: IconButton(
                     iconSize: 40,
                     icon: Icon(Icons.cloud_upload),
-                    onPressed: () => goToBetImagePickerScreen(),
+                    onPressed: () => goToBetImagePickerScreen(document.id),
                   ),
                   title: Text(data['action']),
                   subtitle: InkWell(
-                    onTap: () => goToSingleBetScreen(data),
+                    onTap: () => goToSingleBetScreen(data, document.id),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -63,7 +61,7 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
         ));
   }
 
-  void goToBetImagePickerScreen() {
+  void goToBetImagePickerScreen(docId) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => BetImagePicker(
@@ -73,7 +71,7 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
     );
   }
 
-  void goToSingleBetScreen(data) {
+  void goToSingleBetScreen(data, docId) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => SingleBetScreen(
         docId: docId,
