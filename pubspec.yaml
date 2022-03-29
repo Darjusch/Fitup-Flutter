@@ -15,6 +15,7 @@ dependencies:
   cupertino_icons: ^1.0.2 # Only required if you use Cupertino (iOS style) icons
   firebase_core: ^1.13.1
   cloud_firestore: ^3.1.10
+  image_picker: ^0.8.4+11
 
 dev_dependencies:
   flutter_test:
