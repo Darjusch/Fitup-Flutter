@@ -131,6 +131,7 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
   }
 
   void createBet() {
+    final now = DateTime.now();
     try {
       print(
           " Action ${dropdownActionValue}\n Time ${_time.format(context)}\n Duration ${dropdownDurationValue}\n Value ${_value}€");
@@ -139,6 +140,9 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
         "time": _time.format(context),
         "duration": dropdownDurationValue,
         "value": _value,
+        "isActive": true,
+        "startDate": now,
+        "success": null,
       }).then((value) => {
             Navigator.of(context).push(
               MaterialPageRoute(

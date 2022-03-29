@@ -49,8 +49,9 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("Time: ${data['time']}"),
+                        // TODO calculate days left instead
                         Text("Duration: ${data['duration']}"),
-                        Text("Value: ${data['value']}€"),
+
                       ],
                     ),
                   ),
