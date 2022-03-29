@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fitup/screens/bet_history_screen.dart';
+import 'package:fitup/screens/bet_overview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

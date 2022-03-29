@@ -1,4 +1,4 @@
-import 'package:fitup/screens/bet_history_screen.dart';
+import 'package:fitup/screens/bet_overview_screen.dart';
 import 'package:fitup/screens/create_bet_screen.dart';
 import 'package:flutter/material.dart';
 
