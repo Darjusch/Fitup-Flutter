@@ -42,25 +42,11 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
                   trailing: IconButton(
                     iconSize: 40,
                     icon: Icon(Icons.cloud_upload),
-                    onPressed: () => {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => BetImagePicker(
-                            docId: docId,
-                          ),
-                        ),
-                      )
-                    },
+                    onPressed: () => goToBetImagePickerScreen(),
                   ),
                   title: Text(data['action']),
                   subtitle: InkWell(
-                    onTap: () => {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => SingleBetScreen(
-                            docId: docId,
-                            data: data,
-                          ),),)
-                    },
+                    onTap: () => goToSingleBetScreen(data),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -75,5 +61,24 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
             );
           },
         ));
+  }
+
+  void goToBetImagePickerScreen() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => BetImagePicker(
+          docId: docId,
+        ),
+      ),
+    );
+  }
+
+  void goToSingleBetScreen(data) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => SingleBetScreen(
+        docId: docId,
+        data: data,
+      ),
+    ));
   }
 }

@@ -68,7 +68,7 @@ class _BetImagePickerState extends State<BetImagePicker> {
                   )));
   }
 
-  // Upload to Firestorage
+  // Upload Image to Firestorage
 
   Future uploadFile() async {
     if (file == null) return;
@@ -81,15 +81,20 @@ class _BetImagePickerState extends State<BetImagePicker> {
           .child(fileName);
       await ref.putFile(file);
       String imageUrl = await ref.getDownloadURL();
-      FirebaseFirestore.instance
-          .collection('bets')
-          .doc(widget.docId)
-          .update({"images": imageUrl})
-          .then((value) => print("ImageUrl updated"))
-          .catchError((error) => print("Failed up update ImageUrl: $error"));
+      saveImageURL(imageUrl);
     } catch (e) {
-      print('error occured');
+      print('error occured $e');
     }
+  }
+
+  // Save imageUrl in Firestore
+  void saveImageURL(imageUrl) async {
+    FirebaseFirestore.instance
+        .collection('bets')
+        .doc(widget.docId)
+        .update({"images": imageUrl})
+        .then((value) => print("ImageUrl updated"))
+        .catchError((error) => print("Failed up update ImageUrl: $error"));
   }
 
   /// Get from gallery
