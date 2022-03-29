@@ -22,7 +22,7 @@ class MyHomeScreen extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const Text("Keep yourself accountable by betting on your goals!",
+          const Text("Hold yourself accountable by betting on your goals!",
               style: TextStyle(fontSize: 24)),
           const Divider(
             height: 200,
