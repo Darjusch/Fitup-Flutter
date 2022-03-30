@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../screens/bet_overview_screen/bet_overview_screen.dart';
 import '../screens/create_bet_screen/create_bet_screen.dart';
-import '../screens/single_bet_screen.dart';
+import '../screens/single_bet_screen/single_bet_screen.dart';
 import '../screens/image_picker_screen/image_picker_screen.dart';
 
 class NavigationHelper {

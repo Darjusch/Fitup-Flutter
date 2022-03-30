@@ -52,8 +52,6 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                       )
                   ]))
               : Text("No Images uploaded yet"),
-
-//          Image.network("${widget.data['images'][0]}", width: 250, height: 250,)
         ],
       ),
     );
