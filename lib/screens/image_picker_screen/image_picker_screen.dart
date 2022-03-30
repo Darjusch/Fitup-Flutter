@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/image_picker_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class BetImagePicker extends StatefulWidget {
   final String docId;
@@ -33,7 +34,7 @@ class _BetImagePickerState extends State<BetImagePicker> {
                         ElevatedButton(
                           onPressed: () async {
                             String path =
-                                await ImagePickerHelper().getFromGallery();
+                                await ImagePickerHelper().getImageFrom(ImageSource.gallery);
                             setState(() {
                               filePath = path;
                             });
@@ -46,7 +47,7 @@ class _BetImagePickerState extends State<BetImagePicker> {
                         ElevatedButton(
                           onPressed: () async {
                             String path =
-                                await ImagePickerHelper().getFromCamera();
+                                await ImagePickerHelper().getImageFrom(ImageSource.camera);
                             setState(() {
                               filePath = path;
                             });
