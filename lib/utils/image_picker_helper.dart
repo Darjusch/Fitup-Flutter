@@ -17,6 +17,7 @@ class ImagePickerHelper {
       return xfile.path;
     } on PlatformException catch (e) {
       debugPrint('Failed to pick image: $e');
+      return '';
     }
   }
 }

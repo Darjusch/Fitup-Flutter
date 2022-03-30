@@ -25,7 +25,7 @@ class _BetImagePickerState extends State<BetImagePicker> {
           title: const Text("Image Picker"),
         ),
         body: Container(
-            child: filePath == null
+            child: filePath == null || filePath == ''
                 ? Container(
                     alignment: Alignment.center,
                     child: Column(
@@ -33,8 +33,8 @@ class _BetImagePickerState extends State<BetImagePicker> {
                       children: <Widget>[
                         ElevatedButton(
                           onPressed: () async {
-                            String path =
-                                await ImagePickerHelper().getImageFrom(ImageSource.gallery);
+                            String path = await ImagePickerHelper()
+                                .getImageFrom(ImageSource.gallery);
                             setState(() {
                               filePath = path;
                             });
@@ -46,8 +46,8 @@ class _BetImagePickerState extends State<BetImagePicker> {
                         ),
                         ElevatedButton(
                           onPressed: () async {
-                            String path =
-                                await ImagePickerHelper().getImageFrom(ImageSource.camera);
+                            String path = await ImagePickerHelper()
+                                .getImageFrom(ImageSource.camera);
                             setState(() {
                               filePath = path;
                             });
