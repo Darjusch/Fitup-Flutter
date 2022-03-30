@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../screens/bet_overview_screen.dart';
+import '../screens/bet_overview_screen/bet_overview_screen.dart';
 
 class FirebaseHelper {
   void createBet(DateTime now, BuildContext context, String dropdownActionValue,

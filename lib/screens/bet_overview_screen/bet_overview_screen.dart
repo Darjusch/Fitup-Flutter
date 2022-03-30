@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fitup/screens/single_bet_screen.dart';
-import 'package:fitup/widgets/bet_image_picker.dart';
+import 'package:fitup/utils/navigation_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -44,11 +43,11 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
                   trailing: IconButton(
                     iconSize: 40,
                     icon: Icon(Icons.cloud_upload),
-                    onPressed: () => goToBetImagePickerScreen(document.id),
+                    onPressed: () => NavigationHelper().goToBetImagePickerScreen(document.id, context),
                   ),
                   title: Text(data['action']),
                   subtitle: InkWell(
-                    onTap: () => goToSingleBetScreen(data, document.id),
+                    onTap: () => NavigationHelper().goToSingleBetScreen(data, document.id, context),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -75,26 +74,5 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
             );
           },
         ));
-  }
-
-  void goToBetImagePickerScreen(docId) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) =>
-            BetImagePicker(
-              docId: docId,
-            ),
-      ),
-    );
-  }
-
-  void goToSingleBetScreen(data, docId) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) =>
-          SingleBetScreen(
-            docId: docId,
-            data: data,
-          ),
-    ));
   }
 }
