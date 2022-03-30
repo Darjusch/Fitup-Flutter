@@ -51,9 +51,9 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("Time: ${data['time']}"),
-                        TimeHelper().betIsLongerThanADay(data)
-                            ? Text("Time left: ${TimeHelper().betHasXDaysLeft(data)} days")
-                            : Text("Time left: ${TimeHelper().betHasXHoursLeft(data)} hours"),
+                        TimeHelper().betIsLongerThanADay(data['duration'], data['startDate'])
+                            ? Text("Time left: ${TimeHelper().betHasXDaysLeft(data['duration'], data['startDate'])} days")
+                            : Text("Time left: ${TimeHelper().betHasXHoursLeft(data['duration'], data['startDate'])} hours"),
                       ],
                     ),
                   ),
