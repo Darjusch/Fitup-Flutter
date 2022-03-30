@@ -13,13 +13,13 @@ class TimeHelper {
     }
   }
 
-  bool betIsLongerThanADay(Map<String, dynamic> data) {
-    return data['duration'] - (DateTime.now().difference(data['startDate'].toDate()).inDays) > 0;
+  bool betIsLongerThanADay(int duration, DateTime startDate) {
+    return duration - (DateTime.now().difference(startDate).inDays) > 0;
   }
-  int betHasXDaysLeft(Map<String, dynamic> data) {
-    return data['duration'] - (DateTime.now().difference(data['startDate'].toDate()).inDays);
+  int betHasXDaysLeft(int duration, DateTime startDate) {
+    return duration - (DateTime.now().difference(startDate).inDays);
   }
-  int betHasXHoursLeft(Map<String, dynamic> data) {
-    return data['duration'] - (DateTime.now().difference(data['startDate'].toDate()).inHours);
+  int betHasXHoursLeft(int duration, DateTime startDate) {
+    return (duration * 24) - (DateTime.now().difference(startDate).inHours);
   }
 }

@@ -9,7 +9,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  flutter:       # Required for every Flutter project
+  flutter: # Required for every Flutter project
     sdk: flutter # Required for every Flutter project
 
   cupertino_icons: ^1.0.2 # Only required if you use Cupertino (iOS style) icons
@@ -20,14 +20,14 @@ dependencies:
   firebase_storage: ^10.2.9
   intl: ^0.17.0
 
-dev_dependencies:
-  flutter_test:
-    sdk: flutter # Required for a Flutter project that includes tests
 
 flutter:
-
   uses-material-design: true # Required if you use the Material icon font
+
 flutter_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/icon/icon.png"
+
+dev_dependencies: 
+  test: ^1.20.2
