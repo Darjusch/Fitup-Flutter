@@ -10,4 +10,14 @@ class TimeHelper {
     );
     return newTime;
   }
+
+  bool betIsLongerThanADay(Map<String, dynamic> data) {
+    return data['duration'] - (DateTime.now().difference(data['startDate'].toDate()).inDays) > 0;
+  }
+  int betHasXDaysLeft(Map<String, dynamic> data) {
+    return data['duration'] - (DateTime.now().difference(data['startDate'].toDate()).inDays);
+  }
+  int betHasXHoursLeft(Map<String, dynamic> data) {
+    return data['duration'] - (DateTime.now().difference(data['startDate'].toDate()).inHours);
+  }
 }

@@ -5,7 +5,7 @@ import '../screens/bet_overview_screen/bet_overview_screen.dart';
 
 class FirebaseHelper {
   void createBet(DateTime now, BuildContext context, String dropdownActionValue,
-      TimeOfDay _time, String dropdownDurationValue, int _value) {
+      TimeOfDay _time, int dropdownDurationValue, int _value) {
     try {
       print(
           " Action ${dropdownActionValue}\n Time ${_time.format(context)}\n Duration ${dropdownDurationValue}\n Value ${_value}€");
