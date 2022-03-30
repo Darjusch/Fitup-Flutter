@@ -15,7 +15,6 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
   final Stream<QuerySnapshot> _betsStream = FirebaseFirestore.instance
       .collection('bets')
       .snapshots(includeMetadataChanges: true);
-  var dateFormat = DateFormat('dd/MM/yyyy, HH:mm');
 
   @override
   Widget build(BuildContext context) {
