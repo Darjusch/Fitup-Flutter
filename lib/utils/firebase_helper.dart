@@ -11,8 +11,6 @@ class FirebaseHelper {
   void createBet(DateTime now, BuildContext context, String dropdownActionValue,
       TimeOfDay _time, int dropdownDurationValue, int _value) {
     try {
-      print(
-          " Action ${dropdownActionValue}\n Time ${_time.format(context)}\n Duration ${dropdownDurationValue}\n Value ${_value}€");
       FirebaseFirestore.instance.collection('bets').add(<String, dynamic>{
         "action": dropdownActionValue,
         "time": _time.format(context),
@@ -29,7 +27,7 @@ class FirebaseHelper {
             )
           });
     } catch (err) {
-      print("Error: $err");
+      debugPrint("Error: $err");
     }
   }
   // Upload Image to Firestorage
@@ -37,7 +35,7 @@ class FirebaseHelper {
   Future uploadFile(String filePath, String docId) async {
     if (filePath == null) return;
     final fileName = basename(filePath);
-    final destination = 'images/${docId}';
+    final destination = 'images/$docId';
 
     try {
       final ref = firebase_storage.FirebaseStorage.instance
@@ -47,26 +45,25 @@ class FirebaseHelper {
       String imageUrl = await ref.getDownloadURL();
       saveImageURL(imageUrl, docId);
     } catch (e) {
-      print('error occured $e');
+      debugPrint('error occured $e');
     }
   }
 
   // Save imageUrl in Firestore
   void saveImageURL(String imageUrl, String docId) async {
-    print(docId);
     FirebaseFirestore.instance
         .collection('bets')
         .doc(docId)
         .update({
-      "images": FieldValue.arrayUnion([imageUrl])
-    })
-        .then((value) => print("ImageUrl updated"))
-        .catchError((error) => print("Failed up update ImageUrl: $error"));
+          "images": FieldValue.arrayUnion([imageUrl])
+        })
+        .then((value) => debugPrint("ImageUrl updated"))
+        .catchError((error) => debugPrint("Failed up update ImageUrl: $error"));
   }
+
   Stream<QuerySnapshot> getBetsStream() {
     return FirebaseFirestore.instance
         .collection('bets')
         .snapshots(includeMetadataChanges: true);
   }
-
 }

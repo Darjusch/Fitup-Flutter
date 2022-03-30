@@ -11,9 +11,7 @@ class ImagePickerHelper {
       maxWidth: maxWidth,
       maxHeight: maxHeight,
     );
-    if (xfile != null) {
-      return xfile.path;
-    }
+    return xfile.path;
   }
 
   /// Get from Camera
@@ -23,8 +21,6 @@ class ImagePickerHelper {
       maxWidth: maxWidth,
       maxHeight: maxHeight,
     );
-    if (xfile != null) {
-      return xfile.path;
-    }
+    return xfile.path;
   }
 }

@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/image_picker_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class BetImagePicker extends StatefulWidget {
   final String docId;
@@ -22,7 +21,7 @@ class _BetImagePickerState extends State<BetImagePicker> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Image Picker"),
+          title: const Text("Image Picker"),
         ),
         body: Container(
             child: filePath == null
@@ -39,7 +38,7 @@ class _BetImagePickerState extends State<BetImagePicker> {
                               filePath = path;
                             });
                           },
-                          child: Text("PICK FROM GALLERY"),
+                          child: const Text("PICK FROM GALLERY"),
                         ),
                         Container(
                           height: 40.0,
@@ -52,12 +51,14 @@ class _BetImagePickerState extends State<BetImagePicker> {
                               filePath = path;
                             });
                           },
-                          child: Text("PICK FROM CAMERA"),
+                          child: const Text("PICK FROM CAMERA"),
                         )
                       ],
                     ),
                   )
-                : Container(
+                : SizedBox(
+                    height: 300,
+                    width: 300,
                     child: Column(
                       children: [
                         Image.file(
@@ -66,12 +67,12 @@ class _BetImagePickerState extends State<BetImagePicker> {
                         ),
                         ElevatedButton(
                             onPressed: () => {
-                              FirebaseHelper().uploadFile(filePath, widget.docId)
-                            }, child: Text("Upload Image"))
+                                  FirebaseHelper()
+                                      .uploadFile(filePath, widget.docId)
+                                },
+                            child: const Text("Upload Image"))
                       ],
                     ),
                   )));
   }
-
-
 }

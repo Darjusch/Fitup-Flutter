@@ -14,7 +14,7 @@ class CreateBetScreen extends StatefulWidget {
 class _CreateBetScreenState extends State<CreateBetScreen> {
   String dropdownActionValue = "Push-ups";
   int dropdownDurationValue = 1;
-  TimeOfDay _time = TimeOfDay(hour: 8, minute: 0);
+  TimeOfDay _time = const TimeOfDay(hour: 8, minute: 0);
   int _value = 0;
 
   @override
@@ -40,13 +40,13 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
               children: <Widget>[
                 ElevatedButton(
                   onPressed: () => {
-                  setState(() async {
-                    _time = await TimeHelper().selectTime(context, _time);
-                  })
-                    },
-                  child: Text('SELECT TIME'),
+                    setState(() async {
+                      _time = await TimeHelper().selectTime(context, _time);
+                    })
+                  },
+                  child: const Text('SELECT TIME'),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   'Selected time: ${_time.format(context)}',
                 ),
@@ -98,7 +98,6 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
       }).toList(),
       onChanged: (String newValue) {
         setState(() {
-          print(newValue);
           dropdownActionValue = newValue;
         });
       },
@@ -109,16 +108,14 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
     return DropdownButton<int>(
       value: dropdownDurationValue,
       icon: const Icon(Icons.arrow_downward),
-      items: <int>[1, 2, 3, 4, 5, 6, 7]
-          .map<DropdownMenuItem<int>>((int value) {
+      items: <int>[1, 2, 3, 4, 5, 6, 7].map<DropdownMenuItem<int>>((int value) {
         return DropdownMenuItem<int>(
           value: value,
-          child: Text("${value} days"),
+          child: Text("$value days"),
         );
       }).toList(),
       onChanged: (int newValue) {
         setState(() {
-          print(newValue);
           dropdownDurationValue = newValue;
         });
       },
@@ -131,6 +128,7 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
       width: 100.0,
       child: TextField(
         onSubmitted: (text) => {
+          // ignore: todo
           // TODO How to disallow - , .
           _value = int.parse(text),
         },
@@ -139,10 +137,8 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
           FilteringTextInputFormatter.digitsOnly
         ],
         decoration: InputDecoration(
-            border: OutlineInputBorder(), hintText: "$_value €"),
+            border: const OutlineInputBorder(), hintText: "$_value €"),
       ),
     );
   }
-
-
 }

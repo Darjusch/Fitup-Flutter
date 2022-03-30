@@ -12,7 +12,6 @@ class BetHistoryScreen extends StatefulWidget {
 }
 
 class _BetHistoryScreenState extends State<BetHistoryScreen> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,22 +23,21 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
-              return Text('Something went wrong');
+              return const Text('Something went wrong');
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Text("Loading");
+              return const Text("Loading");
             }
 
             return ListView(
               children: snapshot.data.docs.map((DocumentSnapshot document) {
                 Map<String, dynamic> data =
                     document.data() as Map<String, dynamic>;
-                ;
                 return ListTile(
                   trailing: IconButton(
                     iconSize: 40,
-                    icon: Icon(Icons.cloud_upload),
+                    icon: const Icon(Icons.cloud_upload),
                     onPressed: () => NavigationHelper()
                         .goToBetImagePickerScreen(document.id, context),
                   ),
@@ -51,9 +49,12 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("Time: ${data['time']}"),
-                        TimeHelper().betIsLongerThanADay(data['duration'], data['startDate'])
-                            ? Text("Time left: ${TimeHelper().betHasXDaysLeft(data['duration'], data['startDate'])} days")
-                            : Text("Time left: ${TimeHelper().betHasXHoursLeft(data['duration'], data['startDate'])} hours"),
+                        TimeHelper().betIsLongerThanADay(
+                                data['duration'], data['startDate'].toDate())
+                            ? Text(
+                                "Time left: ${TimeHelper().betHasXDaysLeft(data['duration'], data['startDate'].toDate())} days")
+                            : Text(
+                                "Time left: ${TimeHelper().betHasXHoursLeft(data['duration'], data['startDate'].toDate())} hours"),
                       ],
                     ),
                   ),
