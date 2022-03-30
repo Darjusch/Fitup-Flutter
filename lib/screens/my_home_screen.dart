@@ -1,5 +1,4 @@
-import 'package:fitup/screens/bet_overview_screen/bet_overview_screen.dart';
-import 'package:fitup/screens/create_bet_screen/create_bet_screen.dart';
+import 'package:fitup/utils/navigation_helper.dart';
 import 'package:flutter/material.dart';
 
 class MyHomeScreen extends StatelessWidget {
@@ -13,8 +12,7 @@ class MyHomeScreen extends StatelessWidget {
         actions: <Widget>[
           IconButton(
               onPressed: () => {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const BetHistoryScreen()))
+                    NavigationHelper().goToBetHistoryScreen(context),
                   },
               icon: const Icon(Icons.account_box_rounded))
         ],
@@ -29,8 +27,7 @@ class MyHomeScreen extends StatelessWidget {
           ),
           OutlinedButton.icon(
             onPressed: () => {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const CreateBetScreen()))
+              NavigationHelper().goToCreateBetScreen(context),
             },
             icon: const Icon(Icons.add),
             label: const Text('Create Bet'),

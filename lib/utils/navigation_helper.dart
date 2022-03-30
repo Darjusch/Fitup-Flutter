@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 
+import '../screens/bet_overview_screen/bet_overview_screen.dart';
+import '../screens/create_bet_screen/create_bet_screen.dart';
 import '../screens/single_bet_screen.dart';
 import '../screens/image_picker_screen/image_picker_screen.dart';
 
@@ -24,5 +26,15 @@ class NavigationHelper {
             data: data,
           ),
     ));
+  }
+
+  void goToCreateBetScreen(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => const CreateBetScreen()));
+  }
+
+  void goToBetHistoryScreen(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => const BetHistoryScreen()));
   }
 }

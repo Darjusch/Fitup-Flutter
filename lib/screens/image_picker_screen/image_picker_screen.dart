@@ -17,9 +17,6 @@ class _BetImagePickerState extends State<BetImagePicker> {
   /// Variables
   String filePath;
 
-  firebase_storage.FirebaseStorage storage =
-      firebase_storage.FirebaseStorage.instance;
-
   /// Widget
   @override
   Widget build(BuildContext context) {
