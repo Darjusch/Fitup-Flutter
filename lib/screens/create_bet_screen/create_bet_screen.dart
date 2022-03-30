@@ -127,6 +127,7 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
       height: 50.0,
       width: 100.0,
       child: TextField(
+        key: const ValueKey('betValueField'),
         onSubmitted: (text) => {
           // ignore: todo
           // TODO How to disallow - , .

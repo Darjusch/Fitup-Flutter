@@ -20,6 +20,9 @@ dependencies:
   firebase_storage: ^10.2.9
   intl: ^0.17.0
   flutter_lints: ^1.0.4
+  integration_test: 
+    sdk: flutter
+    version: ^0.0.0
 
 
 flutter:
@@ -31,4 +34,4 @@ flutter_icons:
   image_path: "assets/icon/icon.png"
 
 dev_dependencies: 
-  test: ^1.20.2
+  test: ^1.19.0
