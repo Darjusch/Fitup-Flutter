@@ -22,18 +22,18 @@ void main() {
       await Firebase.initializeApp();
       await tester.pumpWidget(const MyApp());
       await tester.pumpAndSettle();
-      addDelay(5000);
+      await addDelay(5000);
       await tester.tap(find.byIcon(Icons.add));
 
       tester.printToConsole('Bet creation screen opens');
 
       await tester.pumpAndSettle();
-      addDelay(15000);
+      await addDelay(5000);
 
       int value = 5;
       await tester.enterText(
           find.byKey(const ValueKey('betValueField')), value.toString());
-      addDelay(5000);
+      await addDelay(5000);
 
       //TODO: click on create bet
       // TODO: check if bet was created by looking for action using except
