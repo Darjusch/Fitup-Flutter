@@ -1,11 +1,8 @@
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/image_picker_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:path/path.dart';
 
 class BetImagePicker extends StatefulWidget {
   final String docId;
@@ -18,7 +15,7 @@ class BetImagePicker extends StatefulWidget {
 
 class _BetImagePickerState extends State<BetImagePicker> {
   /// Variables
-  File file;
+  String filePath;
 
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
@@ -31,7 +28,7 @@ class _BetImagePickerState extends State<BetImagePicker> {
           title: Text("Image Picker"),
         ),
         body: Container(
-            child: file == null
+            child: filePath == null
                 ? Container(
                     alignment: Alignment.center,
                     child: Column(
@@ -42,7 +39,7 @@ class _BetImagePickerState extends State<BetImagePicker> {
                             String path =
                                 await ImagePickerHelper().getFromGallery();
                             setState(() {
-                              file = File(path);
+                              filePath = path;
                             });
                           },
                           child: Text("PICK FROM GALLERY"),
@@ -55,7 +52,7 @@ class _BetImagePickerState extends State<BetImagePicker> {
                             String path =
                                 await ImagePickerHelper().getFromCamera();
                             setState(() {
-                              file = File(path);
+                              filePath = path;
                             });
                           },
                           child: Text("PICK FROM CAMERA"),
@@ -67,45 +64,17 @@ class _BetImagePickerState extends State<BetImagePicker> {
                     child: Column(
                       children: [
                         Image.file(
-                          file,
+                          File(filePath),
                           fit: BoxFit.cover,
                         ),
                         ElevatedButton(
-                            onPressed: uploadFile, child: Text("Upload Image"))
+                            onPressed: () => {
+                              FirebaseHelper().uploadFile(filePath, widget.docId)
+                            }, child: Text("Upload Image"))
                       ],
                     ),
                   )));
   }
 
-  // Upload Image to Firestorage
 
-  Future uploadFile() async {
-    if (file == null) return;
-    final fileName = basename(file.path);
-    final destination = 'images/${widget.docId}';
-
-    try {
-      final ref = firebase_storage.FirebaseStorage.instance
-          .ref(destination)
-          .child(fileName);
-      await ref.putFile(file);
-      String imageUrl = await ref.getDownloadURL();
-      saveImageURL(imageUrl);
-    } catch (e) {
-      print('error occured $e');
-    }
-  }
-
-  // Save imageUrl in Firestore
-  void saveImageURL(imageUrl) async {
-    print(widget.docId);
-    FirebaseFirestore.instance
-        .collection('bets')
-        .doc(widget.docId)
-        .update({
-          "images": FieldValue.arrayUnion([imageUrl])
-        })
-        .then((value) => print("ImageUrl updated"))
-        .catchError((error) => print("Failed up update ImageUrl: $error"));
-  }
 }
