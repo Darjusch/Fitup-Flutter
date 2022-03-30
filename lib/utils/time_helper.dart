@@ -8,7 +8,9 @@ class TimeHelper {
       initialTime: _time,
       initialEntryMode: TimePickerEntryMode.input,
     );
-    return newTime;
+    if(newTime != null) {
+      return newTime;
+    }
   }
 
   bool betIsLongerThanADay(Map<String, dynamic> data) {

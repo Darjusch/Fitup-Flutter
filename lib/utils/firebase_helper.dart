@@ -28,4 +28,11 @@ class FirebaseHelper {
       print("Error: $err");
     }
   }
+
+  Stream<QuerySnapshot> getBetsStream() {
+    return FirebaseFirestore.instance
+        .collection('bets')
+        .snapshots(includeMetadataChanges: true);
+  }
+
 }

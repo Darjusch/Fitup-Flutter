@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fitup/utils/image_picker_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -37,8 +38,12 @@ class _BetImagePickerState extends State<BetImagePicker> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         ElevatedButton(
-                          onPressed: () {
-                            _getFromGallery();
+                          onPressed: () async {
+                            String path =
+                                await ImagePickerHelper().getFromGallery();
+                            setState(() {
+                              file = File(path);
+                            });
                           },
                           child: Text("PICK FROM GALLERY"),
                         ),
@@ -46,8 +51,12 @@ class _BetImagePickerState extends State<BetImagePicker> {
                           height: 40.0,
                         ),
                         ElevatedButton(
-                          onPressed: () {
-                            _getFromCamera();
+                          onPressed: () async {
+                            String path =
+                                await ImagePickerHelper().getFromCamera();
+                            setState(() {
+                              file = File(path);
+                            });
                           },
                           child: Text("PICK FROM CAMERA"),
                         )
@@ -93,36 +102,10 @@ class _BetImagePickerState extends State<BetImagePicker> {
     FirebaseFirestore.instance
         .collection('bets')
         .doc(widget.docId)
-        .update({"images": FieldValue.arrayUnion([imageUrl])})
+        .update({
+          "images": FieldValue.arrayUnion([imageUrl])
+        })
         .then((value) => print("ImageUrl updated"))
         .catchError((error) => print("Failed up update ImageUrl: $error"));
-  }
-
-  /// Get from gallery
-  _getFromGallery() async {
-    XFile xfile = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 1800,
-      maxHeight: 1800,
-    );
-    if (xfile != null) {
-      setState(() {
-        file = File(xfile.path);
-      });
-    }
-  }
-
-  /// Get from Camera
-  _getFromCamera() async {
-    XFile xfile = await ImagePicker().pickImage(
-      source: ImageSource.camera,
-      maxWidth: 1800,
-      maxHeight: 1800,
-    );
-    if (xfile != null) {
-      setState(() {
-        file = File(xfile.path);
-      });
-    }
   }
 }

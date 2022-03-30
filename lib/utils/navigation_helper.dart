@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 
 import '../screens/single_bet_screen.dart';
-import '../screens/image_picker_screen.dart';
+import '../screens/image_picker_screen/image_picker_screen.dart';
 
 class NavigationHelper {
   void goToBetImagePickerScreen(String docId, BuildContext context) {

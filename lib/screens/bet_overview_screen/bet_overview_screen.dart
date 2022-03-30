@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/navigation_helper.dart';
 import 'package:fitup/utils/time_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class BetHistoryScreen extends StatefulWidget {
   const BetHistoryScreen({Key key}) : super(key: key);
@@ -12,9 +12,6 @@ class BetHistoryScreen extends StatefulWidget {
 }
 
 class _BetHistoryScreenState extends State<BetHistoryScreen> {
-  final Stream<QuerySnapshot> _betsStream = FirebaseFirestore.instance
-      .collection('bets')
-      .snapshots(includeMetadataChanges: true);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +20,7 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
           title: const Text("Bet overview"),
         ),
         body: StreamBuilder<QuerySnapshot>(
-          stream: _betsStream,
+          stream: FirebaseHelper().getBetsStream(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
