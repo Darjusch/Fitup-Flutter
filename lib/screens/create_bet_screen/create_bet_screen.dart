@@ -1,7 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fitup/screens/bet_overview_screen.dart';
+import 'package:fitup/utils/firebase_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../../utils/time_helper.dart';
 
 class CreateBetScreen extends StatefulWidget {
   const CreateBetScreen({Key key}) : super(key: key);
@@ -38,7 +39,11 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 ElevatedButton(
-                  onPressed: _selectTime,
+                  onPressed: () => {
+                  setState(() async {
+                    _time = await TimeHelper().selectTime(context, _time);
+                  })
+                    },
                   child: Text('SELECT TIME'),
                 ),
                 SizedBox(height: 8),
@@ -62,7 +67,16 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
               ],
             ),
             FloatingActionButton(
-              onPressed: createBet,
+              onPressed: () => {
+                FirebaseHelper().createBet(
+                  DateTime.now(),
+                  context,
+                  dropdownActionValue,
+                  _time,
+                  dropdownDurationValue,
+                  _value,
+                )
+              },
               child: const Icon(Icons.add),
             )
           ],
@@ -130,41 +144,5 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
     );
   }
 
-  void createBet() {
-    final now = DateTime.now();
-    try {
-      print(
-          " Action ${dropdownActionValue}\n Time ${_time.format(context)}\n Duration ${dropdownDurationValue}\n Value ${_value}€");
-      FirebaseFirestore.instance.collection('bets').add(<String, dynamic>{
-        "action": dropdownActionValue,
-        "time": _time.format(context),
-        "duration": dropdownDurationValue,
-        "value": _value,
-        "isActive": true,
-        "startDate": now,
-        "success": null,
-      }).then((value) => {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const BetHistoryScreen(),
-              ),
-            )
-          });
-    } catch (err) {
-      print("Error: $err");
-    }
-  }
 
-  void _selectTime() async {
-    final TimeOfDay newTime = await showTimePicker(
-      context: context,
-      initialTime: _time,
-      initialEntryMode: TimePickerEntryMode.input,
-    );
-    if (newTime != null) {
-      setState(() {
-        _time = newTime;
-      });
-    }
-  }
 }

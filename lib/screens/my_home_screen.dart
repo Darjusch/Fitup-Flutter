@@ -1,5 +1,5 @@
 import 'package:fitup/screens/bet_overview_screen.dart';
-import 'package:fitup/screens/create_bet_screen.dart';
+import 'package:fitup/screens/create_bet_screen/create_bet_screen.dart';
 import 'package:flutter/material.dart';
 
 class MyHomeScreen extends StatelessWidget {
