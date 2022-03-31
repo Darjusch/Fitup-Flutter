@@ -1,15 +1,19 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../screens/bet_overview_screen/bet_overview_screen.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 
 class FirebaseHelper {
+
   void createBet(DateTime now, BuildContext context, String dropdownActionValue,
-      TimeOfDay _time, int dropdownDurationValue, int _value) {
+      TimeOfDay _time, int dropdownDurationValue, int _value, String userID) {
+
     try {
       FirebaseFirestore.instance.collection('bets').add(<String, dynamic>{
         "action": dropdownActionValue,
@@ -19,6 +23,7 @@ class FirebaseHelper {
         "isActive": true,
         "startDate": now,
         "success": null,
+        "user_id": userID,
       }).then((value) => {
             Navigator.of(context).push(
               MaterialPageRoute(
@@ -61,9 +66,11 @@ class FirebaseHelper {
         .catchError((error) => debugPrint("Failed up update ImageUrl: $error"));
   }
 
-  Stream<QuerySnapshot> getBetsStream() {
+  Stream<QuerySnapshot> getBetsStream(BuildContext context, userID) {
+
     return FirebaseFirestore.instance
         .collection('bets')
+    .where('user_id', isEqualTo: userID)
         .snapshots(includeMetadataChanges: true);
   }
 }

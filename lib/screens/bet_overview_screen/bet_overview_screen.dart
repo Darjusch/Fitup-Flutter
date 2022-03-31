@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/navigation_helper.dart';
 import 'package:fitup/utils/time_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BetHistoryScreen extends StatefulWidget {
   const BetHistoryScreen({Key key}) : super(key: key);
@@ -14,12 +16,14 @@ class BetHistoryScreen extends StatefulWidget {
 class _BetHistoryScreenState extends State<BetHistoryScreen> {
   @override
   Widget build(BuildContext context) {
+    String userID = context.watch<User>().uid;
+
     return Scaffold(
         appBar: AppBar(
           title: const Text("Bet overview"),
         ),
         body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseHelper().getBetsStream(),
+          stream: FirebaseHelper().getBetsStream(context, userID),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {

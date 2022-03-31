@@ -1,5 +1,7 @@
+import 'package:fitup/providers/AuthenticationService.dart';
 import 'package:fitup/utils/navigation_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MyHomeScreen extends StatelessWidget {
   const MyHomeScreen({Key key}) : super(key: key);
@@ -14,7 +16,14 @@ class MyHomeScreen extends StatelessWidget {
               onPressed: () => {
                     NavigationHelper().goToBetHistoryScreen(context),
                   },
-              icon: const Icon(Icons.account_box_rounded))
+              icon: const Icon(Icons.history)),
+          IconButton(
+            onPressed: () {
+              context.read<AuthenticationService>().signOut();
+            },
+
+            icon: const Icon(Icons.logout),
+          )
         ],
       ),
       body: Column(

@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import '../../utils/time_helper.dart';
 
@@ -16,9 +18,10 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
   int dropdownDurationValue = 1;
   TimeOfDay _time = const TimeOfDay(hour: 8, minute: 0);
   int _value = 0;
-
   @override
   Widget build(BuildContext context) {
+    String userID = context.watch<User>().uid;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create a Bet"),
@@ -66,6 +69,7 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
                 valueInput(),
               ],
             ),
+            Text("Current user ${context.watch<User>().uid}"),
             FloatingActionButton(
               onPressed: () => {
                 FirebaseHelper().createBet(
@@ -75,6 +79,7 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
                   _time,
                   dropdownDurationValue,
                   _value,
+                  userID,
                 )
               },
               child: const Icon(Icons.add),

@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitup/screens/auth_screen/auth_screen.dart';
 import 'package:fitup/screens/my_home_screen/my_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'providers/AuthenticationService.dart';
-import 'screens/signin_screen/sign_in_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,10 +46,11 @@ class AuthenticationWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
     if(firebaseUser != null) {
+      debugPrint(firebaseUser.email);
       return const MyHomeScreen();
     }
     else {
-      return SignInScreen();
+      return AuthScreen();
     }
 
   }
