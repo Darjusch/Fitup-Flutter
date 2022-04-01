@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/utils/firebase_helper.dart';
+import 'package:fitup/utils/navigation_helper.dart';
+import 'package:fitup/utils/notifications_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/time_helper.dart';
@@ -18,9 +21,31 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
   int dropdownDurationValue = 1;
   TimeOfDay _time = const TimeOfDay(hour: 8, minute: 0);
   int _value = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    NotificationHelper.init(initScheduled: true);
+    listenNotifications();
+  }
+
+  void listenNotifications() =>
+      NotificationHelper.onNotifications.stream.listen((onClickedNotification));
+
+  void onClickedNotification(String payload) =>
+      // TODO we cant click back button after this we are stuck on the same screen for 1 or 2 clicks. maybe delete old route or something
+      NavigationHelper().goToBetHistoryScreen(context);
+
+// TODO Correct data
+// TODO Change to create scheduled notification when bet is created
+// TODO Lead to According Bet when clicked on it
+// TODO Do it when the app is not openend
+// TODO Remove notification when the bet is over
+
   @override
   Widget build(BuildContext context) {
     String userID = context.watch<User>().uid;
+    String email = context.watch<User>().email;
 
     return Scaffold(
       appBar: AppBar(
@@ -42,14 +67,17 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 ElevatedButton(
-                  onPressed: () => {
-                    setState(() async {
-                      _time = await TimeHelper().selectTime(context, _time);
-                    })
+                  onPressed: () async {
+                    TimeOfDay newTime =
+                        await TimeHelper().selectTime(context, _time);
+                    setState(() {
+                      _time = newTime;
+                    });
                   },
                   child: const Text('SELECT TIME'),
                 ),
                 const SizedBox(height: 8),
+                // TODO when pressing cancle this thing breaks
                 Text(
                   'Selected time: ${_time.format(context)}',
                 ),
@@ -71,7 +99,8 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
             ),
             Text("Current user ${context.watch<User>().uid}"),
             FloatingActionButton(
-              onPressed: () => {
+              onPressed: () {
+                debugPrint("BET TIME ${_time.hour} - ${_time.minute}");
                 FirebaseHelper().createBet(
                   DateTime.now(),
                   context,
@@ -80,7 +109,14 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
                   dropdownDurationValue,
                   _value,
                   userID,
-                )
+                );
+                NotificationHelper.showScheduledNotification(
+                    title: email.split('@').first,
+                    body:
+                        'It\'s time for your scheduled ${_time.hour}:${_time.minute} $dropdownActionValue!',
+                    payload: 'Darjusch Schrand',
+                    // scheduledTime: const Time(11, 30));
+                    scheduledTime: Time(_time.hour, _time.minute));
               },
               child: const Icon(Icons.add),
             )
@@ -134,7 +170,6 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
       child: TextField(
         key: const ValueKey('betValueField'),
         onSubmitted: (text) => {
-          // ignore: todo
           // TODO How to disallow - , .
           _value = int.parse(text),
         },

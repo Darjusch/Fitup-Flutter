@@ -10,9 +10,12 @@ class NotificationHelper {
   static final onNotifications = BehaviorSubject<String>();
 
   static Future _notificationDetails() async {
+    // const styleInformation = BigPictureStyleInformation(
+    //     FilePathAndroidBitmap('@mipmap/launcher_icon'),
+    //     largeIcon: FilePathAndroidBitmap('@mipmap/launcher_icon'));
     return const NotificationDetails(
         android: AndroidNotificationDetails('channelId', 'channelName',
-            importance: Importance.max),
+            icon: 'fitup', importance: Importance.max),
         iOS: IOSNotificationDetails());
   }
 
@@ -61,6 +64,7 @@ class NotificationHelper {
       );
 
   static tz.TZDateTime _scheduleDaily(Time time) {
+    debugPrint("LOCAL TIME TZ: ${tz.local}");
     final now = tz.TZDateTime.now(tz.local);
     final scheduleDate = tz.TZDateTime(tz.local, now.year, now.month, now.day,
         time.hour, time.minute, time.second);
