@@ -31,6 +31,12 @@ dependencies:
   #Statemanagement
   provider: ^6.0.2
 
+  #Pushnotifications
+  flutter_local_notifications: ^9.4.0
+  rxdart: ^0.27.3
+  flutter_native_timezone: ^2.0.0
+
+  
 
 flutter:
   uses-material-design: true # Required if you use the Material icon font

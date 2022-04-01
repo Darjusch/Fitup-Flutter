@@ -1,9 +1,7 @@
-import 'package:fitup/utils/navigation_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/AuthenticationService.dart';
-import '../../utils/navigation_helper.dart';
 
 class AuthScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
