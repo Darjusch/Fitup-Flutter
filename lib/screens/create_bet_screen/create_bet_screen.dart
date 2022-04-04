@@ -22,24 +22,6 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
   TimeOfDay _time = const TimeOfDay(hour: 8, minute: 0);
   int _value = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    NotificationHelper.init(initScheduled: true);
-    listenNotifications();
-  }
-
-  void listenNotifications() =>
-      NotificationHelper.onNotifications.stream.listen((onClickedNotification));
-
-  void onClickedNotification(String payload) =>
-      // TODO we cant click back button after this we are stuck on the same screen for 1 or 2 clicks. maybe delete old route or something
-      NavigationHelper().goToBetHistoryScreen(context);
-
-// TODO Correct data
-// TODO Change to create scheduled notification when bet is created
-// TODO Lead to According Bet when clicked on it
-// TODO Do it when the app is not openend
 // TODO Remove notification when the bet is over
 
   @override
@@ -99,9 +81,9 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
             ),
             Text("Current user ${context.watch<User>().uid}"),
             FloatingActionButton(
-              onPressed: () {
+              onPressed: () async {
                 debugPrint("BET TIME ${_time.hour} - ${_time.minute}");
-                FirebaseHelper().createBet(
+                String docID = await FirebaseHelper().createBet(
                   DateTime.now(),
                   context,
                   dropdownActionValue,
@@ -110,13 +92,29 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
                   _value,
                   userID,
                 );
-                NotificationHelper.showScheduledNotification(
-                    title: email.split('@').first,
-                    body:
-                        'It\'s time for your scheduled ${_time.hour}:${_time.minute} $dropdownActionValue!',
-                    payload: 'Darjusch Schrand',
-                    // scheduledTime: const Time(11, 30));
-                    scheduledTime: Time(_time.hour, _time.minute));
+                if (docID == "Error") {
+                  final snackBar = SnackBar(
+                    content: const Text("Error"),
+                    action: SnackBarAction(
+                      label: 'Undo',
+                      onPressed: () {
+                        // Some code to undo the change.
+                      },
+                    ),
+                  );
+
+                  // Find the ScaffoldMessenger in the widget tree
+                  // and use it to show a SnackBar.
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                } else {
+                  NavigationHelper().goToBetHistoryScreen(context);
+                  NotificationHelper.showScheduledNotification(
+                      title: email.split('@').first,
+                      body:
+                          'It\'s time for your scheduled $dropdownActionValue!',
+                      payload: docID,
+                      scheduledTime: Time(_time.hour, _time.minute));
+                }
               },
               child: const Icon(Icons.add),
             )

@@ -1,17 +1,22 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../screens/bet_overview_screen/bet_overview_screen.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
 
 class FirebaseHelper {
-
-  void createBet(DateTime now, BuildContext context, String dropdownActionValue,
-      TimeOfDay _time, int dropdownDurationValue, int _value, String userID) {
-
+  Future<String> createBet(
+      DateTime now,
+      BuildContext context,
+      String dropdownActionValue,
+      TimeOfDay _time,
+      int dropdownDurationValue,
+      int _value,
+      String userID) async {
     try {
-      FirebaseFirestore.instance.collection('bets').add(<String, dynamic>{
+      DocumentReference docID = await FirebaseFirestore.instance
+          .collection('bets')
+          .add(<String, dynamic>{
         "action": dropdownActionValue,
         "time": _time.format(context),
         "duration": dropdownDurationValue,
@@ -20,15 +25,11 @@ class FirebaseHelper {
         "startDate": now,
         "success": null,
         "user_id": userID,
-      }).then((value) => {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => const BetHistoryScreen(),
-              ),
-            )
-          });
+      });
+      return docID.id;
     } catch (err) {
       debugPrint("Error: $err");
+      return "Error";
     }
   }
   // Upload Image to Firestorage
@@ -63,10 +64,9 @@ class FirebaseHelper {
   }
 
   Stream<QuerySnapshot> getBetsStream(BuildContext context, userID) {
-
     return FirebaseFirestore.instance
         .collection('bets')
-    .where('user_id', isEqualTo: userID)
+        .where('user_id', isEqualTo: userID)
         .snapshots(includeMetadataChanges: true);
   }
 }
