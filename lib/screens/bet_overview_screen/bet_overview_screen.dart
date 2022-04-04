@@ -38,31 +38,36 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
               children: snapshot.data.docs.map((DocumentSnapshot document) {
                 Map<String, dynamic> data =
                     document.data() as Map<String, dynamic>;
-                return ListTile(
-                  trailing: IconButton(
-                    iconSize: 40,
-                    icon: const Icon(Icons.cloud_upload),
-                    onPressed: () => NavigationHelper()
-                        .goToBetImagePickerScreen(document.id, context),
-                  ),
-                  title: Text(data['action']),
-                  subtitle: InkWell(
-                    onTap: () => NavigationHelper()
-                        .goToSingleBetScreen(data, document.id, context),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Time: ${data['time']}"),
-                        TimeHelper().betIsLongerThanADay(
-                                data['duration'], data['startDate'].toDate())
-                            ? Text(
-                                "Time left: ${TimeHelper().betHasXDaysLeft(data['duration'], data['startDate'].toDate())} days")
-                            : Text(
-                                "Time left: ${TimeHelper().betHasXHoursLeft(data['duration'], data['startDate'].toDate())} hours"),
-                      ],
-                    ),
-                  ),
-                );
+                return TimeHelper().betIsLongerThanAHour(
+                            data['duration'], data['startDate'].toDate()) ==
+                        true
+                    ? ListTile(
+                        trailing: IconButton(
+                          iconSize: 40,
+                          icon: const Icon(Icons.cloud_upload),
+                          onPressed: () => NavigationHelper()
+                              .goToBetImagePickerScreen(document.id, context),
+                        ),
+                        title: Text(data['action']),
+                        subtitle: InkWell(
+                          onTap: () => NavigationHelper()
+                              .goToSingleBetScreen(data, document.id, context),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Time: ${data['time']}"),
+                              TimeHelper().betIsLongerThanADay(data['duration'],
+                                      data['startDate'].toDate())
+                                  ? Text(
+                                      "Time left: ${TimeHelper().betHasXDaysLeft(data['duration'], data['startDate'].toDate())} days")
+                                  : Text(
+                                      "Time left: ${TimeHelper().betHasXHoursLeft(data['duration'], data['startDate'].toDate())} hours"),
+                            ],
+                          ),
+                        ),
+                      )
+                      // TODO maybe instead of this solution filter the data before the mapping
+                    : const SizedBox.shrink();
               }).toList(),
             );
           },
