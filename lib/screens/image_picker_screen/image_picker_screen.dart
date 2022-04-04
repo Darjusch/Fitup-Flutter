@@ -67,10 +67,24 @@ class _BetImagePickerState extends State<BetImagePicker> {
                           fit: BoxFit.cover,
                         ),
                         ElevatedButton(
-                            onPressed: () => {
-                                  FirebaseHelper()
-                                      .uploadFile(filePath, widget.docId)
-                                },
+                            onPressed: () async {
+                              String result = await FirebaseHelper()
+                                  .uploadFile(filePath, widget.docId);
+                              final snackBar = SnackBar(
+                                content: Text(result),
+                                backgroundColor: result == "Success"
+                                    ? Colors.green
+                                    : Colors.red,
+                                action: SnackBarAction(
+                                  label: 'Undo',
+                                  onPressed: () {
+                                    // Some code to undo the change.
+                                  },
+                                ),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            },
                             child: const Text("Upload Image"))
                       ],
                     ),

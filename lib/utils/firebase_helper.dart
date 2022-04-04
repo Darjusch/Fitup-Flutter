@@ -34,8 +34,8 @@ class FirebaseHelper {
   }
   // Upload Image to Firestorage
 
-  Future uploadFile(String filePath, String docId) async {
-    if (filePath == null) return;
+  Future<String> uploadFile(String filePath, String docId) async {
+    if (filePath == null) return "Error";
     final fileName = basename(filePath);
     final destination = 'images/$docId';
 
@@ -46,8 +46,10 @@ class FirebaseHelper {
       await ref.putFile(File(filePath));
       String imageUrl = await ref.getDownloadURL();
       saveImageURL(imageUrl, docId);
+      return "Success";
     } catch (e) {
       debugPrint('error occured $e');
+      return "Error";
     }
   }
 
