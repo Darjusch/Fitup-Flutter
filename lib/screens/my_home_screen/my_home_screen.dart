@@ -1,5 +1,6 @@
 import 'package:fitup/providers/AuthenticationService.dart';
 import 'package:fitup/utils/navigation_helper.dart';
+import 'package:fitup/utils/notifications_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +12,22 @@ class MyHomeScreen extends StatefulWidget {
 }
 
 class _MyHomeScreenState extends State<MyHomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    NotificationHelper.init(initScheduled: true);
+    listenNotifications();
+  }
+
+  void listenNotifications() =>
+      NotificationHelper.onNotifications.stream.listen((onClickedNotification));
+
+  void onClickedNotification(String payload) {
+    // TODO we cant click back button after this we are stuck on the same screen for 1 or 2 clicks. maybe delete old route or something
+    debugPrint(payload);
+    NavigationHelper().goToBetImagePickerScreen(payload, context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

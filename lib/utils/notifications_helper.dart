@@ -10,12 +10,13 @@ class NotificationHelper {
   static final onNotifications = BehaviorSubject<String>();
 
   static Future _notificationDetails() async {
-    // const styleInformation = BigPictureStyleInformation(
-    //     FilePathAndroidBitmap('@mipmap/launcher_icon'),
-    //     largeIcon: FilePathAndroidBitmap('@mipmap/launcher_icon'));
     return const NotificationDetails(
-        android: AndroidNotificationDetails('channelId', 'channelName',
-            icon: 'fitup', importance: Importance.max),
+        android: AndroidNotificationDetails(
+          'channelId',
+          'channelName',
+          icon: 'fitup',
+          importance: Importance.max,
+        ),
         iOS: IOSNotificationDetails());
   }
 
@@ -23,6 +24,15 @@ class NotificationHelper {
     const android = AndroidInitializationSettings('@mipmap/ic_launcher');
     const iOS = IOSInitializationSettings();
     const settings = InitializationSettings(android: android, iOS: iOS);
+
+    // When app is closed and our Notification launched the app
+    final details = await _notifications.getNotificationAppLaunchDetails();
+    if (details != null && details.didNotificationLaunchApp) {
+      debugPrint(details.payload);
+      debugPrint("HERE");
+      onNotifications.add(details.payload);
+    }
+
     await _notifications.initialize(settings,
         onSelectNotification: ((payload) async {
       onNotifications.add(payload);
@@ -33,6 +43,7 @@ class NotificationHelper {
       tz.setLocalLocation(tz.getLocation(locationName));
     }
   }
+  // TODO make notification ID dynamic else we can only get the last Notification that was created this id is also used to cancel notifications
 
   static Future showNotification({
     int id = 0,
@@ -73,4 +84,6 @@ class NotificationHelper {
         ? scheduleDate.add(const Duration(days: 1))
         : scheduleDate;
   }
+
+  static void cancel(int id) => _notifications.cancel(id);
 }
