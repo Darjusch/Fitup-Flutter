@@ -58,13 +58,15 @@ class _BetImagePickerState extends State<BetImagePicker> {
                     ),
                   )
                 : SizedBox(
-                    height: 300,
-                    width: 300,
+                    height: 400,
+                    width: 400,
                     child: Column(
                       children: [
                         Image.file(
                           File(filePath),
-                          fit: BoxFit.cover,
+                          fit: BoxFit.scaleDown,
+                          height: 300,
+                          width: 300,
                         ),
                         ElevatedButton(
                             onPressed: () async {

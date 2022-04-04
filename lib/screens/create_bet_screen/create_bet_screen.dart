@@ -53,7 +53,9 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
                     TimeOfDay newTime =
                         await TimeHelper().selectTime(context, _time);
                     setState(() {
-                      _time = newTime;
+                      if (newTime != null) {
+                        _time = newTime;
+                      }
                     });
                   },
                   child: const Text('SELECT TIME'),
