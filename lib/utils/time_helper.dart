@@ -8,7 +8,6 @@ class TimeHelper {
       initialEntryMode: TimePickerEntryMode.input,
     );
     return newTime;
-
   }
 
   bool betIsLongerThanADay(int duration, DateTime startDate) {
@@ -18,6 +17,13 @@ class TimeHelper {
   bool betIsLongerThanAHour(int duration, DateTime startDate) {
     return (duration * 24) - (DateTime.now().difference(startDate).inHours) > 0;
   }
+
+  bool betIsLongerThanAMinute(int duration, DateTime startDate) {
+    return ((duration * 24) * 60) -
+            (DateTime.now().difference(startDate).inMinutes) >
+        0;
+  }
+
   int betHasXDaysLeft(int duration, DateTime startDate) {
     return duration - (DateTime.now().difference(startDate).inDays);
   }
@@ -27,6 +33,7 @@ class TimeHelper {
   }
 
   int betHasXMinutesLeft(int duration, DateTime startDate) {
-    return ((duration * 24) * 60) - (DateTime.now().difference(startDate).inMinutes);
+    return ((duration * 24) * 60) -
+        (DateTime.now().difference(startDate).inMinutes);
   }
 }

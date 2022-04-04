@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:fitup/utils/time_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -65,10 +66,45 @@ class FirebaseHelper {
         .catchError((error) => debugPrint("Failed up update ImageUrl: $error"));
   }
 
-  Stream<QuerySnapshot> getBetsStream(BuildContext context, userID) {
+  Stream<QuerySnapshot> getAllBetsStream(userID) {
     return FirebaseFirestore.instance
         .collection('bets')
         .where('user_id', isEqualTo: userID)
         .snapshots(includeMetadataChanges: true);
+  }
+
+  Stream<QuerySnapshot> getActiveBetsStream(userID) {
+    return FirebaseFirestore.instance
+        .collection('bets')
+        .where('user_id', isEqualTo: userID)
+        .where('isActive', isEqualTo: true)
+        .snapshots(includeMetadataChanges: true);
+  }
+
+  Stream<QuerySnapshot> getInactiveBetsStream(userID) {
+    return FirebaseFirestore.instance
+        .collection('bets')
+        .where('user_id', isEqualTo: userID)
+        .where('is_active', isEqualTo: false)
+        .snapshots(includeMetadataChanges: true);
+  }
+
+  void updateBetActivityStatus(String userID) {
+    Stream<QuerySnapshot> snap = getAllBetsStream(userID);
+    snap.forEach((element) {
+      for (var doc in element.docs) {
+        debugPrint(
+            "${TimeHelper().betIsLongerThanAHour(doc['duration'], doc['startDate'].toDate()) == true}");
+        if (TimeHelper().betIsLongerThanAMinute(
+                doc['duration'], doc['startDate'].toDate()) ==
+            false) {
+          FirebaseFirestore.instance
+              .collection('bets')
+              .doc(doc.id)
+              .update({"isActive": false});
+        }
+      }
+    });
+    return;
   }
 }
