@@ -22,10 +22,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<AuthenticationService>(
-          create: (_) => AuthenticationService(FirebaseAuth.instance)
-        ),
-        StreamProvider(create: (context) => context.read<AuthenticationService>().authStateChanges)
+        Provider<Auth>(create: (_) => Auth()),
+        StreamProvider(create: (context) => context.read<Auth>().user)
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -45,13 +43,11 @@ class AuthenticationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final firebaseUser = context.watch<User>();
-    if(firebaseUser != null) {
+    if (firebaseUser != null) {
       debugPrint(firebaseUser.email);
       return const MyHomeScreen();
+    } else {
+      return const AuthScreen();
     }
-    else {
-      return AuthScreen();
-    }
-
   }
 }

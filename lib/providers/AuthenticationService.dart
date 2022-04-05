@@ -1,34 +1,49 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class AuthenticationService {
-  final FirebaseAuth _firebaseAuth;
+class Auth {
+  final FirebaseAuth auth;
 
-  AuthenticationService(this._firebaseAuth);
+  Auth({this.auth});
 
-  Stream<User> get authStateChanges => _firebaseAuth.authStateChanges();
+  Stream<User> get user => auth.authStateChanges();
 
-  Future<void> signOut() async {
-    await _firebaseAuth.signOut();
-  }
-
-  Future<void> signIn({String email, String password}) async {
+  Future<String> signIn({String email, String password}) async {
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(
+      await auth.signInWithEmailAndPassword(
           email: email, password: password);
       debugPrint("Signed in");
+      return "Success";
     } on FirebaseAuthException catch (e) {
       debugPrint(e.message);
+      return e.message;
+    } catch (e) {
+      rethrow;
     }
   }
 
-  Future<void> signUp({String email, String password}) async {
+  Future<String> signUp({String email, String password}) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
+      await auth.createUserWithEmailAndPassword(
           email: email, password: password);
       debugPrint("Signed up");
+      return "Success";
     } on FirebaseAuthException catch (e) {
       debugPrint(e.message);
+      return e.message;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> signOut() async {
+    try {
+      await auth.signOut();
+      return "Success";
+    } on FirebaseAuthException catch (e) {
+      return e.message;
+    } catch (e) {
+      rethrow;
     }
   }
 }

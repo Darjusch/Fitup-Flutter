@@ -41,7 +41,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
               icon: const Icon(Icons.history)),
           IconButton(
             onPressed: () {
-              context.read<AuthenticationService>().signOut();
+              context.read<Auth>().signOut();
             },
             icon: const Icon(Icons.logout),
           )

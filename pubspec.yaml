@@ -48,3 +48,4 @@ flutter_icons:
 
 dev_dependencies: 
   test: ^1.19.0
+  mockito: ^5.1.0
