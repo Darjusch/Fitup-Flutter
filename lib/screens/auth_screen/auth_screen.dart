@@ -30,12 +30,14 @@ class _AuthScreenState extends State<AuthScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
+              key: const ValueKey("emailField"),
               controller: emailController,
               decoration: const InputDecoration(
                 labelText: "Email",
               ),
             ),
             TextField(
+              key: const ValueKey("passwordField"),
               controller: passwordController,
               obscureText: !_passwordVisible,
               decoration: InputDecoration(
@@ -61,6 +63,7 @@ class _AuthScreenState extends State<AuthScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
+                  key: const ValueKey("Sign in"),
                   onPressed: () {
                     context.read<AuthenticationService>().signIn(
                           email: emailController.text.trim(),
@@ -70,6 +73,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   child: const Text("Sign in"),
                 ),
                 ElevatedButton(
+                  key: const ValueKey("Sign up"),
                   style: ElevatedButton.styleFrom(primary: Colors.white),
                   onPressed: () {
                     context.read<AuthenticationService>().signUp(

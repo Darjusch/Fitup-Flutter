@@ -61,6 +61,7 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
                         ),
                         title: Text(data['action']),
                         subtitle: InkWell(
+                          key: const ValueKey('betDetails'),
                           onTap: () => NavigationHelper()
                               .goToSingleBetScreen(data, document.id, context),
                           child: Row(

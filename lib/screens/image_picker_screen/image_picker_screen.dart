@@ -14,10 +14,8 @@ class BetImagePicker extends StatefulWidget {
 }
 
 class _BetImagePickerState extends State<BetImagePicker> {
-  /// Variables
   String filePath;
 
-  /// Widget
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,6 +30,7 @@ class _BetImagePickerState extends State<BetImagePicker> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         ElevatedButton(
+                          key: const ValueKey('galleryKey'),
                           onPressed: () async {
                             String path = await ImagePickerHelper()
                                 .getImageFrom(ImageSource.gallery);
@@ -45,6 +44,7 @@ class _BetImagePickerState extends State<BetImagePicker> {
                           height: 40.0,
                         ),
                         ElevatedButton(
+                          key: const ValueKey('cameraKey'),
                           onPressed: () async {
                             String path = await ImagePickerHelper()
                                 .getImageFrom(ImageSource.camera);
@@ -69,6 +69,7 @@ class _BetImagePickerState extends State<BetImagePicker> {
                           width: 300,
                         ),
                         ElevatedButton(
+                            key: const ValueKey('uploadKey'),
                             onPressed: () async {
                               String result = await FirebaseHelper()
                                   .uploadFile(filePath, widget.docId);
