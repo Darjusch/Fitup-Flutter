@@ -14,59 +14,75 @@ class BetHistoryScreen extends StatefulWidget {
 }
 
 class _BetHistoryScreenState extends State<BetHistoryScreen> {
+  bool _loading = false;
+
+  void setLoading() {
+    setState(() {
+      _loading = !_loading;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    setLoading();
     String userID = context.watch<User>().uid;
     FirebaseHelper().updateBetActivityStatus(userID);
-
+    Stream<QuerySnapshot<Object>> stream =
+        FirebaseHelper().getActiveBetsStream(userID);
+    setLoading();
     return Scaffold(
         appBar: AppBar(
           title: const Text("Bet overview"),
         ),
-        body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseHelper().getActiveBetsStream(userID),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return const Text('Something went wrong');
-            }
+        body: _loading == false
+            ? StreamBuilder<QuerySnapshot>(
+                stream: stream,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text('Something went wrong');
+                  }
 
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text("Loading");
-            }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Text("Loading");
+                  }
 
-            return ListView(
-              children: snapshot.data.docs.map((DocumentSnapshot document) {
-                Map<String, dynamic> data =
-                    document.data() as Map<String, dynamic>;
-                return ListTile(
-                  trailing: IconButton(
-                    iconSize: 40,
-                    icon: const Icon(Icons.cloud_upload),
-                    onPressed: () => NavigationHelper()
-                        .goToBetImagePickerScreen(document.id, context),
-                  ),
-                  title: Text(data['action']),
-                  subtitle: InkWell(
-                    onTap: () => NavigationHelper()
-                        .goToSingleBetScreen(data, document.id, context),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Time: ${data['time']}"),
-                        TimeHelper().betIsLongerThanADay(
-                                data['duration'], data['startDate'].toDate())
-                            ? Text(
-                                "Time left: ${TimeHelper().betHasXDaysLeft(data['duration'], data['startDate'].toDate())} days")
-                            : Text(
-                                "Time left: ${TimeHelper().betHasXHoursLeft(data['duration'], data['startDate'].toDate())} hours"),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-            );
-          },
-        ));
+                  return ListView(
+                    children:
+                        snapshot.data.docs.map((DocumentSnapshot document) {
+                      Map<String, dynamic> data =
+                          document.data() as Map<String, dynamic>;
+                      return ListTile(
+                        trailing: IconButton(
+                          iconSize: 40,
+                          icon: const Icon(Icons.cloud_upload),
+                          onPressed: () => NavigationHelper()
+                              .goToBetImagePickerScreen(document.id, context),
+                        ),
+                        title: Text(data['action']),
+                        subtitle: InkWell(
+                          onTap: () => NavigationHelper()
+                              .goToSingleBetScreen(data, document.id, context),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Time: ${data['time']}"),
+                              TimeHelper().betIsLongerThanADay(data['duration'],
+                                      data['startDate'].toDate())
+                                  ? Text(
+                                      "Time left: ${TimeHelper().betHasXDaysLeft(data['duration'], data['startDate'].toDate())} days")
+                                  : Text(
+                                      "Time left: ${TimeHelper().betHasXHoursLeft(data['duration'], data['startDate'].toDate())} hours"),
+                            ],
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  );
+                },
+              )
+            : const CircularProgressIndicator(
+                value: null,
+              ));
   }
 }
