@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:fitup/utils/notifications_helper.dart';
 import 'package:fitup/utils/time_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,21 +8,23 @@ import 'package:path/path.dart';
 
 class FirebaseHelper {
   Future<String> createBet(
+      {int notificationID,
       DateTime now,
       BuildContext context,
       String dropdownActionValue,
-      TimeOfDay _time,
+      TimeOfDay time,
       int dropdownDurationValue,
-      int _value,
-      String userID) async {
+      int value,
+      String userID}) async {
     try {
       DocumentReference docID = await FirebaseFirestore.instance
           .collection('bets')
           .add(<String, dynamic>{
+        "notificationID": notificationID,
         "action": dropdownActionValue,
-        "time": _time.format(context),
+        "time": time.format(context),
         "duration": dropdownDurationValue,
-        "value": _value,
+        "value": value,
         "isActive": true,
         "startDate": now,
         "success": null,
@@ -89,6 +92,7 @@ class FirebaseHelper {
         .snapshots(includeMetadataChanges: true);
   }
 
+  // TODO loading indicator widget
   void updateBetActivityStatus(String userID) {
     Stream<QuerySnapshot> snap = getAllBetsStream(userID);
     snap.forEach((element) {
@@ -102,6 +106,7 @@ class FirebaseHelper {
               .collection('bets')
               .doc(doc.id)
               .update({"isActive": false});
+          NotificationHelper.cancel(doc['notificationID']);
         }
       }
     });

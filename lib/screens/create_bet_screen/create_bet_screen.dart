@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
+import 'dart:math';
 
 import '../../utils/time_helper.dart';
 
@@ -84,15 +85,20 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
             Text("Current user ${context.watch<User>().uid}"),
             FloatingActionButton(
               onPressed: () async {
+                var rng = Random();
+                // TODO find a better way for creating the ID than random int
+
+                int randomID = rng.nextInt(1000000);
                 debugPrint("BET TIME ${_time.hour} - ${_time.minute}");
                 String docID = await FirebaseHelper().createBet(
-                  DateTime.now(),
-                  context,
-                  dropdownActionValue,
-                  _time,
-                  dropdownDurationValue,
-                  _value,
-                  userID,
+                  notificationID: randomID,
+                  now: DateTime.now(),
+                  context: context,
+                  dropdownActionValue: dropdownActionValue,
+                  time: _time,
+                  dropdownDurationValue: dropdownDurationValue,
+                  value: _value,
+                  userID: userID,
                 );
                 if (docID == "Error") {
                   final snackBar = SnackBar(
@@ -108,6 +114,7 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
                 } else {
                   NavigationHelper().goToBetHistoryScreen(context);
                   NotificationHelper.showScheduledNotification(
+                      id: randomID,
                       title: email.split('@').first,
                       body:
                           'It\'s time for your scheduled $dropdownActionValue!',

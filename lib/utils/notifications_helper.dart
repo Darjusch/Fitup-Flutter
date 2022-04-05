@@ -12,8 +12,8 @@ class NotificationHelper {
   static Future _notificationDetails() async {
     return const NotificationDetails(
         android: AndroidNotificationDetails(
-          'channelId',
-          'channelName',
+          'channelId 1',
+          'Bet reminder',
           icon: 'fitup',
           importance: Importance.max,
         ),
@@ -43,19 +43,8 @@ class NotificationHelper {
       tz.setLocalLocation(tz.getLocation(locationName));
     }
   }
-  // TODO make notification ID dynamic else we can only get the last Notification that was created this id is also used to cancel notifications
-
-  static Future showNotification({
-    int id = 0,
-    String title,
-    String body,
-    String payload,
-  }) async =>
-      _notifications.show(id, title, body, await _notificationDetails(),
-          payload: payload);
-
   static Future showScheduledNotification({
-    int id = 0,
+    int id,
     String title,
     String body,
     String payload,
