@@ -53,6 +53,9 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
                       Map<String, dynamic> data =
                           document.data() as Map<String, dynamic>;
                       return ListTile(
+                        key: const ValueKey('betDetails'),
+                        onTap: () => NavigationHelper()
+                            .goToSingleBetScreen(data, document.id, context),
                         trailing: IconButton(
                           iconSize: 40,
                           icon: const Icon(Icons.cloud_upload),
@@ -61,9 +64,6 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
                         ),
                         title: Text(data['action']),
                         subtitle: InkWell(
-                          key: const ValueKey('betDetails'),
-                          onTap: () => NavigationHelper()
-                              .goToSingleBetScreen(data, document.id, context),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
