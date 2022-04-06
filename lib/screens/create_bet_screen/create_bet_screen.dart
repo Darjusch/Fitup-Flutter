@@ -23,7 +23,6 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
   TimeOfDay _time = const TimeOfDay(hour: 8, minute: 0);
   int _value = 0;
 
-// TODO Remove notification when the bet is over
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +61,6 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
                   child: const Text('SELECT TIME'),
                 ),
                 const SizedBox(height: 8),
-                // TODO when pressing cancle this thing breaks
                 Text(
                   'Selected time: ${_time.format(context)}',
                 ),

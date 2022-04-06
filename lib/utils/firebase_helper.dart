@@ -92,7 +92,6 @@ class FirebaseHelper {
         .snapshots(includeMetadataChanges: true);
   }
 
-  // TODO loading indicator widget
   void updateBetActivityStatus(String userID) {
     Stream<QuerySnapshot> snap = getAllBetsStream(userID);
     snap.forEach((element) {
