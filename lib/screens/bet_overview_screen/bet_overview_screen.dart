@@ -60,7 +60,7 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
                           iconSize: 40,
                           icon: const Icon(Icons.cloud_upload),
                           onPressed: () => NavigationHelper()
-                              .goToBetImagePickerScreen(document.id, context),
+                              .goToUploadFileScreen(document.id, context),
                         ),
                         title: Text(data['action']),
                         subtitle: InkWell(

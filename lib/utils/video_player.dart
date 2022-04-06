@@ -11,7 +11,7 @@ class VideoPlayerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return controller != null && controller.value.isInitialized
-        ? buildVideo()
+        ? SizedBox(height: 200, width: 200, child: buildVideo())
         : const Icon(Icons.video_file, size: 120);
   }
 
