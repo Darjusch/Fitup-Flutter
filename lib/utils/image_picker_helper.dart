@@ -6,7 +6,7 @@ class ImagePickerHelper {
   double maxWidth = 1000;
   double maxHeight = 1000;
 
-  /// Get from gallery or camera
+  /// Get image from gallery or camera
   Future<String> getImageFrom(ImageSource source) async {
     try {
       XFile xfile = await ImagePicker().pickImage(
@@ -17,6 +17,24 @@ class ImagePickerHelper {
       return xfile.path;
     } on PlatformException catch (e) {
       debugPrint('Failed to pick image: $e');
+      return '';
+    }
+  }
+
+  // Get video from gallery or camera
+  // TODO show warning that video can not be longer than 5 min
+  Future<String> getVideoFrom(ImageSource source) async {
+    try {
+      XFile xfile = await ImagePicker().pickVideo(
+        source: source,
+        maxDuration: const Duration(minutes: 5),
+      );
+      if (xfile.path == null) {
+        return '';
+      }
+      return xfile.path;
+    } on PlatformException catch (e) {
+      debugPrint('Failed to pick video: $e');
       return '';
     }
   }

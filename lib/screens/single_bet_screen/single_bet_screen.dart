@@ -1,5 +1,7 @@
+import 'package:fitup/utils/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:video_player/video_player.dart';
 
 class SingleBetScreen extends StatefulWidget {
   final String docId;
@@ -13,7 +15,28 @@ class SingleBetScreen extends StatefulWidget {
 }
 
 class _SingleBetScreenState extends State<SingleBetScreen> {
+  String fileType;
+  String filePath;
+  VideoPlayerController videoController;
   var dateFormat = DateFormat('dd/MM/yyyy, HH:mm');
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.data['videos'] != null) {
+      videoController = VideoPlayerController.network(widget.data['videos'][0])
+        ..addListener(() => setState(() {}))
+        ..initialize().then((_) => videoController.play());
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (videoController != null) {
+      videoController.dispose();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,19 +61,26 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                   Text("success: ${widget.data['success']}"),
                 ],
               )),
-          widget.data['images'] != null
-              ? SizedBox(
-                  height: 400,
-                  width: 400,
-                  child: ListView(children: [
-                    for (var image in widget.data['images'])
-                      Image.network(
-                        "$image",
-                        width: 100,
-                        height: 100,
-                      )
-                  ]))
-              : const Text("No Images uploaded yet"),
+          widget.data['images'] != null && widget.data['videos'] != null
+              ? Center(
+                  child: SizedBox(
+                      height: 400,
+                      width: 200,
+                      child: ListView(children: [
+                        for (var image in widget.data['images'])
+                          Image.network(
+                            "$image",
+                            width: 100,
+                            height: 100,
+                          ),
+                        SizedBox(
+                            height: 200,
+                            width: 100,
+                            child:
+                                VideoPlayerWidget(controller: videoController))
+                      ])),
+                )
+              : const Text("No Files uploaded yet"),
         ],
       ),
     );

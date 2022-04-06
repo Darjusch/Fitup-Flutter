@@ -35,6 +35,7 @@ dependencies:
   flutter_local_notifications: ^9.4.0
   rxdart: ^0.27.3
   flutter_native_timezone: ^2.0.0
+  video_player: ^2.3.0
 
   
 
