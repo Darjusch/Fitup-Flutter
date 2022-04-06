@@ -80,7 +80,6 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
                 valueInput(),
               ],
             ),
-            Text("Current user ${context.watch<User>().uid}"),
             FloatingActionButton(
               onPressed: () async {
                 var rng = Random();
