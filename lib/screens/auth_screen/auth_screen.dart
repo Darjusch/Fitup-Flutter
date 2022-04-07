@@ -18,6 +18,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   void initState() {
+    super.initState();
     _passwordVisible = false;
   }
 
