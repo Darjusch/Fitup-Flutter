@@ -38,10 +38,11 @@ class FirebaseHelper {
   }
   // Upload Image to Firestorage
 
-  Future<String> uploadFile(String filePath, String docId) async {
+  Future<String> uploadFile(
+      String filePath, String docId, String fileType) async {
     if (filePath == null) return "Error";
     final fileName = basename(filePath);
-    final destination = 'images/$docId';
+    final destination = '$fileType/$docId';
 
     try {
       final ref = firebase_storage.FirebaseStorage.instance
@@ -49,7 +50,8 @@ class FirebaseHelper {
           .child(fileName);
       await ref.putFile(File(filePath));
       String imageUrl = await ref.getDownloadURL();
-      saveImageURL(imageUrl, docId);
+      saveURL(imageUrl, docId, fileType);
+
       return "Success";
     } catch (e) {
       debugPrint('error occured $e');
@@ -57,13 +59,13 @@ class FirebaseHelper {
     }
   }
 
-  // Save imageUrl in Firestore
-  void saveImageURL(String imageUrl, String docId) async {
+  // Save Url in Firestore
+  void saveURL(String imageUrl, String docId, String fileType) async {
     FirebaseFirestore.instance
         .collection('bets')
         .doc(docId)
         .update({
-          "images": FieldValue.arrayUnion([imageUrl])
+          fileType: FieldValue.arrayUnion([imageUrl])
         })
         .then((value) => debugPrint("ImageUrl updated"))
         .catchError((error) => debugPrint("Failed up update ImageUrl: $error"));
