@@ -1,3 +1,4 @@
+// ignore_for_file: missing_required_param
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/providers/AuthenticationService.dart';
 import 'package:test/test.dart';
