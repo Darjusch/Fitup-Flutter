@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitup/models/bet.dart';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/navigation_helper.dart';
 import 'package:fitup/utils/notifications_helper.dart';
@@ -22,7 +23,6 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
   int dropdownDurationValue = 1;
   TimeOfDay _time = const TimeOfDay(hour: 8, minute: 0);
   int _value = 0;
-
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +97,16 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
                   value: _value,
                   userID: userID,
                 );
+                Provider.of<BetProvider>(context, listen: false).addBet(Bet(
+                  notificationID: randomID,
+                  now: DateTime.now(),
+                  context: context,
+                  dropdownActionValue: dropdownActionValue,
+                  time: _time,
+                  dropdownDurationValue: dropdownDurationValue,
+                  value: _value,
+                  userID: userID,
+                ));
                 if (docID == "Error") {
                   final snackBar = SnackBar(
                     content: const Text("Error"),
