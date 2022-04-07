@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitup/models/bet.dart';
 import 'package:fitup/screens/auth_screen/auth_screen.dart';
 import 'package:fitup/screens/my_home_screen/my_home_screen.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider<Auth>(
           create: (_) => Auth(auth: FirebaseAuth.instance),
+        ),
+        ChangeNotifierProvider<BetProvider>.value(
+          value: BetProvider(),
         ),
         StreamProvider(create: (context) => context.read<Auth>().user)
       ],
