@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/widgets/video_player_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/image_picker_helper.dart';
@@ -7,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class BetVideoPicker extends StatefulWidget {
-  final String docId;
+  final String betID;
 
-  const BetVideoPicker({Key key, @required this.docId}) : super(key: key);
+  const BetVideoPicker({Key key, @required this.betID}) : super(key: key);
 
   @override
   State<BetVideoPicker> createState() => _BetVideoPickerState();
@@ -81,10 +83,15 @@ class _BetVideoPickerState extends State<BetVideoPicker> {
                             key: const ValueKey('uploadKey'),
                             onPressed: () async {
                               String result = await FirebaseHelper()
-                                  .uploadFile(filePath, widget.docId, fileType);
+                                  .uploadFile(filePath, widget.betID, fileType);
+                              if (result != 'error') {
+                                Provider.of<BetProvider>(context, listen: false)
+                                    .updateBetVideo(widget.betID, result);
+                              }
                               final snackBar = SnackBar(
-                                content: Text(result),
-                                backgroundColor: result == "Success"
+                                content: Text(
+                                    result != 'error' ? "Success" : result),
+                                backgroundColor: result != 'error'
                                     ? Colors.green
                                     : Colors.red,
                                 action: SnackBarAction(

@@ -1,14 +1,13 @@
+import 'package:fitup/models/bet_model.dart';
 import 'package:fitup/widgets/video_player_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
 
 class SingleBetScreen extends StatefulWidget {
-  final String docId;
-  final Map<String, dynamic> data;
+  final BetModel bet;
 
-  const SingleBetScreen({Key key, @required this.docId, @required this.data})
-      : super(key: key);
+  const SingleBetScreen({Key key, @required this.bet}) : super(key: key);
 
   @override
   State<SingleBetScreen> createState() => _SingleBetScreenState();
@@ -22,8 +21,8 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
 
   @override
   void initState() {
-    if (widget.data['videos'] != null) {
-      videoController = VideoPlayerController.network(widget.data['videos'][0])
+    if (widget.bet.videos.isNotEmpty) {
+      videoController = VideoPlayerController.network(widget.bet.videos[0])
         ..addListener(() => setState(() {}))
         ..setLooping(true)
         ..initialize().then((_) {
@@ -58,30 +57,30 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                 width: 200,
                 child: Column(
                   children: [
-                    Text("Action: ${widget.data['action']}"),
-                    Text("Duration: ${widget.data['duration']}"),
-                    Text("Time: ${widget.data['time']}"),
-                    Text("Value: ${widget.data['value']}€"),
+                    Text("Action: ${widget.bet.action}"),
+                    Text("Duration: ${widget.bet.duration}"),
+                    Text("Time: ${widget.bet.time}"),
+                    Text("Value: ${widget.bet.value}€"),
                     Text(
-                        "StartDate: ${dateFormat.format(widget.data['startDate'].toDate())}"),
-                    Text("isActive: ${widget.data['isActive']}"),
-                    Text("success: ${widget.data['success']}"),
+                        "StartDate: ${dateFormat.format(widget.bet.startDate)}"),
+                    Text("isActive: ${widget.bet.isActive}"),
+                    Text("success: ${widget.bet.success}"),
                   ],
                 )),
-            widget.data['images'] != null
+            widget.bet.images != null
                 ? SizedBox(
                     height: 200,
                     width: 300,
                     child:
                         ListView(scrollDirection: Axis.horizontal, children: [
-                      for (var image in widget.data['images'])
+                      for (var image in widget.bet.images)
                         SizedBox(
                           height: 200,
                           width: 100,
                           child: Column(
                             children: [
                               Image.network(
-                                "$image",
+                                image,
                                 height: 150,
                                 width: 100,
                               ),
@@ -90,7 +89,7 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                         )
                     ]))
                 : const Text("No Images uploaded yet"),
-            widget.data['videos'] != null
+            widget.bet.videos != null
                 ? SizedBox(
                     height: 150,
                     width: 300,
@@ -108,5 +107,4 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
       ),
     );
   }
-
 }

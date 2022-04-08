@@ -8,7 +8,8 @@ import 'package:path/path.dart';
 
 class FirebaseHelper {
   Future<String> createBet(
-      {int notificationID,
+      {String betID,
+      int notificationID,
       DateTime now,
       BuildContext context,
       String dropdownActionValue,
@@ -20,6 +21,7 @@ class FirebaseHelper {
       DocumentReference docID = await FirebaseFirestore.instance
           .collection('bets')
           .add(<String, dynamic>{
+        "betID": betID,
         "notificationID": notificationID,
         "action": dropdownActionValue,
         "time": time.format(context),
@@ -36,13 +38,13 @@ class FirebaseHelper {
       return "Error";
     }
   }
-  // Upload Image to Firestorage
+  // Upload File to Firestorage
 
   Future<String> uploadFile(
-      String filePath, String docId, String fileType) async {
+      String filePath, String betID, String fileType) async {
     if (filePath == null) return "Error";
     final fileName = basename(filePath);
-    final destination = '$fileType/$docId';
+    final destination = '$fileType/$betID';
 
     try {
       final ref = firebase_storage.FirebaseStorage.instance
@@ -50,9 +52,9 @@ class FirebaseHelper {
           .child(fileName);
       await ref.putFile(File(filePath));
       String imageUrl = await ref.getDownloadURL();
-      saveURL(imageUrl, docId, fileType);
+      saveURL(imageUrl, betID, fileType);
 
-      return "Success";
+      return imageUrl;
     } catch (e) {
       debugPrint('error occured $e');
       return "Error";
@@ -60,15 +62,23 @@ class FirebaseHelper {
   }
 
   // Save Url in Firestore
-  void saveURL(String imageUrl, String docId, String fileType) async {
+  void saveURL(String imageUrl, String betID, String fileType) async {
+    debugPrint(betID);
     FirebaseFirestore.instance
         .collection('bets')
-        .doc(docId)
-        .update({
-          fileType: FieldValue.arrayUnion([imageUrl])
-        })
-        .then((value) => debugPrint("ImageUrl updated"))
-        .catchError((error) => debugPrint("Failed up update ImageUrl: $error"));
+        .where('betID', isEqualTo: betID)
+        .get()
+        .then((value) {
+      FirebaseFirestore.instance
+          .collection('bets')
+          .doc(value.docs.first.id)
+          .update({
+            fileType: FieldValue.arrayUnion([imageUrl])
+          })
+          .then((value) => debugPrint("ImageUrl updated"))
+          .catchError(
+              (error) => debugPrint("Failed up update ImageUrl: $error"));
+    });
   }
 
   Stream<QuerySnapshot> getAllBetsStream(userID) {

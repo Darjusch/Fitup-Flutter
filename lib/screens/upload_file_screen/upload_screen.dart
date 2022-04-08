@@ -2,13 +2,14 @@ import 'package:fitup/utils/navigation_helper.dart';
 import 'package:flutter/material.dart';
 
 class UploadFileScreen extends StatefulWidget {
-  final String docId;
+  final String betID;
 
-  const UploadFileScreen({Key key, @required this.docId}) : super(key: key);
+  const UploadFileScreen({Key key, @required this.betID}) : super(key: key);
 
   @override
   State<UploadFileScreen> createState() => _UploadFileScreenState();
 }
+
 // TODO RESTRICT FOR THE BET TO UPLOAD ONLY 1 IMAGE OR VIDEO FOR THAT DAY
 class _UploadFileScreenState extends State<UploadFileScreen> {
   @override
@@ -26,14 +27,14 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
               ElevatedButton.icon(
                   onPressed: () {
                     NavigationHelper()
-                        .goToBetImagePickerScreen(widget.docId, context);
+                        .goToBetImagePickerScreen(widget.betID, context);
                   },
                   icon: const Icon(Icons.image),
                   label: const Text("Image")),
               ElevatedButton.icon(
                   onPressed: () {
                     NavigationHelper()
-                        .goToBetVideoPickerScreen(widget.docId, context);
+                        .goToBetVideoPickerScreen(widget.betID, context);
                   },
                   icon: const Icon(Icons.camera),
                   label: const Text("Video"))

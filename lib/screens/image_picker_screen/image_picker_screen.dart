@@ -1,13 +1,15 @@
 import 'dart:io';
+import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/image_picker_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class BetImagePicker extends StatefulWidget {
-  final String docId;
+  final String betID;
 
-  const BetImagePicker({Key key, @required this.docId}) : super(key: key);
+  const BetImagePicker({Key key, @required this.betID}) : super(key: key);
 
   @override
   State<BetImagePicker> createState() => _BetImagePickerState();
@@ -85,10 +87,16 @@ class _BetImagePickerState extends State<BetImagePicker> {
                             key: const ValueKey('uploadKey'),
                             onPressed: () async {
                               String result = await FirebaseHelper()
-                                  .uploadFile(filePath, widget.docId, fileType);
+                                  .uploadFile(filePath, widget.betID, fileType);
+                              if (result != 'error') {
+                                Provider.of<BetProvider>(context, listen: false)
+                                    .updateBetImage(widget.betID, result);
+                              }
+
                               final snackBar = SnackBar(
-                                content: Text(result),
-                                backgroundColor: result == "Success"
+                                content: Text(
+                                    result != 'error' ? "Success" : result),
+                                backgroundColor: result != 'error'
                                     ? Colors.green
                                     : Colors.red,
                                 action: SnackBarAction(

@@ -2,7 +2,7 @@ import 'package:fitup/utils/firebase_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
-import '../lib/models/bet.dart';
+import '../lib/models/bet_model.dart';
 
 class MockFirebaseHelper extends Mock implements FirebaseHelper {}
 
@@ -12,13 +12,12 @@ void main() {
   final MockFirebaseHelper mockFirebaseHelper = MockFirebaseHelper();
   MockBuildContext _mockContext;
   _mockContext = MockBuildContext();
-  Bet bet = Bet(
+  BetModel bet = BetModel(
     notificationID: 1,
-    now: DateTime.now(), // maybe a bit later
-    context: _mockContext,
-    dropdownActionValue: 'Push-ups',
+    startDate: DateTime.now(), // maybe a bit later
+    action: 'Push-ups',
     time: const TimeOfDay(hour: 15, minute: 0),
-    dropdownDurationValue: 3,
+    duration: 3,
     value: 20,
     userID: "someuserid",
   );

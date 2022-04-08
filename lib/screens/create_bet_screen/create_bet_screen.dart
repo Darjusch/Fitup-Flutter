@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitup/models/bet.dart';
+import 'package:fitup/models/bet_model.dart';
+import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/navigation_helper.dart';
 import 'package:fitup/utils/notifications_helper.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
+import 'package:uuid/uuid.dart';
 
 import '../../utils/time_helper.dart';
 
@@ -23,6 +25,7 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
   int dropdownDurationValue = 1;
   TimeOfDay _time = const TimeOfDay(hour: 8, minute: 0);
   int _value = 0;
+  var uuid = const Uuid();
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +89,10 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
                 // TODO find a better way for creating the ID than random int
 
                 int randomID = rng.nextInt(1000000);
+                String betID = uuid.v4();
                 debugPrint("BET TIME ${_time.hour} - ${_time.minute}");
                 String docID = await FirebaseHelper().createBet(
+                  betID: betID,
                   notificationID: randomID,
                   now: DateTime.now(),
                   context: context,
@@ -97,16 +102,20 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
                   value: _value,
                   userID: userID,
                 );
-                Provider.of<BetProvider>(context, listen: false).addBet(Bet(
+                Provider.of<BetProvider>(context, listen: false)
+                    .addBet(BetModel(
+                  betID: betID,
                   notificationID: randomID,
-                  now: DateTime.now(),
-                  context: context,
-                  dropdownActionValue: dropdownActionValue,
+                  startDate: DateTime.now(),
+                  action: dropdownActionValue,
                   time: _time,
-                  dropdownDurationValue: dropdownDurationValue,
+                  duration: dropdownDurationValue,
                   value: _value,
                   userID: userID,
+                  images: [],
+                  videos: [],
                 ));
+
                 if (docID == "Error") {
                   final snackBar = SnackBar(
                     content: const Text("Error"),

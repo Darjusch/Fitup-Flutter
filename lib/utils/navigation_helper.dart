@@ -1,3 +1,4 @@
+import 'package:fitup/models/bet_model.dart';
 import 'package:fitup/screens/my_home_screen/my_home_screen.dart';
 import 'package:fitup/screens/upload_file_screen/upload_screen.dart';
 import 'package:fitup/screens/video_picker_screen/video_picker_screen.dart';
@@ -10,32 +11,30 @@ import '../screens/image_picker_screen/image_picker_screen.dart';
 import '../screens/auth_screen/auth_screen.dart';
 
 class NavigationHelper {
-  void goToUploadFileScreen(String docId, BuildContext context) {
+  void goToUploadFileScreen(String betID, BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => UploadFileScreen(docId: docId)));
+        builder: (context) => UploadFileScreen(betID: betID)));
   }
 
-  void goToBetVideoPickerScreen(String docId, BuildContext context) {
+  void goToBetVideoPickerScreen(String betID, BuildContext context) {
     Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => BetVideoPicker(docId: docId)));
+        MaterialPageRoute(builder: (context) => BetVideoPicker(betID: betID)));
   }
 
-  void goToBetImagePickerScreen(String docId, BuildContext context) {
+  void goToBetImagePickerScreen(String betID, BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => BetImagePicker(
-          docId: docId,
+          betID: betID,
         ),
       ),
     );
   }
 
-  void goToSingleBetScreen(
-      Map<String, dynamic> data, String docId, BuildContext context) {
+  void goToSingleBetScreen(BetModel betItem, BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => SingleBetScreen(
-        docId: docId,
-        data: data,
+        bet: betItem,
       ),
     ));
   }

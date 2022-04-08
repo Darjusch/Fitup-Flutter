@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitup/models/bet.dart';
+import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/screens/auth_screen/auth_screen.dart';
 import 'package:fitup/screens/my_home_screen/my_home_screen.dart';
 import 'package:flutter/material.dart';
@@ -23,13 +23,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<Auth>(
-          create: (_) => Auth(auth: FirebaseAuth.instance),
-        ),
-        ChangeNotifierProvider<BetProvider>.value(
-          value: BetProvider(),
-        ),
-        StreamProvider(create: (context) => context.read<Auth>().user)
+        Provider<Auth>(create: (_) => Auth(auth: FirebaseAuth.instance)),
+        StreamProvider(create: (context) => context.read<Auth>().user),
+        ChangeNotifierProvider(create: (context) => BetProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/providers/AuthenticationService.dart';
+import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/utils/navigation_helper.dart';
 import 'package:fitup/utils/notifications_helper.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +32,10 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO ERROR IS IN LOAD INITIAL BETTSSSSS
+    // TODO what if we enter through pushnotifications?
+    String userID = context.watch<User>().uid;
+    Provider.of<BetProvider>(context).loadInitalBets(userID);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Fit-up"),
