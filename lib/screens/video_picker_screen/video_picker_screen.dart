@@ -75,6 +75,7 @@ class _BetVideoPickerState extends State<BetVideoPicker> {
                     width: 400,
                     child: Column(
                       children: [
+                        // TODO NAVIGATE AWAY AFTER UPLOAD
                         VideoPlayerWidget(controller: videoController),
                         ElevatedButton(
                             key: const ValueKey('uploadKey'),

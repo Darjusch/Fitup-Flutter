@@ -26,6 +26,7 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
       videoController = VideoPlayerController.network(widget.data['videos'][0])
         ..addListener(() => setState(() {}))
         ..initialize().then((_) => videoController.play());
+        
     }
     super.initState();
   }
