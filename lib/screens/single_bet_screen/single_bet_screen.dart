@@ -25,8 +25,11 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
     if (widget.data['videos'] != null) {
       videoController = VideoPlayerController.network(widget.data['videos'][0])
         ..addListener(() => setState(() {}))
-        ..initialize().then((_) => videoController.play());
-        
+        ..setLooping(true)
+        ..initialize().then((_) {
+          videoController.setVolume(0.0);
+          videoController.play();
+        });
     }
     super.initState();
   }
@@ -67,15 +70,23 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                 )),
             widget.data['images'] != null
                 ? SizedBox(
-                    height: 150,
+                    height: 200,
                     width: 300,
                     child:
                         ListView(scrollDirection: Axis.horizontal, children: [
                       for (var image in widget.data['images'])
-                        Image.network(
-                          "$image",
-                          height: 150,
+                        SizedBox(
+                          height: 200,
                           width: 100,
+                          child: Column(
+                            children: [
+                              Image.network(
+                                "$image",
+                                height: 150,
+                                width: 100,
+                              ),
+                            ],
+                          ),
                         )
                     ]))
                 : const Text("No Images uploaded yet"),
@@ -97,4 +108,5 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
       ),
     );
   }
+
 }
