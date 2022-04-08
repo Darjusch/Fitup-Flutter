@@ -6,14 +6,14 @@ import 'package:fitup/utils/time_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class BetHistoryScreen extends StatefulWidget {
-  const BetHistoryScreen({Key key}) : super(key: key);
+class BetOverviewScreen extends StatefulWidget {
+  const BetOverviewScreen({Key key}) : super(key: key);
 
   @override
-  State<BetHistoryScreen> createState() => _BetHistoryScreenState();
+  State<BetOverviewScreen> createState() => _BetOverviewScreenState();
 }
 
-class _BetHistoryScreenState extends State<BetHistoryScreen> {
+class _BetOverviewScreenState extends State<BetOverviewScreen> {
   bool _loading = false;
 
   void setLoading() {
@@ -53,7 +53,6 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
                       Map<String, dynamic> data =
                           document.data() as Map<String, dynamic>;
                       return ListTile(
-                        key: const ValueKey('betDetails'),
                         onTap: () => NavigationHelper()
                             .goToSingleBetScreen(data, document.id, context),
                         trailing: IconButton(
@@ -64,6 +63,7 @@ class _BetHistoryScreenState extends State<BetHistoryScreen> {
                         ),
                         title: Text(data['action']),
                         subtitle: InkWell(
+                          key: const ValueKey('betDetails'),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

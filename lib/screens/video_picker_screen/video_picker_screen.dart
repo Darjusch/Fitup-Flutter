@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:fitup/utils/video_player.dart';
+import 'package:fitup/widgets/video_player_widget.dart';
 import 'package:video_player/video_player.dart';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/image_picker_helper.dart';

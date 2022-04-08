@@ -37,6 +37,8 @@ dependencies:
   flutter_native_timezone: ^2.0.0
   video_player: ^2.3.0
 
+  video_player: ^2.3.0
+
   
 
 flutter:
