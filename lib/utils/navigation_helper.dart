@@ -52,7 +52,7 @@ class NavigationHelper {
 
   void goToBetHistoryScreen(BuildContext context) {
     Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => const BetHistoryScreen()));
+        MaterialPageRoute(builder: (context) => const BetOverviewScreen()));
   }
 
   void goToAuthScreen(BuildContext context) {
