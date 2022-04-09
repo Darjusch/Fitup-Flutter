@@ -20,18 +20,52 @@ class BetProvider extends ChangeNotifier {
     _bets.add(bet);
     notifyListeners();
   }
+  // BetModel getBet(String betID) {}
+  // void updateBetIsActive() {} // OR WE LOOP THROUGH ALL BETS MAYBE BETTER
+  // void updateBetIsSuccessful() {} // OR WE LOOP THROUGH ALL BETS MAYBE BETTER
+  // return active bets
+  // return inactive bets
 
   void updateBetImage(String betID, String imageUrl) {
+    DateTime now = DateTime.now();
+    String date = DateTime(now.year, now.month, now.day).toString();
     BetModel bet = _bets.firstWhere((element) => element.betID == betID);
-    bet.images.add(imageUrl);
+    bet.files[date] = imageUrl;
     notifyListeners();
   }
 
+  // TODO can be replaced with function above and made generic
   void updateBetVideo(String betID, String videoUrl) {
+    DateTime now = DateTime.now();
+    String date = DateTime(now.year, now.month, now.day).toString();
     BetModel bet = _bets.firstWhere((element) => element.betID == betID);
-    bet.videos.add(videoUrl);
+    bet.files[date] = videoUrl;
     notifyListeners();
   }
+
+  // List<String> getVideosOfBet(String betID) {
+  //   List<String> videos = [];
+  //   BetModel bet = _bets.where((element) => element.betID == betID).first;
+  //   bet.files.forEach((key, value) {
+  //     if (value.contains("mp4")) {
+  //       videos.add(value);
+  //     }
+  //   });
+  //   return videos;
+  // }
+
+  // List<String> getImagesOfBet(String betID) {
+  //   List<String> images = [];
+  //   BetModel bet = _bets.where((element) => element.betID == betID).first;
+  //   bet.files.forEach((key, value) {
+  //     if (value.contains("jpg") ||
+  //         value.contains("png") ||
+  //         value.contains("jpeg")) {
+  //       images.add(value);
+  //     }
+  //   });
+  //   return images;
+  // }
 
   void loadInitalBets(String userID) {
     FirebaseFirestore.instance
@@ -39,14 +73,17 @@ class BetProvider extends ChangeNotifier {
         .where('user_id', isEqualTo: userID)
         .get()
         .then((QuerySnapshot querySnapshot) {
-          // TODO ERRRORRR IS HERE 
+      // TODO ERRRORRR IS HERE since docImages and docVideos are empty when bet is created and we cant access the values
       for (var doc in querySnapshot.docs) {
-        String betID = uuid.v4();
-
-        // debugPrint(
-        //     "${doc["action"]}, ${doc['duration']}, ${doc['isActive']} ${doc['notificationID']} ${doc['startDate'].toDate()} ${doc['success']} ${TimeOfDay(hour: int.parse(doc['time'].split(":")[0]), minute: int.parse(doc['time'].split(":")[1]))} ${doc['user_id']} ${doc['value']}");
-        addBet(BetModel(
-          betID: betID,
+        debugPrint(
+            "BetID: ${doc['betID']}, Action: ${doc["action"]}, Duration: ${doc['duration']}, isActive: ${doc['isActive']}, notificationID: ${doc['notificationID']}, startDate: ${doc['startDate'].toDate()}, success: ${doc['success']}, time: ${TimeOfDay(hour: int.parse(doc['time'].split(":")[0]), minute: int.parse(doc['time'].split(":")[1]))}, user_id: ${doc['user_id']}, value: ${doc['value']}");
+        for (var entry in doc['files'].entries) {
+          debugPrint(entry.key);
+          debugPrint(entry.value);
+        }
+        Map<String, String> files = Map<String, String>.from(doc['files']);
+        _bets.add(BetModel(
+          betID: doc['betID'],
           action: doc['action'],
           duration: doc['duration'],
           isActive: doc['isActive'],
@@ -58,18 +95,11 @@ class BetProvider extends ChangeNotifier {
               minute: int.parse(doc['time'].split(":")[1])),
           userID: doc['user_id'],
           value: doc['value'],
-          images: doc['images'],
-          videos: doc['videos'],
+          files: files,
+          // images: doc['images'],
+          // videos: doc['videos'],
         ));
       }
     });
   }
-
-  // Bet getBet() {} for this we need to add a ID into Bet
-
-  // void updateBet() {} for this we need to add a ID into Bet
-
-  // return active bets
-
-  // return inactive bets
 }

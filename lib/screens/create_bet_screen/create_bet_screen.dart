@@ -101,6 +101,7 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
                   dropdownDurationValue: dropdownDurationValue,
                   value: _value,
                   userID: userID,
+                  files: {"initialized": "till we found a better approach"},
                 );
                 Provider.of<BetProvider>(context, listen: false)
                     .addBet(BetModel(
@@ -112,8 +113,7 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
                   duration: dropdownDurationValue,
                   value: _value,
                   userID: userID,
-                  images: [],
-                  videos: [],
+                  files: {},
                 ));
 
                 if (docID == "Error") {

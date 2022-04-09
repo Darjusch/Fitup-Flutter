@@ -7,16 +7,18 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
 
 class FirebaseHelper {
-  Future<String> createBet(
-      {String betID,
-      int notificationID,
-      DateTime now,
-      BuildContext context,
-      String dropdownActionValue,
-      TimeOfDay time,
-      int dropdownDurationValue,
-      int value,
-      String userID}) async {
+  Future<String> createBet({
+    String betID,
+    int notificationID,
+    DateTime now,
+    BuildContext context,
+    String dropdownActionValue,
+    TimeOfDay time,
+    int dropdownDurationValue,
+    int value,
+    String userID,
+    Map<String, String> files,
+  }) async {
     try {
       DocumentReference docID = await FirebaseFirestore.instance
           .collection('bets')
@@ -31,6 +33,7 @@ class FirebaseHelper {
         "startDate": now,
         "success": null,
         "user_id": userID,
+        'files': files,
       });
       return docID.id;
     } catch (err) {
@@ -61,24 +64,25 @@ class FirebaseHelper {
     }
   }
 
-  // Save Url in Firestore
-  void saveURL(String imageUrl, String betID, String fileType) async {
+  void saveURL(String fileUrl, String betID, String fileType) async {
     debugPrint(betID);
+    DateTime now = DateTime.now();
+    String date = DateTime(now.year, now.month, now.day).toString();
+
     FirebaseFirestore.instance
         .collection('bets')
         .where('betID', isEqualTo: betID)
         .get()
         .then((value) {
-      FirebaseFirestore.instance
-          .collection('bets')
-          .doc(value.docs.first.id)
-          .update({
-            fileType: FieldValue.arrayUnion([imageUrl])
-          })
-          .then((value) => debugPrint("ImageUrl updated"))
-          .catchError(
-              (error) => debugPrint("Failed up update ImageUrl: $error"));
-    });
+          FirebaseFirestore.instance
+              .collection('bets')
+              .doc(value.docs.first.id)
+              .update({
+            'files': {date: fileUrl}
+          }); // TODO Remember now we are overriding for each day the file ( which is correct since user should only upload once per day per bet)!
+        })
+        .then((value) => debugPrint("ImageUrl updated"))
+        .catchError((error) => debugPrint("Failed up update ImageUrl: $error"));
   }
 
   Stream<QuerySnapshot> getAllBetsStream(userID) {

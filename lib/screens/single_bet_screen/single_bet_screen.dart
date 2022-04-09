@@ -18,11 +18,29 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
   String filePath;
   VideoPlayerController videoController;
   var dateFormat = DateFormat('dd/MM/yyyy, HH:mm');
+  List<String> videos = [];
+  List<String> images = [];
 
   @override
   void initState() {
-    if (widget.bet.videos.isNotEmpty) {
-      videoController = VideoPlayerController.network(widget.bet.videos[0])
+    BetModel bet = widget.bet;
+    if (bet.files != null) {
+      bet.files.forEach((key, value) {
+        if (value.contains("mp4")) {
+          videos.add(value);
+        }
+      });
+      bet.files.forEach((key, value) {
+        if (value.contains("jpg") ||
+            value.contains("png") ||
+            value.contains("jpeg")) {
+          images.add(value);
+        }
+      });
+    }
+
+    if (videos.isNotEmpty) {
+      videoController = VideoPlayerController.network(videos[0])
         ..addListener(() => setState(() {}))
         ..setLooping(true)
         ..initialize().then((_) {
@@ -67,13 +85,13 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                     Text("success: ${widget.bet.success}"),
                   ],
                 )),
-            widget.bet.images != null
+            images != null
                 ? SizedBox(
                     height: 200,
                     width: 300,
                     child:
                         ListView(scrollDirection: Axis.horizontal, children: [
-                      for (var image in widget.bet.images)
+                      for (var image in images)
                         SizedBox(
                           height: 200,
                           width: 100,
@@ -89,7 +107,7 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                         )
                     ]))
                 : const Text("No Images uploaded yet"),
-            widget.bet.videos != null
+            videos != null
                 ? SizedBox(
                     height: 150,
                     width: 300,

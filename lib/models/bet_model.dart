@@ -11,8 +11,7 @@ class BetModel {
   final TimeOfDay time;
   final String userID;
   final int value;
-  final List<String> videos;
-  final List<String> images;
+  final Map<String, String> files;
 
   BetModel({
     @required this.betID,
@@ -25,7 +24,6 @@ class BetModel {
     @required this.time,
     @required this.userID,
     @required this.value,
-    @required this.videos,
-    @required this.images,
+    this.files,
   });
 }
