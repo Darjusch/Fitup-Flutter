@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:fitup/providers/bet_provider.dart';
+import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:fitup/widgets/video_player_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -40,9 +41,7 @@ class _BetVideoPickerState extends State<BetVideoPicker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Video Picker"),
-        ),
+        appBar: customAppBar(title: "Video picker screen", context: context),
         body: SizedBox(
             height: 800,
             child: filePath == null || filePath == ''

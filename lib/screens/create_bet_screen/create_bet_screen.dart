@@ -4,6 +4,7 @@ import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/navigation_helper.dart';
 import 'package:fitup/utils/notifications_helper.dart';
+import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -33,9 +34,7 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
     String email = context.watch<User>().email;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Create a Bet"),
-      ),
+      appBar: customAppBar(title: "Create Bet", context: context),
       body: Padding(
         padding: const EdgeInsets.all(40.0),
         child: Column(

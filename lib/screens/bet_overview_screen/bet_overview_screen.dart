@@ -1,6 +1,7 @@
 import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/utils/navigation_helper.dart';
 import 'package:fitup/utils/time_helper.dart';
+import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,9 +17,7 @@ class _BetOverviewScreenState extends State<BetOverviewScreen> {
   Widget build(BuildContext context) {
     final betsList = Provider.of<BetProvider>(context).bets;
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Bet overview"),
-        ),
+        appBar: customAppBar(title: "Bet overview", context: context),
         body: ListView.builder(
             itemCount: betsList.length,
             itemBuilder: (context, index) {

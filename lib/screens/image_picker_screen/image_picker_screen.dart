@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/image_picker_helper.dart';
+import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -22,9 +23,8 @@ class _BetImagePickerState extends State<BetImagePicker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Image Picker"),
-        ),
+                appBar: customAppBar(title: "Image Picker Screen", context: context),
+
         body: SizedBox(
             height: 800,
             child: filePath == null || filePath == ''

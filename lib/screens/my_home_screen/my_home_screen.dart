@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitup/providers/AuthenticationService.dart';
 import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/utils/navigation_helper.dart';
 import 'package:fitup/utils/notifications_helper.dart';
+import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -37,22 +37,7 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
     Provider.of<BetProvider>(context, listen: false).loadInitalBets(userID);
     Provider.of<BetProvider>(context, listen: false).updateBetIsActive();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Fit-up"),
-        actions: <Widget>[
-          IconButton(
-              onPressed: () => {
-                    NavigationHelper().goToBetHistoryScreen(context),
-                  },
-              icon: const Icon(Icons.history)),
-          IconButton(
-            onPressed: () {
-              context.read<Auth>().signOut();
-            },
-            icon: const Icon(Icons.logout),
-          )
-        ],
-      ),
+      appBar: customAppBar(title: "Fit-up", context: context),
       body: SizedBox(
         height: double.infinity * 0.5,
         child: Column(

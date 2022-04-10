@@ -1,4 +1,5 @@
 import 'package:fitup/utils/navigation_helper.dart';
+import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
 
 class UploadFileScreen extends StatefulWidget {
@@ -15,9 +16,8 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Select File-type"),
-      ),
+      appBar:
+          customAppBar(title: "Select filetype to upload", context: context),
       body: Center(
         child: SizedBox(
           height: 400,

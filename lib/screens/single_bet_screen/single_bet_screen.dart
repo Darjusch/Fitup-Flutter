@@ -1,5 +1,6 @@
 import 'package:fitup/models/bet_model.dart';
 import 'package:fitup/providers/bet_provider.dart';
+import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:fitup/widgets/video_player_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -54,9 +55,8 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
         Provider.of<BetProvider>(context, listen: false).getVideosOfBet(bet);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Bet details"),
-      ),
+              appBar: customAppBar(title: "Bet details", context: context),
+
       body: SizedBox(
         height: 1000,
         width: 400,
