@@ -26,6 +26,11 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
 
   @override
   void initState() {
+    BetModel bet = widget.bet;
+    images =
+        Provider.of<BetProvider>(context, listen: false).getImagesOfBet(bet);
+    videos =
+        Provider.of<BetProvider>(context, listen: false).getVideosOfBet(bet);
     if (videos.isNotEmpty) {
       videoController = VideoPlayerController.network(videos[0])
         ..addListener(() => setState(() {}))
@@ -35,6 +40,7 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
           videoController.play();
         });
     }
+
     super.initState();
   }
 
@@ -48,15 +54,8 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    BetModel bet = widget.bet;
-    images =
-        Provider.of<BetProvider>(context, listen: false).getImagesOfBet(bet);
-    videos =
-        Provider.of<BetProvider>(context, listen: false).getVideosOfBet(bet);
-
     return Scaffold(
-              appBar: customAppBar(title: "Bet details", context: context),
-
+      appBar: customAppBar(title: "Bet details", context: context),
       body: SizedBox(
         height: 1000,
         width: 400,
