@@ -38,26 +38,24 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
     Provider.of<BetProvider>(context, listen: false).updateBetIsActive();
     return Scaffold(
       appBar: customAppBar(title: "Fit-up", context: context),
-      body: SizedBox(
-        height: double.infinity * 0.5,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text("Hold yourself accountable by betting on your goals!",
-                style: TextStyle(fontSize: 24)),
-            const Divider(
-              height: 200,
-            ),
-            OutlinedButton.icon(
-              onPressed: () => {
-                NavigationHelper().goToCreateBetScreen(context),
-              },
-              icon: const Icon(Icons.add),
-              label: const Text('Create Bet'),
-            ),
-          ],
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage("assets/images/background.jpeg"))),
+        child: const Padding(
+          padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 170.0),
+          child: Text("Hold yourself accountable by betting on your goals!",
+              style: TextStyle(fontSize: 34, color: Colors.white)),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () => {
+                NavigationHelper().goToCreateBetScreen(context),
+              }),
     );
   }
 }

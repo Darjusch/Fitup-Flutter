@@ -43,6 +43,9 @@ dependencies:
 
 flutter:
   uses-material-design: true # Required if you use the Material icon font
+  assets:
+    - assets/images/
+
 
 flutter_icons:
   android: "launcher_icon"
@@ -52,3 +55,4 @@ flutter_icons:
 dev_dependencies: 
   test: ^1.19.0
   mockito: ^5.1.0
+
