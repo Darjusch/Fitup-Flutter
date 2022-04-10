@@ -32,7 +32,6 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO ERROR IS IN LOAD INITIAL BETTSSSSS
     // TODO what if we enter through pushnotifications?
     String userID = context.watch<User>().uid;
     Provider.of<BetProvider>(context, listen: false).loadInitalBets(userID);

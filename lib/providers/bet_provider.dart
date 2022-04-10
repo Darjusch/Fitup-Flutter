@@ -30,7 +30,6 @@ class BetProvider extends ChangeNotifier {
         bet.isActive == false;
       }
     }
-    notifyListeners();
   }
 
   // Current success check is to compare the amount of uploaded images/videos
@@ -99,6 +98,9 @@ class BetProvider extends ChangeNotifier {
   }
 
   void loadInitalBets(String userID) {
+    if (_bets.isNotEmpty) {
+      return;
+    }
     FirebaseFirestore.instance
         .collection('bets')
         .where('user_id', isEqualTo: userID)
@@ -123,6 +125,5 @@ class BetProvider extends ChangeNotifier {
         ));
       }
     });
-    notifyListeners();
   }
 }
