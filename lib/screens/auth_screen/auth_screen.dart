@@ -85,6 +85,15 @@ class _AuthScreenState extends State<AuthScreen> {
                   child: const Text("Sign Up",
                       style: TextStyle(color: Colors.blue)),
                 ),
+                ElevatedButton(
+                  key: const ValueKey("DEVELOPER SIGNIN"),
+                  style: ElevatedButton.styleFrom(primary: Colors.white),
+                  onPressed: () {
+                    context.read<Auth>().devSignIn();
+                  },
+                  child: const Text("DEVELOPER SIGNIN",
+                      style: TextStyle(color: Colors.red)),
+                ),
               ],
             )
           ],

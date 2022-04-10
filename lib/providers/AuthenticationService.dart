@@ -8,10 +8,23 @@ class Auth {
 
   Stream<User> get user => auth.authStateChanges();
 
-  Future<String> signIn({String email, String password}) async {
+  Future<String> devSignIn() async {
     try {
       await auth.signInWithEmailAndPassword(
-          email: email, password: password);
+          email: "dev@test.de", password: "somepassword123");
+      debugPrint("Signed in");
+      return "Success";
+    } on FirebaseAuthException catch (e) {
+      debugPrint(e.message);
+      return e.message;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> signIn({String email, String password}) async {
+    try {
+      await auth.signInWithEmailAndPassword(email: email, password: password);
       debugPrint("Signed in");
       return "Success";
     } on FirebaseAuthException catch (e) {
