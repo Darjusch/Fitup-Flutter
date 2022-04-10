@@ -86,7 +86,7 @@ class _BetVideoPickerState extends State<BetVideoPicker> {
                                   .uploadFile(filePath, widget.betID, fileType);
                               if (result != 'error') {
                                 Provider.of<BetProvider>(context, listen: false)
-                                    .updateBetVideo(widget.betID, result);
+                                    .updateBetFile(widget.betID, result);
                               }
                               final snackBar = SnackBar(
                                 content: Text(

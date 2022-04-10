@@ -90,7 +90,7 @@ class _BetImagePickerState extends State<BetImagePicker> {
                                   .uploadFile(filePath, widget.betID, fileType);
                               if (result != 'error') {
                                 Provider.of<BetProvider>(context, listen: false)
-                                    .updateBetImage(widget.betID, result);
+                                    .updateBetFile(widget.betID, result);
                               }
 
                               final snackBar = SnackBar(

@@ -35,7 +35,8 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
     // TODO ERROR IS IN LOAD INITIAL BETTSSSSS
     // TODO what if we enter through pushnotifications?
     String userID = context.watch<User>().uid;
-    Provider.of<BetProvider>(context).loadInitalBets(userID);
+    Provider.of<BetProvider>(context, listen: false).loadInitalBets(userID);
+    Provider.of<BetProvider>(context, listen: false).updateBetIsActive();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Fit-up"),

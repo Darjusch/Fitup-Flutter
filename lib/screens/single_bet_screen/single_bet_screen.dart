@@ -1,8 +1,10 @@
 import 'package:fitup/models/bet_model.dart';
+import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/widgets/video_player_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
+import 'package:provider/provider.dart';
 
 class SingleBetScreen extends StatefulWidget {
   final BetModel bet;
@@ -23,22 +25,6 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
 
   @override
   void initState() {
-    BetModel bet = widget.bet;
-    if (bet.files != null) {
-      bet.files.forEach((key, value) {
-        if (value.contains("mp4")) {
-          videos.add(value);
-        }
-      });
-      bet.files.forEach((key, value) {
-        if (value.contains("jpg") ||
-            value.contains("png") ||
-            value.contains("jpeg")) {
-          images.add(value);
-        }
-      });
-    }
-
     if (videos.isNotEmpty) {
       videoController = VideoPlayerController.network(videos[0])
         ..addListener(() => setState(() {}))
@@ -61,6 +47,12 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    BetModel bet = widget.bet;
+    images =
+        Provider.of<BetProvider>(context, listen: false).getImagesOfBet(bet);
+    videos =
+        Provider.of<BetProvider>(context, listen: false).getVideosOfBet(bet);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Bet details"),

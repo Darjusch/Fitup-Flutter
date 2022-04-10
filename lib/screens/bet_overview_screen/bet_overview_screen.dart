@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/utils/navigation_helper.dart';
 import 'package:fitup/utils/time_helper.dart';
@@ -15,9 +14,7 @@ class BetOverviewScreen extends StatefulWidget {
 class _BetOverviewScreenState extends State<BetOverviewScreen> {
   @override
   Widget build(BuildContext context) {
-    String userID = context.watch<User>().uid;
-    final betsList =
-        Provider.of<BetProvider>(context).getBetsOfCurrentUser(userID);
+    final betsList = Provider.of<BetProvider>(context).bets;
     return Scaffold(
         appBar: AppBar(
           title: const Text("Bet overview"),

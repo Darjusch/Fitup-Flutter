@@ -7,7 +7,7 @@ class BetModel {
   final bool isActive;
   final int notificationID;
   final DateTime startDate;
-  final bool success;
+  bool success;
   final TimeOfDay time;
   final String userID;
   final int value;
