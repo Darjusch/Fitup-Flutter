@@ -27,12 +27,17 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
   TimeOfDay _time = const TimeOfDay(hour: 8, minute: 0);
   int _value = 0;
   var uuid = const Uuid();
+  String userID;
+  String email;
+  @override
+  void initState() {
+    userID = Provider.of<User>(context, listen: false).uid;
+    email = Provider.of<User>(context, listen: false).email;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    String userID = context.watch<User>().uid;
-    String email = context.watch<User>().email;
-
     return Scaffold(
       appBar: customAppBar(title: "Create Bet", context: context),
       body: Padding(

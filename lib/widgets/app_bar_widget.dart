@@ -16,7 +16,10 @@ Widget customAppBar({String title, BuildContext context}) {
       IconButton(
         onPressed: () {
           Provider.of<BetProvider>(context, listen: false).removeAllBets();
-          context.read<Auth>().signOut();
+          Provider.of<Auth>(context, listen: false)
+              .signOut();
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
         },
         icon: const Icon(Icons.logout),
       )
