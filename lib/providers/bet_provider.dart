@@ -23,6 +23,10 @@ class BetProvider extends ChangeNotifier {
     return bet;
   }
 
+  void removeAllBets() {
+    _bets.clear();
+  }
+
   void updateBetIsActive() {
     for (var bet in _bets) {
       if (TimeHelper().betIsLongerThanAMinute(bet.duration, bet.startDate) ==
