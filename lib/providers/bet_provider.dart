@@ -71,6 +71,16 @@ class BetProvider extends ChangeNotifier {
     return inActiveBets;
   }
 
+  bool didUploadProofToday(BetModel bet) {
+    DateTime now = DateTime.now();
+    String date = DateTime(now.year, now.month, now.day).toString();
+    if (bet.files.keys.contains(date)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   void updateBetFile(String betID, String fileUrl) {
     DateTime now = DateTime.now();
     String date = DateTime(now.year, now.month, now.day).toString();

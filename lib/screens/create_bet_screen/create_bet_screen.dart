@@ -22,10 +22,10 @@ class CreateBetScreen extends StatefulWidget {
 }
 
 class _CreateBetScreenState extends State<CreateBetScreen> {
-  String dropdownActionValue = "Push-ups";
-  int dropdownDurationValue = 1;
+  String dropdownActionValue = "Wake up";
+  int dropdownDurationValue = 3;
   TimeOfDay _time = const TimeOfDay(hour: 8, minute: 0);
-  int _value = 0;
+  int _value = 15;
   var uuid = const Uuid();
   String userID;
   String email;
@@ -77,17 +77,18 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
                       }
                     });
                   },
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                  ),
                   child: Row(
                     children: [
-                      Text(
-                        _time.format(context),
-                        style: TextStyle(
-                            fontSize: 17,
-                            decoration: TextDecoration.underline,
-                            color: (Colors.grey[700]),
-                            decorationThickness: 0.5,
-                            decorationColor: (Colors.grey[500])),
-                      ),
+                      Text(_time.format(context),
+                          style: TextStyle(
+                              fontSize: 17,
+                              decoration: TextDecoration.underline,
+                              color: (Colors.grey[700]),
+                              decorationThickness: 0.5,
+                              decorationColor: (Colors.grey[500]))),
                       Icon(
                         Icons.arrow_downward,
                         color: (Colors.grey[700]),
