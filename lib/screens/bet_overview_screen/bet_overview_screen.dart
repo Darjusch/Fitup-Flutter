@@ -3,7 +3,6 @@ import 'package:fitup/utils/navigation_helper.dart';
 import 'package:fitup/utils/time_helper.dart';
 import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
 
 class BetOverviewScreen extends StatefulWidget {
@@ -59,39 +58,7 @@ class _BetOverviewScreenState extends State<BetOverviewScreen> {
               //           : NavigationHelper()
               //               .goToUploadFileScreen(betItem.betID, context),
               // ),
-              trailing: SpeedDial(
-                buttonSize: const Size(40, 40),
-                elevation: 0,
-                direction: SpeedDialDirection.down,
-                animatedIcon: AnimatedIcons.menu_arrow,
-                backgroundColor: Colors.blue,
-                overlayColor: Colors.black,
-                overlayOpacity: 0.7,
-                visible: Provider.of<BetProvider>(context, listen: false)
-                        .didUploadProofToday(betItem)
-                    ? false
-                    : true,
-                children: [
-                  SpeedDialChild(
-                    child: const Icon(Icons.image),
-                    backgroundColor: Colors.yellow,
-                    label: 'Image Gallery',
-                    onTap: () => {},
-                  ),
-                  SpeedDialChild(
-                    child: const Icon(Icons.camera),
-                    backgroundColor: Colors.green,
-                    label: 'Image Camera',
-                    onTap: () => {},
-                  ),
-                  SpeedDialChild(
-                    child: const Icon(Icons.video_collection),
-                    backgroundColor: Colors.orange,
-                    label: 'Video Gallery',
-                    onTap: () => {},
-                  ),
-                ],
-              ),
+
               title: Text(betItem.action),
               subtitle: InkWell(
                 key: const ValueKey('betDetails'),
