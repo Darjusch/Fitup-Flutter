@@ -28,49 +28,62 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
   List<String> videos = [];
   List<String> images = [];
 
-  List<VideoPlayerController> videoPlayerControllers = [];
-
+  //List<VideoPlayerController> videoPlayerControllers = [];
   @override
   void initState() {
+    // if (videos.isNotEmpty) {
+    //   int n = 0;
+    //   for (var video in videos) {
+    //     VideoPlayerController  = setupVideo(video);
+    //     videoPlayerControllers.add(videoPlayer);
+    //   }
+    // }
+
+    super.initState();
+  }
+
+  // @override
+  // void dispose() {
+  //   if (videoPlayerControllers.isNotEmpty) {
+  //     for (var element in videoPlayerControllers) {
+  //       element.dispose();
+  //     }
+  //   }
+  //   super.dispose();
+  // }
+
+  // VideoPlayerController setupVideo(String video) {
+  //   VideoPlayerController videoController;
+  //   videoController = VideoPlayerController.network(video)
+  //     ..addListener(() => setState(() {}))
+  //     ..setLooping(true)
+  //     ..initialize().then((_) {
+  //       videoController.setVolume(0.0);
+  //       videoController.play();
+  //     });
+  //   return videoController;
+  // }
+
+  @override
+  Widget build(BuildContext context) {
     BetModel bet = widget.bet;
     images =
         Provider.of<BetProvider>(context, listen: false).getImagesOfBet(bet);
     videos =
         Provider.of<BetProvider>(context, listen: false).getVideosOfBet(bet);
-    if (videos.isNotEmpty) {
-      for (var video in videos) {
-        VideoPlayerController videoPlayer = setupVideo(video);
-        videoPlayerControllers.add(videoPlayer);
-      }
-    }
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    if (videoPlayerControllers.isNotEmpty) {
-      for (var element in videoPlayerControllers) {
-        element.dispose();
-      }
-    }
-    super.dispose();
-  }
-
-  VideoPlayerController setupVideo(String video) {
-    VideoPlayerController videoController;
-    videoController = VideoPlayerController.network(video)
-      ..addListener(() => setState(() {}))
-      ..setLooping(true)
-      ..initialize().then((_) {
-        videoController.setVolume(0.0);
-        videoController.play();
+    Map<String, VideoPlayerController> videoPlayerControllers = {};
+    var videoPlayers = <VideoPlayerWidget>[];
+    for (var video in videos) {
+      var videoPlayerController = VideoPlayerController.network(video);
+      videoPlayerController.addListener(() => setState(() {}));
+      videoPlayerController.setLooping(true);
+      videoPlayerController.initialize().then((_) {
+        videoPlayerController.setVolume(0.2);
+        videoPlayerController.play();
+        videoPlayerControllers.putIfAbsent(video, () => videoPlayerController);
+        videoPlayers.add(VideoPlayerWidget(controller: videoPlayerController));
       });
-    return videoController;
-  }
-
-  @override
-  Widget build(BuildContext context) {
+    }
     return Scaffold(
       appBar: customAppBar(title: "Bet details", context: context),
       body: SizedBox(
@@ -116,19 +129,28 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                     ]))
                 : const Text("No Images uploaded yet"),
             videos != null
+                // ? SizedBox(
+                //     height: 300,
+                //     width: 300,
+                //     child: ListView.builder(
+                //       itemCount: videos.length,
+                //       itemBuilder: (context, index) {
+                //         return SizedBox(
+                //             height: 300,
+                //             width: 300,
+                //             child: VideoPlayerWidget(
+                //                 controller: videoPlayerControllers[index]));
+                //       },
+                //     ),
+                //   )
                 ? SizedBox(
                     height: 300,
                     width: 300,
                     child: ListView.builder(
-                      itemCount: videos.length,
-                      itemBuilder: (context, index) {
-                        return SizedBox(
-                            height: 300,
-                            width: 300,
-                            child: VideoPlayerWidget(
-                                controller: videoPlayerControllers[index]));
-                      },
-                    ),
+                        itemCount: videoPlayers.length,
+                        itemBuilder: ((context, index) {
+                          return videoPlayers[index];
+                        })),
                   )
                 : const Text("No Videos uploaded yet"),
           ],
@@ -138,76 +160,76 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
     );
   }
 
-  Widget customSpeedDial(){
+  Widget customSpeedDial() {
     return SpeedDial(
-        direction: SpeedDialDirection.up,
-        animatedIcon: AnimatedIcons.menu_arrow,
-        backgroundColor: Provider.of<BetProvider>(context, listen: false)
-                .didUploadProofToday(widget.bet)
-            ? Colors.grey
-            : Colors.blue,
-        overlayColor: Colors.black,
-        overlayOpacity: 0.7,
-        children: [
-          SpeedDialChild(
-            child: const Icon(Icons.image),
-            backgroundColor: Colors.yellow,
-            label: 'Image Gallery',
-            onTap: () async {
-              String path =
-                  await ImagePickerHelper().getImageFrom(ImageSource.gallery);
-              // TODO upload doesn't rebuild widget to show newly uploaded image / video
-              String result = await FirebaseHelper()
-                  .uploadFile(path, widget.bet.betID, 'images');
-              setState(() {
-                Provider.of<BetProvider>(context, listen: false)
-                    .updateBetFile(widget.bet.betID, result);
-                final snackBar = customSnackBar(result);
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              });
-            },
-          ),
-          SpeedDialChild(
-            child: const Icon(Icons.camera),
-            backgroundColor: Colors.green,
-            label: 'Image Camera',
-            onTap: () async {
-              String path =
-                  await ImagePickerHelper().getImageFrom(ImageSource.camera);
-              String result = await FirebaseHelper()
-                  .uploadFile(path, widget.bet.betID, 'images');
+      direction: SpeedDialDirection.up,
+      animatedIcon: AnimatedIcons.menu_arrow,
+      backgroundColor: Provider.of<BetProvider>(context, listen: false)
+              .didUploadProofToday(widget.bet)
+          ? Colors.grey
+          : Colors.blue,
+      overlayColor: Colors.black,
+      overlayOpacity: 0.7,
+      children: [
+        SpeedDialChild(
+          child: const Icon(Icons.image),
+          backgroundColor: Colors.yellow,
+          label: 'Image Gallery',
+          onTap: () async {
+            String path =
+                await ImagePickerHelper().getImageFrom(ImageSource.gallery);
+            // TODO upload doesn't rebuild widget to show newly uploaded image / video
+            String result = await FirebaseHelper()
+                .uploadFile(path, widget.bet.betID, 'images');
+            setState(() {
+              Provider.of<BetProvider>(context, listen: false)
+                  .updateBetFile(widget.bet.betID, result);
+              final snackBar = customSnackBar(result);
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            });
+          },
+        ),
+        SpeedDialChild(
+          child: const Icon(Icons.camera),
+          backgroundColor: Colors.green,
+          label: 'Image Camera',
+          onTap: () async {
+            String path =
+                await ImagePickerHelper().getImageFrom(ImageSource.camera);
+            String result = await FirebaseHelper()
+                .uploadFile(path, widget.bet.betID, 'images');
 
-              setState(() {
-                if (result != 'error') {
-                  Provider.of<BetProvider>(context, listen: false)
-                      .updateBetFile(widget.bet.betID, result);
-                }
-                final snackBar = customSnackBar(result);
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              });
-            },
-          ),
-          SpeedDialChild(
-            child: const Icon(Icons.video_collection),
-            backgroundColor: Colors.orange,
-            label: 'Video Gallery',
-            onTap: () async {
-              String path =
-                  await ImagePickerHelper().getVideoFrom(ImageSource.gallery);
-              String result = await FirebaseHelper()
-                  .uploadFile(path, widget.bet.betID, 'videos');
+            setState(() {
               if (result != 'error') {
                 Provider.of<BetProvider>(context, listen: false)
                     .updateBetFile(widget.bet.betID, result);
               }
-              setState(() {
-                final snackBar = customSnackBar(result);
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              });
-            },
-          ),
-        ],
-      )
+              final snackBar = customSnackBar(result);
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            });
+          },
+        ),
+        SpeedDialChild(
+          child: const Icon(Icons.video_collection),
+          backgroundColor: Colors.orange,
+          label: 'Video Gallery',
+          onTap: () async {
+            String path =
+                await ImagePickerHelper().getVideoFrom(ImageSource.gallery);
+            String result = await FirebaseHelper()
+                .uploadFile(path, widget.bet.betID, 'videos');
+            if (result != 'error') {
+              Provider.of<BetProvider>(context, listen: false)
+                  .updateBetFile(widget.bet.betID, result);
+            }
+            setState(() {
+              final snackBar = customSnackBar(result);
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            });
+          },
+        ),
+      ],
+    );
   }
 
   Widget customSnackBar(String result) {
