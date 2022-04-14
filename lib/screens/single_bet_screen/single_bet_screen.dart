@@ -3,6 +3,7 @@ import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/image_picker_helper.dart';
 import 'package:fitup/utils/navigation_helper.dart';
+import 'package:fitup/utils/time_helper.dart';
 import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -24,7 +25,6 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
   String fileType;
   String filePath;
 
-  var dateFormat = DateFormat('dd/MM/yyyy, HH:mm');
   List<String> videos = [];
   List<String> images = [];
 
@@ -73,57 +73,96 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
       appBar: customAppBar(title: "Bet details", context: context),
       body: SizedBox(
         height: 1000,
-        width: 400,
+        width: double.infinity,
         child: Column(
           children: [
             videos != null && videos.isNotEmpty
                 ? SizedBox(
-                    height: 300,
-                    width: 300,
+                    height: 312,
+                    width: double.infinity,
                     child: ListView.builder(
                         itemCount: videoPlayers.length,
+                        scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           return SizedBox(
-                              height: 200,
-                              width: 200,
-                              child: Stack(
-                                  alignment: AlignmentDirectional.center,
-                                  children: [
-                                    videoPlayers[index],
-                                    SizedBox(
-                                      height: 100,
-                                      width: 100,
-                                      child: IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            videoPlayers[index]
-                                                    .controller
-                                                    .value
-                                                    .isPlaying
-                                                ? videoPlayers[index]
-                                                    .controller
-                                                    .pause()
-                                                : videoPlayers[index]
-                                                    .controller
-                                                    .play();
-                                          });
-                                        },
-                                        icon: Icon(
-                                          videoPlayers[index]
-                                                  .controller
-                                                  .value
-                                                  .isPlaying
-                                              ? Icons.pause
-                                              : Icons.play_arrow,
-                                          color: Colors.white,
-                                          size: 50,
-                                        ),
-                                      ),
+                            height: 340,
+                            width: 400,
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Day ${index + 1}",
+                                    style: const TextStyle(
+                                      fontSize: 18,
                                     ),
-                                  ]));
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 270,
+                                  width: 400,
+                                  child: DecoratedBox(
+                                    decoration: const BoxDecoration(
+                                        color: Colors.black),
+                                    child: Stack(
+                                        alignment: AlignmentDirectional.center,
+                                        children: [
+                                          SizedBox(
+                                              height: 270,
+                                              width: 300,
+                                              child: videoPlayers[index]),
+                                          SizedBox(
+                                            height: 100,
+                                            width: 100,
+                                            child: IconButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  videoPlayers[index]
+                                                          .controller
+                                                          .value
+                                                          .isPlaying
+                                                      ? videoPlayers[index]
+                                                          .controller
+                                                          .pause()
+                                                      : videoPlayers[index]
+                                                          .controller
+                                                          .play();
+                                                });
+                                              },
+                                              icon: Icon(
+                                                videoPlayers[index]
+                                                        .controller
+                                                        .value
+                                                        .isPlaying
+                                                    ? Icons.pause
+                                                    : Icons.play_arrow,
+                                                color: Colors.white,
+                                                size: 100,
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                  width: 400,
+                                  child: VideoProgressIndicator(
+                                    videoPlayers[index].controller,
+                                    allowScrubbing: true,
+                                    padding: const EdgeInsets.only(top: 0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
                         }),
                   )
                 : const Text("No Videos uploaded yet"),
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: InfoCard(widget.bet, context),
+            ),
           ],
         ),
       ),
@@ -178,4 +217,77 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
       ),
     );
   }
+}
+
+Widget InfoCard(BetModel bet, BuildContext context) {
+  var dateFormat = DateFormat('dd/MM/yyyy, HH:mm');
+
+  return Container(
+    padding: const EdgeInsets.all(25.0),
+    decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(.05),
+            offset: const Offset(0, 10),
+            blurRadius: 0,
+            spreadRadius: 0,
+          )
+        ],
+        gradient: const RadialGradient(
+          colors: [Colors.orangeAccent, Colors.orange],
+          focal: Alignment.topCenter,
+          radius: .85,
+        )),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              bet.action,
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold),
+            ),
+            RichText(
+                text: TextSpan(
+              text:
+                  "Day: ${(bet.duration - TimeHelper().betHasXDaysLeft(bet.duration, bet.startDate)) + 1} of ${bet.duration}",
+              style:
+                  TextStyle(color: Colors.white.withOpacity(.75), fontSize: 14),
+            )),
+          ],
+        ),
+        RichText(
+            text: TextSpan(
+          text: "Startdate: ${dateFormat.format(bet.startDate)}",
+          style: TextStyle(color: Colors.white.withOpacity(.75), fontSize: 14),
+        )),
+        const SizedBox(height: 10),
+        RichText(
+            text: TextSpan(
+          text:
+              "Status: ${bet.isActive ? "Ongoing" : bet.success ? "Success" : "Failed"}",
+          style: TextStyle(color: Colors.white.withOpacity(.75), fontSize: 14),
+        )),
+        const SizedBox(height: 10),
+        RichText(
+            text: TextSpan(
+          text:
+              "Uploaded Today: ${Provider.of<BetProvider>(context, listen: false).didUploadProofToday(bet) ? "Yes" : "No"}",
+          style: TextStyle(color: Colors.white.withOpacity(.75), fontSize: 14),
+        )),
+        const SizedBox(height: 10),
+        RichText(
+            text: TextSpan(
+          text: "Value ${bet.value.toString()}\$",
+          style: TextStyle(color: Colors.white.withOpacity(.75), fontSize: 14),
+        )),
+      ],
+    ),
+  );
 }
