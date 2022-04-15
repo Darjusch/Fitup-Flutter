@@ -79,7 +79,7 @@ class FirebaseHelper {
               .doc(value.docs.first.id)
               .update({
             'files': {date: fileUrl}
-          }); // TODO Remember now we are overriding for each day the file ( which is correct since user should only upload once per day per bet)!
+          });
         })
         .then((value) => debugPrint("ImageUrl updated"))
         .catchError((error) => debugPrint("Failed up update ImageUrl: $error"));

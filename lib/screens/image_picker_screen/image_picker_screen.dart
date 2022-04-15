@@ -82,7 +82,6 @@ class _BetImagePickerState extends State<BetImagePicker> {
                           height: 300,
                           width: 300,
                         ),
-                        //  TODO ONLY LET UPLOAD ONCE THEN NAVIGATE AWAY
                         ElevatedButton(
                             key: const ValueKey('uploadKey'),
                             onPressed: () async {
