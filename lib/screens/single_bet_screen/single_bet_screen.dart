@@ -33,15 +33,16 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
   @override
   void initState() {
     BetModel bet = widget.bet;
-
-    // videos =
-    //     Provider.of<BetProvider>(context, listen: true).getVideosOfBet(bet);
-
-    videos = [
-      'https://firebasestorage.googleapis.com/v0/b/fitup-31ebf.appspot.com/o/videos%2F0ede8374-5fd2-4a3f-9779-9f817fafd2b5%2Fimage_picker7816311112605649560.mp4?alt=media&token=58e6361c-49c6-4a31-9494-4d54937f5c75',
-      'https://firebasestorage.googleapis.com/v0/b/fitup-31ebf.appspot.com/o/videos%2F0ede8374-5fd2-4a3f-9779-9f817fafd2b5%2Fimage_picker7816311112605649560.mp4?alt=media&token=58e6361c-49c6-4a31-9494-4d54937f5c75',
-      'https://firebasestorage.googleapis.com/v0/b/fitup-31ebf.appspot.com/o/videos%2F0ede8374-5fd2-4a3f-9779-9f817fafd2b5%2Fimage_picker7816311112605649560.mp4?alt=media&token=58e6361c-49c6-4a31-9494-4d54937f5c75'
-    ];
+    bet.files.forEach((key, value) {
+      if (value.contains("mp4")) {
+        videos.add(value);
+      }
+    });
+    // videos = [
+    //   'https://firebasestorage.googleapis.com/v0/b/fitup-31ebf.appspot.com/o/videos%2F0ede8374-5fd2-4a3f-9779-9f817fafd2b5%2Fimage_picker7816311112605649560.mp4?alt=media&token=58e6361c-49c6-4a31-9494-4d54937f5c75',
+    //   'https://firebasestorage.googleapis.com/v0/b/fitup-31ebf.appspot.com/o/videos%2F0ede8374-5fd2-4a3f-9779-9f817fafd2b5%2Fimage_picker7816311112605649560.mp4?alt=media&token=58e6361c-49c6-4a31-9494-4d54937f5c75',
+    //   'https://firebasestorage.googleapis.com/v0/b/fitup-31ebf.appspot.com/o/videos%2F0ede8374-5fd2-4a3f-9779-9f817fafd2b5%2Fimage_picker7816311112605649560.mp4?alt=media&token=58e6361c-49c6-4a31-9494-4d54937f5c75'
+    // ];
 
     for (var video in videos) {
       var videoPlayerController = VideoPlayerController.network(
@@ -69,6 +70,8 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    videos = Provider.of<BetProvider>(context, listen: true)
+        .getVideosOfBet(widget.bet);
     return Scaffold(
       appBar: customAppBar(title: "Bet details", context: context),
       body: SizedBox(
@@ -86,7 +89,7 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                         itemBuilder: (context, index) {
                           return SizedBox(
                             height: 340,
-                            width: 400,
+                            width: 300,
                             child: Column(
                               children: [
                                 Padding(
@@ -100,16 +103,18 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                                 ),
                                 SizedBox(
                                   height: 270,
-                                  width: 400,
+                                  width: 250,
                                   child: DecoratedBox(
-                                    decoration: const BoxDecoration(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(25.0),
                                         color: Colors.black),
                                     child: Stack(
                                         alignment: AlignmentDirectional.center,
                                         children: [
                                           SizedBox(
                                               height: 270,
-                                              width: 300,
+                                              width: 200,
                                               child: videoPlayers[index]),
                                           SizedBox(
                                             height: 100,
@@ -137,7 +142,7 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                                                     ? Icons.pause
                                                     : Icons.play_arrow,
                                                 color: Colors.white,
-                                                size: 100,
+                                                size: 75,
                                               ),
                                             ),
                                           ),
@@ -146,7 +151,7 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                                 ),
                                 SizedBox(
                                   height: 5,
-                                  width: 400,
+                                  width: 200,
                                   child: VideoProgressIndicator(
                                     videoPlayers[index].controller,
                                     allowScrubbing: true,
