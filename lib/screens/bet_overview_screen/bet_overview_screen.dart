@@ -22,8 +22,7 @@ class _BetOverviewScreenState extends State<BetOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO only active bets
-    final betsList = Provider.of<BetProvider>(context).bets;
+    final betsList = Provider.of<BetProvider>(context).getActiveBets();
     return Scaffold(
       appBar: customAppBar(title: "Bet overview", context: context),
       body: ListView.builder(
@@ -42,23 +41,6 @@ class _BetOverviewScreenState extends State<BetOverviewScreen> {
                   AssetImage(actionToIcon[betItem.action]),
                 ),
               ),
-              // trailing: IconButton(
-              //   iconSize: 40,
-              //   icon: Icon(
-              //     Icons.cloud_upload,
-              //     color: Provider.of<BetProvider>(context, listen: false)
-              //             .didUploadProofToday(betItem)
-              //         ? Colors.grey
-              //         : Colors.blue,
-              //   ),
-              //   onPressed: () =>
-              //       Provider.of<BetProvider>(context, listen: false)
-              //               .didUploadProofToday(betItem)
-              //           ? {}
-              //           : NavigationHelper()
-              //               .goToUploadFileScreen(betItem.betID, context),
-              // ),
-
               title: Text(betItem.action),
               subtitle: InkWell(
                 key: const ValueKey('betDetails'),
