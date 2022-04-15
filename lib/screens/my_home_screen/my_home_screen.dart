@@ -27,12 +27,11 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
   void onClickedNotification(String payload) {
     // TODO we cant click back button after this we are stuck on the same screen for 1 or 2 clicks. maybe delete old route or something
     debugPrint(payload);
-    NavigationHelper().goToBetImagePickerScreen(payload, context);
+    NavigationHelper().goToSingleBetScreen(payload, context);
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO what if we enter through pushnotifications?
     String userID = context.watch<User>().uid;
     Provider.of<BetProvider>(context, listen: false).loadInitalBets(userID);
     Provider.of<BetProvider>(context, listen: false).updateBetIsActive();

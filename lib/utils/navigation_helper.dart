@@ -1,4 +1,3 @@
-import 'package:fitup/models/bet_model.dart';
 import 'package:fitup/screens/my_home_screen/my_home_screen.dart';
 import 'package:fitup/screens/upload_file_screen/upload_screen.dart';
 import 'package:fitup/screens/video_picker_screen/video_picker_screen.dart';
@@ -31,10 +30,10 @@ class NavigationHelper {
     );
   }
 
-  void goToSingleBetScreen(BetModel betItem, BuildContext context) {
+  void goToSingleBetScreen(String betID, BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => SingleBetScreen(
-        bet: betItem,
+        betID: betID,
       ),
     ));
   }

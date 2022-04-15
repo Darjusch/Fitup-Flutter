@@ -13,9 +13,8 @@ import 'package:video_player/video_player.dart';
 import 'package:provider/provider.dart';
 
 class SingleBetScreen extends StatefulWidget {
-  final BetModel bet;
-
-  const SingleBetScreen({Key key, @required this.bet}) : super(key: key);
+  final String betID;
+  const SingleBetScreen({Key key, @required this.betID}) : super(key: key);
 
   @override
   State<SingleBetScreen> createState() => _SingleBetScreenState();
@@ -24,7 +23,11 @@ class SingleBetScreen extends StatefulWidget {
 class _SingleBetScreenState extends State<SingleBetScreen> {
   String fileType;
   String filePath;
+  BetModel bet;
 
+  // TODO conditional according to challenge show Images / Video / Challenge
+  // TODO progress indicator when uploading video
+  // TODO Navigator pop old screen when navigating here to refresh after upload
   List<String> videos = [];
   List<String> images = [];
 
@@ -32,7 +35,8 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
 
   @override
   void initState() {
-    BetModel bet = widget.bet;
+    bet = Provider.of<BetProvider>(context, listen: false).getBet(widget.betID);
+
     bet.files.forEach((key, value) {
       if (value.contains("mp4")) {
         videos.add(value);
@@ -70,8 +74,8 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    videos = Provider.of<BetProvider>(context, listen: true)
-        .getVideosOfBet(widget.bet);
+    videos =
+        Provider.of<BetProvider>(context, listen: true).getVideosOfBet(bet);
     return Scaffold(
       appBar: customAppBar(title: "Bet details", context: context),
       body: SizedBox(
@@ -166,7 +170,7 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                 : const Text("No Videos uploaded yet"),
             Padding(
               padding: const EdgeInsets.all(18.0),
-              child: InfoCard(widget.bet, context),
+              child: infoCard(bet, context),
             ),
           ],
         ),
@@ -180,7 +184,7 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
       direction: SpeedDialDirection.up,
       animatedIcon: AnimatedIcons.menu_arrow,
       backgroundColor: Provider.of<BetProvider>(context, listen: false)
-              .didUploadProofToday(widget.bet)
+              .didUploadProofToday(bet)
           ? Colors.grey
           : Colors.blue,
       overlayColor: Colors.black,
@@ -193,17 +197,17 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
           onTap: () async {
             String path =
                 await ImagePickerHelper().getVideoFrom(ImageSource.gallery);
-            String result = await FirebaseHelper()
-                .uploadFile(path, widget.bet.betID, 'videos');
+            String result =
+                await FirebaseHelper().uploadFile(path, bet.betID, 'videos');
             if (result != 'error') {
               Provider.of<BetProvider>(context, listen: false)
-                  .updateBetFile(widget.bet.betID, result);
+                  .updateBetFile(bet.betID, result);
             }
             setState(() {
               final snackBar = customSnackBar(result);
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             });
-            NavigationHelper().goToSingleBetScreen(widget.bet, context);
+            NavigationHelper().goToSingleBetScreen(bet.betID, context);
           },
         ),
       ],
@@ -224,7 +228,7 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
   }
 }
 
-Widget InfoCard(BetModel bet, BuildContext context) {
+Widget infoCard(BetModel bet, BuildContext context) {
   var dateFormat = DateFormat('dd/MM/yyyy, HH:mm');
 
   return Container(

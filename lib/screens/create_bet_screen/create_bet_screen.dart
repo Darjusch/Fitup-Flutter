@@ -157,7 +157,7 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
                 id: randomID,
                 title: email.split('@').first,
                 body: 'It\'s time for your scheduled $dropdownActionValue!',
-                payload: docID,
+                payload: betID,
                 scheduledTime: Time(_time.hour, _time.minute));
           }
         },

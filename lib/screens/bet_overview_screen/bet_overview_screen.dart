@@ -31,7 +31,7 @@ class _BetOverviewScreenState extends State<BetOverviewScreen> {
             final betItem = betsList[index];
             return ListTile(
               onTap: () {
-                NavigationHelper().goToSingleBetScreen(betItem, context);
+                NavigationHelper().goToSingleBetScreen(betItem.betID, context);
               },
               minLeadingWidth: 0,
               leading: SizedBox(
