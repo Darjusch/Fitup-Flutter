@@ -24,7 +24,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<Auth>(create: (_) => Auth(auth: FirebaseAuth.instance)),
-        StreamProvider(create: (context) => context.read<Auth>().user),
+        StreamProvider(
+          create: (context) => context.read<Auth>().user,
+          initialData: null,
+        ),
         ChangeNotifierProvider(create: (context) => BetProvider()),
       ],
       child: MaterialApp(
