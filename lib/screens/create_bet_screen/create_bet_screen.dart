@@ -36,6 +36,8 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
     super.initState();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,35 +69,7 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
                 const Text(
                   'Bet Time',
                 ),
-                TextButton(
-                  onPressed: () async {
-                    TimeOfDay newTime =
-                        await TimeHelper().selectTime(context, _time);
-                    setState(() {
-                      if (newTime != null) {
-                        _time = newTime;
-                      }
-                    });
-                  },
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                  ),
-                  child: Row(
-                    children: [
-                      Text(_time.format(context),
-                          style: TextStyle(
-                              fontSize: 17,
-                              decoration: TextDecoration.underline,
-                              color: (Colors.grey[700]),
-                              decorationThickness: 0.5,
-                              decorationColor: (Colors.grey[500]))),
-                      Icon(
-                        Icons.arrow_downward,
-                        color: (Colors.grey[700]),
-                      )
-                    ],
-                  ),
-                ),
+                timePicker(),
               ],
             ),
             Row(
@@ -111,24 +85,10 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           var rng = Random();
-          // TODO find a better way for creating the ID than random int
-
           int randomID = rng.nextInt(1000000);
           String betID = uuid.v4();
           debugPrint("BET TIME ${_time.hour} - ${_time.minute}");
-          String docID = await FirebaseHelper().createBet(
-            betID: betID,
-            notificationID: randomID,
-            now: DateTime.now(),
-            context: context,
-            dropdownActionValue: dropdownActionValue,
-            time: _time,
-            dropdownDurationValue: dropdownDurationValue,
-            value: _value,
-            userID: userID,
-            files: {"initialized": "till we found a better approach"},
-          );
-          Provider.of<BetProvider>(context, listen: false).addBet(BetModel(
+          BetModel bet = BetModel(
             betID: betID,
             notificationID: randomID,
             startDate: DateTime.now(),
@@ -137,8 +97,13 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
             duration: dropdownDurationValue,
             value: _value,
             userID: userID,
-            files: {},
-          ));
+            files: {"initialized": "till we found a better approach"},
+          );
+          String docID = await FirebaseHelper().createBet(
+            bet: bet,
+            context: context,
+          );
+          Provider.of<BetProvider>(context, listen: false).addBet(bet);
 
           if (docID == "Error") {
             final snackBar = SnackBar(
@@ -182,6 +147,37 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
           dropdownActionValue = newValue;
         });
       },
+    );
+  }
+
+  Widget timePicker() {
+    return TextButton(
+      onPressed: () async {
+        TimeOfDay newTime = await TimeHelper().selectTime(context, _time);
+        setState(() {
+          if (newTime != null) {
+            _time = newTime;
+          }
+        });
+      },
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.zero,
+      ),
+      child: Row(
+        children: [
+          Text(_time.format(context),
+              style: TextStyle(
+                  fontSize: 17,
+                  decoration: TextDecoration.underline,
+                  color: (Colors.grey[700]),
+                  decorationThickness: 0.5,
+                  decorationColor: (Colors.grey[500]))),
+          Icon(
+            Icons.arrow_downward,
+            color: (Colors.grey[700]),
+          )
+        ],
+      ),
     );
   }
 

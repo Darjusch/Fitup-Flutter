@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:fitup/models/bet_model.dart';
 import 'package:fitup/utils/notifications_helper.dart';
 import 'package:fitup/utils/time_helper.dart';
 import 'package:flutter/material.dart';
@@ -7,33 +8,22 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:path/path.dart';
 
 class FirebaseHelper {
-  Future<String> createBet({
-    String betID,
-    int notificationID,
-    DateTime now,
-    BuildContext context,
-    String dropdownActionValue,
-    TimeOfDay time,
-    int dropdownDurationValue,
-    int value,
-    String userID,
-    Map<String, String> files,
-  }) async {
+  Future<String> createBet({BetModel bet, BuildContext context}) async {
     try {
       DocumentReference docID = await FirebaseFirestore.instance
           .collection('bets')
           .add(<String, dynamic>{
-        "betID": betID,
-        "notificationID": notificationID,
-        "action": dropdownActionValue,
-        "time": time.format(context),
-        "duration": dropdownDurationValue,
-        "value": value,
+        "betID": bet.betID,
+        "notificationID": bet.notificationID,
+        "action": bet.action,
+        "time": bet.time.format(context),
+        "duration": bet.duration,
+        "value": bet.value,
         "isActive": true,
-        "startDate": now,
+        "startDate": bet.startDate,
         "success": null,
-        "user_id": userID,
-        'files': files,
+        "user_id": bet.userID,
+        'files': bet.files,
       });
       return docID.id;
     } catch (err) {
