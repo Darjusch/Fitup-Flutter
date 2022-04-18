@@ -91,80 +91,7 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                         itemCount: videoPlayers.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
-                          return SizedBox(
-                            height: 340,
-                            width: 300,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Day ${index + 1}",
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 270,
-                                  width: 250,
-                                  child: DecoratedBox(
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(25.0),
-                                        color: Colors.black),
-                                    child: Stack(
-                                        alignment: AlignmentDirectional.center,
-                                        children: [
-                                          SizedBox(
-                                              height: 270,
-                                              width: 200,
-                                              child: videoPlayers[index]),
-                                          SizedBox(
-                                            height: 100,
-                                            width: 100,
-                                            child: IconButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  videoPlayers[index]
-                                                          .controller
-                                                          .value
-                                                          .isPlaying
-                                                      ? videoPlayers[index]
-                                                          .controller
-                                                          .pause()
-                                                      : videoPlayers[index]
-                                                          .controller
-                                                          .play();
-                                                });
-                                              },
-                                              icon: Icon(
-                                                videoPlayers[index]
-                                                        .controller
-                                                        .value
-                                                        .isPlaying
-                                                    ? Icons.pause
-                                                    : Icons.play_arrow,
-                                                color: Colors.white,
-                                                size: 75,
-                                              ),
-                                            ),
-                                          ),
-                                        ]),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                  width: 200,
-                                  child: VideoProgressIndicator(
-                                    videoPlayers[index].controller,
-                                    allowScrubbing: true,
-                                    padding: const EdgeInsets.only(top: 0),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
+                          return customVideoPlayer(index);
                         }),
                   )
                 : const Text("No Videos uploaded yet"),
@@ -176,6 +103,67 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
         ),
       ),
       floatingActionButton: customSpeedDial(),
+    );
+  }
+
+  Widget customVideoPlayer(int index) {
+    return SizedBox(
+      height: 340,
+      width: 300,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "Day ${index + 1}",
+              style: const TextStyle(
+                fontSize: 18,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 270,
+            width: 250,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25.0),
+                  color: Colors.black),
+              child: Stack(alignment: AlignmentDirectional.center, children: [
+                SizedBox(height: 270, width: 200, child: videoPlayers[index]),
+                SizedBox(
+                  height: 100,
+                  width: 100,
+                  child: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        videoPlayers[index].controller.value.isPlaying
+                            ? videoPlayers[index].controller.pause()
+                            : videoPlayers[index].controller.play();
+                      });
+                    },
+                    icon: Icon(
+                      videoPlayers[index].controller.value.isPlaying
+                          ? Icons.pause
+                          : Icons.play_arrow,
+                      color: Colors.white,
+                      size: 75,
+                    ),
+                  ),
+                ),
+              ]),
+            ),
+          ),
+          SizedBox(
+            height: 5,
+            width: 200,
+            child: VideoProgressIndicator(
+              videoPlayers[index].controller,
+              allowScrubbing: true,
+              padding: const EdgeInsets.only(top: 0),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
