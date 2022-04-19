@@ -25,15 +25,15 @@ class _UploadFileScreenState extends State<UploadFileScreen> {
             children: [
               ElevatedButton.icon(
                   onPressed: () {
-                    NavigationHelper()
-                        .goToBetImagePickerScreen(widget.betID, context);
+                    // NavigationHelper()
+                    //     .goToBetImagePickerScreen(widget.betID, context);
                   },
                   icon: const Icon(Icons.image),
                   label: const Text("Image")),
               ElevatedButton.icon(
                   onPressed: () {
-                    NavigationHelper()
-                        .goToBetVideoPickerScreen(widget.betID, context);
+                    // NavigationHelper()
+                    //     .goToBetVideoPickerScreen(widget.betID, context);
                   },
                   icon: const Icon(Icons.camera),
                   label: const Text("Video"))
