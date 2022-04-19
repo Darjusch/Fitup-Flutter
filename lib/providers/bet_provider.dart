@@ -31,7 +31,7 @@ class BetProvider extends ChangeNotifier {
     for (var bet in _bets) {
       if (TimeHelper().betIsLongerThanAMinute(bet.duration, bet.startDate) ==
           false) {
-        bet.isActive == false;
+        bet.isActive = false;
       }
     }
   }
@@ -48,7 +48,6 @@ class BetProvider extends ChangeNotifier {
         }
       }
     }
-    notifyListeners();
   }
 
   List<BetModel> getActiveBets() {

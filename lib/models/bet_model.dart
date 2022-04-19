@@ -4,7 +4,7 @@ class BetModel {
   final String betID;
   final String action;
   final int duration;
-  final bool isActive;
+  bool isActive;
   final int notificationID;
   final DateTime startDate;
   bool success;
