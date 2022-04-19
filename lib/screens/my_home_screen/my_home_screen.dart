@@ -35,6 +35,8 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
     String userID = context.watch<User>().uid;
     Provider.of<BetProvider>(context, listen: false).loadInitalBets(userID);
     Provider.of<BetProvider>(context, listen: false).updateBetIsActive();
+    Provider.of<BetProvider>(context, listen: false).updateBetIsSuccessful();
+
     return Scaffold(
       appBar: customAppBar(title: "Fit-up", context: context),
       body: Container(

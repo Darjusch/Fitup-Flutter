@@ -19,42 +19,90 @@ class _BetOverviewScreenState extends State<BetOverviewScreen> {
     "Wake up": "assets/icons/wake-up.png",
     "Shower": "assets/icons/shower.jpeg",
   };
+  bool overview = true;
 
   @override
   Widget build(BuildContext context) {
-    final betsList = Provider.of<BetProvider>(context).getActiveBets();
+    final activeBets = Provider.of<BetProvider>(context).getActiveBets();
+    final inactiveBets = Provider.of<BetProvider>(context).getInactiveBets();
     return Scaffold(
       appBar: customAppBar(title: "Bet overview", context: context),
-      body: ListView.builder(
-          itemCount: betsList.length,
-          itemBuilder: (context, index) {
-            final betItem = betsList[index];
-            return ListTile(
-              onTap: () {
-                NavigationHelper().goToSingleBetScreen(betItem.betID, context);
-              },
-              minLeadingWidth: 0,
-              leading: SizedBox(
-                height: 25,
-                width: 25,
-                child: ImageIcon(
-                  AssetImage(actionToIcon[betItem.action]),
-                ),
+      body: SizedBox(
+        height: 1000,
+        width: double.infinity,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 50,
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        overview = true;
+                      });
+                    },
+                    child: const Text("Active Bets"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        overview = false;
+                      });
+                    },
+                    child: const Text("Bet History"),
+                  ),
+                ],
               ),
-              title: Text(betItem.action),
-              subtitle: InkWell(
-                key: const ValueKey('betDetails'),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Time: ${betItem.time.format(context)}"),
-                    Text(
-                        "Day: ${(betItem.duration - TimeHelper().betHasXDaysLeft(betItem.duration, betItem.startDate)) + 1} of ${betItem.duration}")
-                  ],
-                ),
-              ),
-            );
-          }),
+            ),
+            SizedBox(
+              height: 650,
+              width: double.infinity,
+              child: ListView.builder(
+                  itemCount: overview ? activeBets.length : inactiveBets.length,
+                  itemBuilder: (context, index) {
+                    final betItem =
+                        overview ? activeBets[index] : inactiveBets[index];
+                    return ListTile(
+                      tileColor: overview
+                          ? null
+                          : betItem.success
+                              ? Colors.green
+                              : Colors.red,
+                      onTap: () {
+                        NavigationHelper()
+                            .goToSingleBetScreen(betItem.betID, context);
+                      },
+                      minLeadingWidth: 0,
+                      leading: SizedBox(
+                        height: 25,
+                        width: 25,
+                        child: ImageIcon(
+                          AssetImage(actionToIcon[betItem.action]),
+                        ),
+                      ),
+                      title: Text(betItem.action),
+                      subtitle: InkWell(
+                        key: const ValueKey('betDetails'),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Time: ${betItem.time.format(context)}"),
+                            overview
+                                ? Text(
+                                    "Day: ${(betItem.duration - TimeHelper().betHasXDaysLeft(betItem.duration, betItem.startDate)) + 1} of ${betItem.duration}")
+                                : Text("Success: ${betItem.success}")
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+          ],
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
           onPressed: () => {
