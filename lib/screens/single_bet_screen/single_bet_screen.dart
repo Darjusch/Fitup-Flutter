@@ -2,10 +2,10 @@ import 'package:fitup/models/bet_model.dart';
 import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/image_picker_helper.dart';
-import 'package:fitup/utils/navigation_helper.dart';
 import 'package:fitup/utils/time_helper.dart';
 import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -27,7 +27,7 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
 
   // TODO conditional according to challenge show Images / Video / Challenge
   // TODO progress indicator when uploading video
-  // TODO Navigator pop old screen when navigating here to refresh after upload
+
   List<String> videos = [];
   List<String> images = [];
 
@@ -79,14 +79,19 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
     return Scaffold(
       appBar: customAppBar(title: "Bet details", context: context),
       body: SizedBox(
-        height: 1000,
-        width: double.infinity,
+        height: 1000.h,
+        width: double.infinity.w,
         child: Column(
           children: [
+            Padding(
+              padding:
+                  EdgeInsets.only(top: 18.0.h, left: 18.0.w, right: 18.0.w),
+              child: infoCard(bet, context),
+            ),
             videos != null && videos.isNotEmpty
                 ? SizedBox(
-                    height: 312,
-                    width: double.infinity,
+                    height: 315.h,
+                    width: double.infinity.w,
                     child: ListView.builder(
                         itemCount: videoPlayers.length,
                         scrollDirection: Axis.horizontal,
@@ -94,11 +99,13 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                           return customVideoPlayer(index);
                         }),
                   )
-                : const Text("No Videos uploaded yet"),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: infoCard(bet, context),
-            ),
+                : Padding(
+                    padding: EdgeInsets.all(18.0.h),
+                    child: Text(
+                      "No Videos uploaded yet",
+                      style: TextStyle(fontSize: 18.sp),
+                    ),
+                  ),
           ],
         ),
       ),
@@ -108,31 +115,33 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
 
   Widget customVideoPlayer(int index) {
     return SizedBox(
-      height: 340,
-      width: 300,
+      height: 320.h,
+      width: 250.w,
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.only(
+                top: 8.0.h, left: 8.0.w, right: 8.0.w, bottom: 8.0.h),
             child: Text(
               "Day ${index + 1}",
-              style: const TextStyle(
-                fontSize: 18,
+              style: TextStyle(
+                fontSize: 18.sp,
               ),
             ),
           ),
           SizedBox(
-            height: 270,
-            width: 250,
+            height: 270.h,
+            width: 240.w,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25.0),
+                  borderRadius: BorderRadius.circular(25.0.h),
                   color: Colors.black),
               child: Stack(alignment: AlignmentDirectional.center, children: [
-                SizedBox(height: 270, width: 200, child: videoPlayers[index]),
                 SizedBox(
-                  height: 100,
-                  width: 100,
+                    height: 270.h, width: 200.w, child: videoPlayers[index]),
+                SizedBox(
+                  height: 100.h,
+                  width: 100.w,
                   child: IconButton(
                     onPressed: () {
                       setState(() {
@@ -146,7 +155,7 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                           ? Icons.pause
                           : Icons.play_arrow,
                       color: Colors.white,
-                      size: 75,
+                      size: 75.h,
                     ),
                   ),
                 ),
@@ -154,8 +163,8 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
             ),
           ),
           SizedBox(
-            height: 5,
-            width: 200,
+            height: 5.h,
+            width: 200.w,
             child: VideoProgressIndicator(
               videoPlayers[index].controller,
               allowScrubbing: true,
@@ -195,7 +204,13 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
               final snackBar = customSnackBar(result);
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             });
-            NavigationHelper().goToSingleBetScreen(bet.betID, context);
+            Navigator.of(context).pop();
+
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => SingleBetScreen(
+                betID: bet.betID,
+              ),
+            ));
           },
         ),
       ],
@@ -220,9 +235,9 @@ Widget infoCard(BetModel bet, BuildContext context) {
   var dateFormat = DateFormat('dd/MM/yyyy, HH:mm');
 
   return Container(
-    padding: const EdgeInsets.all(25.0),
+    padding: EdgeInsets.all(25.0.h),
     decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
+        borderRadius: BorderRadius.circular(25.0.h),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(.05),
@@ -232,7 +247,7 @@ Widget infoCard(BetModel bet, BuildContext context) {
           )
         ],
         gradient: const RadialGradient(
-          colors: [Colors.orangeAccent, Colors.orange],
+          colors: [Colors.blueAccent, Colors.blue],
           focal: Alignment.topCenter,
           radius: .85,
         )),
@@ -245,44 +260,48 @@ Widget infoCard(BetModel bet, BuildContext context) {
           children: [
             Text(
               bet.action,
-              style: const TextStyle(
+              style: TextStyle(
                   color: Colors.white,
-                  fontSize: 26,
+                  fontSize: 26.sp,
                   fontWeight: FontWeight.bold),
             ),
             RichText(
                 text: TextSpan(
               text:
                   "Day: ${(bet.duration - TimeHelper().betHasXDaysLeft(bet.duration, bet.startDate)) + 1} of ${bet.duration}",
-              style:
-                  TextStyle(color: Colors.white.withOpacity(.75), fontSize: 14),
+              style: TextStyle(
+                  color: Colors.white.withOpacity(.75), fontSize: 14.sp),
             )),
           ],
         ),
         RichText(
             text: TextSpan(
           text: "Startdate: ${dateFormat.format(bet.startDate)}",
-          style: TextStyle(color: Colors.white.withOpacity(.75), fontSize: 14),
+          style:
+              TextStyle(color: Colors.white.withOpacity(.75), fontSize: 14.sp),
         )),
-        const SizedBox(height: 10),
+        SizedBox(height: 10.h),
         RichText(
             text: TextSpan(
           text:
               "Status: ${bet.isActive ? "Ongoing" : bet.success ? "Success" : "Failed"}",
-          style: TextStyle(color: Colors.white.withOpacity(.75), fontSize: 14),
+          style:
+              TextStyle(color: Colors.white.withOpacity(.75), fontSize: 14.sp),
         )),
-        const SizedBox(height: 10),
+        SizedBox(height: 10.h),
         RichText(
             text: TextSpan(
           text:
               "Uploaded Today: ${Provider.of<BetProvider>(context, listen: false).didUploadProofToday(bet) ? "Yes" : "No"}",
-          style: TextStyle(color: Colors.white.withOpacity(.75), fontSize: 14),
+          style:
+              TextStyle(color: Colors.white.withOpacity(.75), fontSize: 14.sp),
         )),
-        const SizedBox(height: 10),
+        SizedBox(height: 10.h),
         RichText(
             text: TextSpan(
           text: "Value ${bet.value.toString()}\$",
-          style: TextStyle(color: Colors.white.withOpacity(.75), fontSize: 14),
+          style:
+              TextStyle(color: Colors.white.withOpacity(.75), fontSize: 14.sp),
         )),
       ],
     ),
