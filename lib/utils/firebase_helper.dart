@@ -54,6 +54,25 @@ class FirebaseHelper {
     }
   }
 
+  Future<String> uploadProfilePicFile(String filePath, String userID) async {
+    if (filePath == null) return "Error";
+    final fileName = basename(filePath);
+    final destination = userID;
+
+    try {
+      final ref = firebase_storage.FirebaseStorage.instance
+          .ref(destination)
+          .child(fileName);
+      await ref.putFile(File(filePath));
+      String imageUrl = await ref.getDownloadURL();
+
+      return imageUrl;
+    } catch (e) {
+      debugPrint('error occured $e');
+      return "Error";
+    }
+  }
+
   void saveURL(String fileUrl, String betID, String fileType) async {
     debugPrint(betID);
     DateTime now = DateTime.now();
