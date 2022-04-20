@@ -8,6 +8,7 @@ class Auth {
 
   Stream<User> get user => auth.authStateChanges();
 
+
   Future<String> devSignIn() async {
     try {
       await auth.signInWithEmailAndPassword(
@@ -58,5 +59,28 @@ class Auth {
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<String> changePassword(
+      String currentPassword, String newPassword, BuildContext context) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final cred = EmailAuthProvider.credential(
+        email: user.email, password: currentPassword);
+
+    user.reauthenticateWithCredential(cred).then((value) {
+      user.updatePassword(newPassword).then((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Successfully changed Password")));
+        return "Success";
+      }).catchError((error) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("There was a problem chaning your password")));
+        return "Error";
+      });
+    }).catchError((err) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("There was a problem chaning your password")));
+      return err;
+    });
   }
 }
