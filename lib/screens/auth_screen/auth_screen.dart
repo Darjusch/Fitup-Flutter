@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/AuthenticationService.dart';
@@ -26,7 +27,8 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(40.0),
+        padding: EdgeInsets.only(
+            top: 40.0.h, bottom: 40.0.h, left: 40.0.w, right: 40.0.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -60,12 +62,6 @@ class _AuthScreenState extends State<AuthScreen> {
                     }),
               ),
             ),
-            // FlutterPwValidator(
-            //     controller: passwordController,
-            //     minLength: 6,
-            //     uppercaseCharCount: 2,
-            //     numericCharCount: 3,
-            //     specialCharCount: 1,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [

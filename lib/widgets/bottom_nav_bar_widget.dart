@@ -4,6 +4,7 @@ import 'package:fitup/screens/my_home_screen/my_home_screen.dart';
 import 'package:fitup/screens/profile_screen.dart';
 import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 
@@ -50,14 +51,14 @@ class CustomNavigationWrapperState extends State<CustomNavigationWrapper> {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+            padding: EdgeInsets.symmetric(horizontal: 15.0.w, vertical: 8.h),
             child: GNav(
               rippleColor: Colors.grey[300],
               hoverColor: Colors.grey[100],
               gap: 8,
               activeColor: Colors.black,
               iconSize: 24,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
               duration: const Duration(milliseconds: 400),
               tabBackgroundColor: Colors.grey[100],
               color: Colors.black,

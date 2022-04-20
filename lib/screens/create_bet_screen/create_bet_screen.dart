@@ -6,6 +6,7 @@ import 'package:fitup/utils/notifications_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
 import 'package:uuid/uuid.dart';
@@ -40,7 +41,7 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
       resizeToAvoidBottomInset: false,
       body: Padding(
         padding:
-            const EdgeInsets.only(left: 50, right: 50, top: 20, bottom: 320),
+            EdgeInsets.only(left: 50.w, right: 50.w, top: 20.h, bottom: 320.h),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -168,7 +169,7 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
         children: [
           Text(_time.format(context),
               style: TextStyle(
-                  fontSize: 17,
+                  fontSize: 17.sp,
                   decoration: TextDecoration.underline,
                   color: (Colors.grey[700]),
                   decorationThickness: 0.5,
@@ -202,8 +203,8 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
 
   Widget valueInput() {
     return SizedBox(
-      height: 40.0,
-      width: 90.0,
+      height: 40.0.h,
+      width: 90.0.w,
       child: TextField(
         key: const ValueKey('betValueField'),
         onSubmitted: (text) => {

@@ -3,6 +3,7 @@ import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/utils/navigation_helper.dart';
 import 'package:fitup/utils/time_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class BetOverviewScreen extends StatefulWidget {
@@ -32,13 +33,13 @@ class _BetOverviewScreenState extends State<BetOverviewScreen> {
     final inactiveBets = Provider.of<BetProvider>(context).getInactiveBets();
 
     return SizedBox(
-      height: 1000,
-      width: double.infinity,
+      height: 1000.h,
+      width: double.infinity.w,
       child: Column(
         children: [
           SizedBox(
-            height: 50,
-            width: double.infinity,
+            height: 50.h,
+            width: double.infinity.w,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -62,8 +63,8 @@ class _BetOverviewScreenState extends State<BetOverviewScreen> {
             ),
           ),
           SizedBox(
-            height: 600,
-            width: double.infinity,
+            height: 550.h,
+            width: double.infinity.w,
             child: ListView.builder(
                 itemCount: overview ? activeBets.length : inactiveBets.length,
                 itemBuilder: (context, index) {
@@ -81,8 +82,8 @@ class _BetOverviewScreenState extends State<BetOverviewScreen> {
                     },
                     minLeadingWidth: 0,
                     leading: SizedBox(
-                      height: 25,
-                      width: 25,
+                      height: 25.h,
+                      width: 25.w,
                       child: ImageIcon(
                         AssetImage(actionToIcon[betItem.action]),
                       ),

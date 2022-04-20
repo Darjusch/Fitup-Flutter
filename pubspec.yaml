@@ -40,7 +40,7 @@ dependencies:
   flutter_speed_dial: ^5.1.0
   google_nav_bar: ^5.0.6
   line_icons: ^2.0.1
-  flutter_pw_validator: ^1.4.2
+  flutter_screenutil: ^5.4.0+1
 
 
   

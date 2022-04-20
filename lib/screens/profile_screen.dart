@@ -5,6 +5,7 @@ import 'package:fitup/providers/user_provider.dart';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/image_picker_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
@@ -37,13 +38,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return SafeArea(
       child: SizedBox(
         child: Padding(
-          padding:
-              const EdgeInsets.only(top: 50.0, left: 40, right: 40, bottom: 15),
+          padding: EdgeInsets.only(
+              top: 50.0.h, left: 40.w, right: 40.w, bottom: 15.h),
           child: Column(
             children: [
               SizedBox(
-                height: 115,
-                width: 115,
+                height: 115.h,
+                width: 115.h,
                 child: Stack(
                   clipBehavior: Clip.none,
                   fit: StackFit.expand,
@@ -55,8 +56,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           : NetworkImage(profilePicUrl),
                     ),
                     Positioned(
-                        bottom: 0,
-                        right: -25,
+                        bottom: 0.h,
+                        right: -25.w,
                         child: RawMaterialButton(
                           onPressed: () async {
                             try {
@@ -91,14 +92,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             LineIcons.camera,
                             color: Colors.blue,
                           ),
-                          padding: const EdgeInsets.all(15.0),
+                          padding: EdgeInsets.all(15.0.h),
                           shape: const CircleBorder(),
                         )),
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 50,
+              SizedBox(
+                height: 50.h,
               ),
               // TextField(
               //   decoration: const InputDecoration(hintText: 'Username'),
@@ -119,12 +120,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 obscureText: true,
                 controller: _oldPassword,
               ),
-              const SizedBox(
-                height: 150,
+              SizedBox(
+                height: 150.h,
               ),
               SizedBox(
-                height: 40,
-                width: 150,
+                height: 40.h,
+                width: 150.w,
                 child: TextButton(
                   onPressed: () async {
                     // Change Password
