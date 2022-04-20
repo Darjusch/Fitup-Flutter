@@ -2,9 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/models/bet_model.dart';
 import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/utils/firebase_helper.dart';
-import 'package:fitup/utils/navigation_helper.dart';
 import 'package:fitup/utils/notifications_helper.dart';
-import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -36,13 +34,10 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: customAppBar(title: "Create Bet", context: context),
       body: Padding(
         padding:
             const EdgeInsets.only(left: 50, right: 50, top: 20, bottom: 320),
@@ -106,27 +101,33 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
           Provider.of<BetProvider>(context, listen: false).addBet(bet);
 
           if (docID == "Error") {
-            final snackBar = SnackBar(
-              content: const Text("Error"),
-              action: SnackBarAction(
-                label: 'Undo',
-                onPressed: () {
-                  // Some code to undo the change.
-                },
-              ),
-            );
+            final snackBar = customSnackBar("Something went wrong");
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           } else {
-            NavigationHelper().goToBetHistoryScreen(context);
             NotificationHelper.showScheduledNotification(
                 id: randomID,
                 title: email.split('@').first,
                 body: 'It\'s time for your scheduled $dropdownActionValue!',
                 payload: betID,
                 scheduledTime: Time(_time.hour, _time.minute));
+            final snackBar = customSnackBar("Bet created successfully");
+
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
         },
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget customSnackBar(String message) {
+    return SnackBar(
+      content: Text(message),
+      action: SnackBarAction(
+        label: 'Undo',
+        onPressed: () {
+          // Some code to undo the change.
+        },
       ),
     );
   }
