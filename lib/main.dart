@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/providers/bet_provider.dart';
+import 'package:fitup/providers/user_provider.dart';
 import 'package:fitup/screens/auth_screen/auth_screen.dart';
-import 'package:fitup/screens/my_home_screen/my_home_screen.dart';
+import 'package:fitup/widgets/bottom_nav_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,9 @@ class MyApp extends StatelessWidget {
           create: (context) => context.read<Auth>().user,
           initialData: null,
         ),
-        ChangeNotifierProvider(create: (context) => BetProvider()),
+        ChangeNotifierProvider<BetProvider>(create: (context) => BetProvider()),
+        ChangeNotifierProvider<UserProvider>(
+            create: (context) => UserProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -50,7 +53,7 @@ class AuthenticationWrapper extends StatelessWidget {
     final firebaseUser = context.watch<User>();
     if (firebaseUser != null) {
       debugPrint(firebaseUser.email);
-      return const MyHomeScreen();
+      return const CustomNavigationWrapper();
     } else {
       return const AuthScreen();
     }
