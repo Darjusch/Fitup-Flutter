@@ -60,6 +60,12 @@ class _AuthScreenState extends State<AuthScreen> {
                     }),
               ),
             ),
+            // FlutterPwValidator(
+            //     controller: passwordController,
+            //     minLength: 6,
+            //     uppercaseCharCount: 2,
+            //     numericCharCount: 3,
+            //     specialCharCount: 1,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [

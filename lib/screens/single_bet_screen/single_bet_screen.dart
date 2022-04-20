@@ -5,6 +5,7 @@ import 'package:fitup/utils/image_picker_helper.dart';
 import 'package:fitup/utils/navigation_helper.dart';
 import 'package:fitup/utils/time_helper.dart';
 import 'package:fitup/widgets/app_bar_widget.dart';
+import 'package:fitup/widgets/bottom_nav_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:image_picker/image_picker.dart';
