@@ -38,6 +38,9 @@ dependencies:
   video_player: ^2.3.0
   uuid: ^3.0.6
   flutter_speed_dial: ^5.1.0
+  google_nav_bar: ^5.0.6
+  line_icons: ^2.0.1
+  flutter_pw_validator: ^1.4.2
 
 
   
@@ -57,4 +60,3 @@ flutter_icons:
 dev_dependencies: 
   test: ^1.19.0
   mockito: ^5.1.0
-
