@@ -8,8 +8,8 @@ class UserProvider extends ChangeNotifier {
 
   void signIn(User firebaseUser) {
     currentUser ??= UserModel(
-      user_ID: firebaseUser.uid,
-      profile_pic: firebaseUser.photoURL,
+      userID: firebaseUser.uid,
+      profilePic: firebaseUser.photoURL,
       email: firebaseUser.email,
     );
   }
@@ -21,7 +21,7 @@ class UserProvider extends ChangeNotifier {
   }
 
   void updateProfilePic(String photoURL) {
-    currentUser.profile_pic = photoURL;
+    currentUser.profilePic = photoURL;
     notifyListeners();
   }
 

@@ -33,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     firebaseUser = Provider.of<User>(context);
     Provider.of<UserProvider>(context).signIn(firebaseUser);
     currentUser = Provider.of<UserProvider>(context).user;
-    profilePicUrl = Provider.of<UserProvider>(context).user.profile_pic;
+    profilePicUrl = Provider.of<UserProvider>(context).user.profilePic;
     return SafeArea(
       child: SizedBox(
         child: Padding(
@@ -66,7 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               // Upload Image
                               String result = await FirebaseHelper()
                                   .uploadProfilePicFile(
-                                      path, currentUser.user_ID);
+                                      path, currentUser.userID);
 
                               // Update image
                               if (result != "Error") {

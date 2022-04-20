@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class UserModel {
-  final String user_ID;
-  String profile_pic;
+  final String userID;
+  String profilePic;
   String email;
 
   UserModel({
-    @required this.user_ID,
-    this.profile_pic,
+    @required this.userID,
+    this.profilePic,
     this.email,
   });
 }

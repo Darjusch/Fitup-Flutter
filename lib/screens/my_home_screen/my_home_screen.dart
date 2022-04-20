@@ -1,9 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/utils/navigation_helper.dart';
 import 'package:fitup/utils/notifications_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class MyHomeScreen extends StatefulWidget {
   const MyHomeScreen({Key key}) : super(key: key);
@@ -24,14 +21,12 @@ class _MyHomeScreenState extends State<MyHomeScreen> {
       NotificationHelper.onNotifications.stream.listen((onClickedNotification));
 
   void onClickedNotification(String payload) {
-    // TODO we cant click back button after this we are stuck on the same screen for 1 or 2 clicks. maybe delete old route or something
     debugPrint(payload);
     NavigationHelper().goToSingleBetScreen(payload, context);
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       height: double.infinity,
       width: double.infinity,
