@@ -7,8 +7,7 @@ class UserProvider extends ChangeNotifier {
   UserModel get user => currentUser;
 
   void signIn(User firebaseUser) {
-    // init user
-    currentUser = UserModel(
+    currentUser ??= UserModel(
       user_ID: firebaseUser.uid,
       profile_pic: firebaseUser.photoURL,
       email: firebaseUser.email,

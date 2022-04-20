@@ -22,14 +22,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _newPassword = TextEditingController();
   final TextEditingController _oldPassword = TextEditingController();
 
+  String email;
+  String profilePicUrl;
+  User firebaseUser;
+  UserModel currentUser;
+
   @override
   Widget build(BuildContext context) {
-    final firebaseUser = context.watch<User>();
-    Provider.of<UserProvider>(context).signIn(firebaseUser);
-    UserModel user = Provider.of<UserProvider>(context).user;
-
     // String username = Provider.of<User>(context, listen: false).displayName;
-
+    firebaseUser = Provider.of<User>(context);
+    Provider.of<UserProvider>(context).signIn(firebaseUser);
+    currentUser = Provider.of<UserProvider>(context).user;
+    profilePicUrl = Provider.of<UserProvider>(context).user.profile_pic;
     return SafeArea(
       child: SizedBox(
         child: Padding(
@@ -45,10 +49,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   fit: StackFit.expand,
                   children: [
                     CircleAvatar(
-                      backgroundImage: user.profile_pic == null
+                      backgroundImage: profilePicUrl == null
                           ? const AssetImage(
                               "assets/images/empty_profile_pic.png")
-                          : NetworkImage(user.profile_pic),
+                          : NetworkImage(profilePicUrl),
                     ),
                     Positioned(
                         bottom: 0,
@@ -61,7 +65,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   .getImageFrom(ImageSource.gallery);
                               // Upload Image
                               String result = await FirebaseHelper()
-                                  .uploadProfilePicFile(path, user.user_ID);
+                                  .uploadProfilePicFile(
+                                      path, currentUser.user_ID);
 
                               // Update image
                               if (result != "Error") {
@@ -131,10 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     }
 
                     // Change Email
-                    if (_email.text !=
-                        Provider.of<UserProvider>(context, listen: false)
-                            .user
-                            .email) {
+                    if (_email.text != email) {
                       try {
                         Provider.of<User>(context, listen: false)
                             .updateEmail(_email.text);
@@ -150,11 +152,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 "invalid-email / email-already-in-use / need to login again")));
                       }
                     }
-                    String email =
-                        Provider.of<UserProvider>(context, listen:false).user.email;
-                    setState(() {
-                      _email.text = email;
-                    });
                   },
                   child: const Text(
                     "Save",
