@@ -1,5 +1,6 @@
 import 'package:fitup/providers/AuthenticationService.dart';
 import 'package:fitup/providers/bet_provider.dart';
+import 'package:fitup/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,6 +11,7 @@ Widget customAppBar({String title, BuildContext context}) {
       IconButton(
         onPressed: () {
           Provider.of<BetProvider>(context, listen: false).removeAllBets();
+          Provider.of<UserProvider>(context, listen: false).signOut();
           Provider.of<Auth>(context, listen: false).signOut();
           Navigator.of(context)
               .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
