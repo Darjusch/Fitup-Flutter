@@ -57,7 +57,7 @@ class FirebaseHelper {
   Future<String> uploadProfilePicFile(String filePath, String userID) async {
     if (filePath == null) return "Error";
     final fileName = basename(filePath);
-    final destination = userID;
+    final destination = "profileImage/$userID";
 
     try {
       final ref = firebase_storage.FirebaseStorage.instance
