@@ -16,6 +16,9 @@ class BetProvider extends ChangeNotifier {
     "Shower": "assets/icons/shower.jpeg",
   };
 
+  List<String> actions = ["Push-ups", "Make bed", "Wake up", "Shower"];
+  List<int> duration = [1, 2, 3, 4, 5, 6, 7];
+
   String getIconOfAction(String action) {
     if (actionToIcon.containsKey(action)) {
       return actionToIcon[action];

@@ -29,6 +29,7 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
   var uuid = const Uuid();
   String userID;
   String email;
+
   @override
   void initState() {
     userID = Provider.of<User>(context, listen: false).uid;
@@ -80,57 +81,62 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          var rng = Random();
-          int randomID = rng.nextInt(1000000);
-          String betID = uuid.v4();
-          debugPrint("BET TIME ${_time.hour} - ${_time.minute}");
-          BetModel bet = BetModel(
-            betID: betID,
-            notificationID: randomID,
-            startDate: DateTime.now(),
-            action: dropdownActionValue,
-            time: _time,
-            duration: dropdownDurationValue,
-            value: _value,
-            userID: userID,
-            files: {"initialized": "till we found a better approach"},
-          );
-          String docID = await FirebaseHelper().createBet(
-            bet: bet,
-            context: context,
-          );
-          Provider.of<BetProvider>(context, listen: false).addBet(bet);
-
-          if (docID == "Error") {
-            ScaffoldMessenger.of(context).showSnackBar(snackBarWidget(
-              "Something went wrong",
-              true,
-            ));
-          } else {
-            NotificationHelper.showScheduledNotification(
-                id: randomID,
-                title: email.split('@').first,
-                body: 'It\'s time for your scheduled $dropdownActionValue!',
-                payload: betID,
-                scheduledTime: Time(_time.hour, _time.minute));
-
-            ScaffoldMessenger.of(context).showSnackBar(snackBarWidget(
-              "Bet created successfully",
-              false,
-            ));
-          }
+        onPressed: () {
+          createBetAndScheduleNotification();
         },
         child: const Icon(Icons.add),
       ),
     );
   }
 
+  void createBetAndScheduleNotification() async {
+    var rng = Random();
+    int randomID = rng.nextInt(1000000);
+    String betID = uuid.v4();
+    debugPrint("BET TIME ${_time.hour} - ${_time.minute}");
+    BetModel bet = BetModel(
+      betID: betID,
+      notificationID: randomID,
+      startDate: DateTime.now(),
+      action: dropdownActionValue,
+      time: _time,
+      duration: dropdownDurationValue,
+      value: _value,
+      userID: userID,
+      files: {"initialized": "till we found a better approach"},
+    );
+    String docID = await FirebaseHelper().createBet(
+      bet: bet,
+      context: context,
+    );
+    Provider.of<BetProvider>(context, listen: false).addBet(bet);
+
+    if (docID == "Error") {
+      ScaffoldMessenger.of(context).showSnackBar(snackBarWidget(
+        "Something went wrong",
+        true,
+      ));
+    } else {
+      NotificationHelper.showScheduledNotification(
+          id: randomID,
+          title: email.split('@').first,
+          body: 'It\'s time for your scheduled $dropdownActionValue!',
+          payload: betID,
+          scheduledTime: Time(_time.hour, _time.minute));
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBarWidget(
+        "Bet created successfully",
+        false,
+      ));
+    }
+  }
+
   Widget actionValueDropdown() {
     return DropdownButton(
       value: dropdownActionValue,
       icon: const Icon(Icons.arrow_downward),
-      items: <String>["Push-ups", "Make bed", "Wake up", "Shower"]
+      items: Provider.of<BetProvider>(context)
+          .actions
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
@@ -180,7 +186,9 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
     return DropdownButton<int>(
       value: dropdownDurationValue,
       icon: const Icon(Icons.arrow_downward),
-      items: <int>[1, 2, 3, 4, 5, 6, 7].map<DropdownMenuItem<int>>((int value) {
+      items: Provider.of<BetProvider>(context)
+          .duration
+          .map<DropdownMenuItem<int>>((int value) {
         return DropdownMenuItem<int>(
           value: value,
           child: Text("$value days"),
