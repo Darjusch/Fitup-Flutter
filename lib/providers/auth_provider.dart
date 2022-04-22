@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitup/widgets/snack_bar_widget.dart';
 import 'package:flutter/material.dart';
 
-class Auth {
+class AuthProvider {
   final FirebaseAuth auth;
 
-  Auth({this.auth});
+  AuthProvider({this.auth});
 
   Stream<User> get user => auth.authStateChanges();
 
@@ -69,19 +70,23 @@ class Auth {
 
       user.reauthenticateWithCredential(cred).then((value) {
         user.updatePassword(newPassword).then((_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Successfully changed Password")));
+          ScaffoldMessenger.of(context).showSnackBar(snackBarWidget(
+            "Successfully changed Password",
+            false,
+          ));
           return "Success";
         }).catchError((error) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("The password is to weak")));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(snackBarWidget("The password is to weak", true));
           return "Error";
         });
       });
       return "Success";
     } catch (err) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("The password was wrong")));
+      ScaffoldMessenger.of(context).showSnackBar(snackBarWidget(
+        "The password was wrong",
+        true,
+      ));
       return err;
     }
   }
@@ -95,19 +100,25 @@ class Auth {
 
       user.reauthenticateWithCredential(cred).then((value) {
         user.updateEmail(newEmail).then((_) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Successfully changed Email")));
+          ScaffoldMessenger.of(context).showSnackBar(snackBarWidget(
+            "Successfully changed Email",
+            false,
+          ));
           return "Success";
         }).catchError((error) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("Either the email is invalid / already in use")));
+          ScaffoldMessenger.of(context).showSnackBar(snackBarWidget(
+            "Either the email is invalid / already in use",
+            true,
+          ));
           return "Error";
         });
       });
       return "Success";
     } catch (err) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("The password is wrong")));
+      ScaffoldMessenger.of(context).showSnackBar(snackBarWidget(
+        "The password is wrong",
+        true,
+      ));
       return err;
     }
   }

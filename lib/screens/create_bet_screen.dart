@@ -3,6 +3,7 @@ import 'package:fitup/models/bet_model.dart';
 import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/notifications_helper.dart';
+import 'package:fitup/widgets/snack_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -102,8 +103,10 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
           Provider.of<BetProvider>(context, listen: false).addBet(bet);
 
           if (docID == "Error") {
-            final snackBar = customSnackBar("Something went wrong");
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            ScaffoldMessenger.of(context).showSnackBar(snackBarWidget(
+              "Something went wrong",
+              true,
+            ));
           } else {
             NotificationHelper.showScheduledNotification(
                 id: randomID,
@@ -111,24 +114,14 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
                 body: 'It\'s time for your scheduled $dropdownActionValue!',
                 payload: betID,
                 scheduledTime: Time(_time.hour, _time.minute));
-            final snackBar = customSnackBar("Bet created successfully");
 
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            ScaffoldMessenger.of(context).showSnackBar(snackBarWidget(
+              "Bet created successfully",
+              false,
+            ));
           }
         },
         child: const Icon(Icons.add),
-      ),
-    );
-  }
-
-  Widget customSnackBar(String message) {
-    return SnackBar(
-      content: Text(message),
-      action: SnackBarAction(
-        label: 'Undo',
-        onPressed: () {
-          // Some code to undo the change.
-        },
       ),
     );
   }

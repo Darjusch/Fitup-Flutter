@@ -3,6 +3,7 @@ import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/image_picker_helper.dart';
 import 'package:fitup/widgets/app_bar_widget.dart';
+import 'package:fitup/widgets/snack_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -23,8 +24,7 @@ class _BetImagePickerState extends State<BetImagePicker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-                appBar: customAppBar(title: "Image Picker Screen", context: context),
-
+        appBar: customAppBar(title: "Image Picker Screen", context: context),
         body: SizedBox(
             height: 800,
             child: filePath == null || filePath == ''
@@ -91,22 +91,10 @@ class _BetImagePickerState extends State<BetImagePicker> {
                                 Provider.of<BetProvider>(context, listen: false)
                                     .updateBetFile(widget.betID, result);
                               }
-
-                              final snackBar = SnackBar(
-                                content: Text(
-                                    result != 'error' ? "Success" : result),
-                                backgroundColor: result != 'error'
-                                    ? Colors.green
-                                    : Colors.red,
-                                action: SnackBarAction(
-                                  label: 'Undo',
-                                  onPressed: () {
-                                    // Some code to undo the change.
-                                  },
-                                ),
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  snackBarWidget(
+                                      result != 'error' ? "Success" : result,
+                                      result == 'error' ? true : false));
                             },
                             child: const Text("Upload Image"))
                       ],

@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/models/user_model.dart';
-import 'package:fitup/providers/AuthenticationService.dart';
+import 'package:fitup/providers/auth_provider.dart';
 import 'package:fitup/providers/user_provider.dart';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/image_picker_helper.dart';
+import 'package:fitup/widgets/snack_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
@@ -88,9 +89,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     .updateProfilePic(result);
 
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            "Successfully uploaded Image")));
+                                    snackBarWidget(
+                                        "Successfully uploaded Image", false));
 
                                 // setState(() {});
                               }
@@ -144,7 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // Change Password
                     if (_oldPasswordController.text.length >= 8 &&
                         _newPasswordController.text.length > 8) {
-                      await Provider.of<Auth>(context, listen: false)
+                      await Provider.of<AuthProvider>(context, listen: false)
                           .changePassword(_oldPasswordController.text.trim(),
                               _newPasswordController.text.trim(), context);
                     }
@@ -152,13 +152,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // Change Email
                     if (_emailController.text != email) {
                       if (_oldPasswordController.text.length <= 8) {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text(
-                                "Old password is required to change email")));
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(snackBarWidget(
+                          "Old password is required to change email",
+                          true,
+                        ));
                       } else {
                         try {
                           String result =
-                              await Provider.of<Auth>(context, listen: false)
+                              await Provider.of<AuthProvider>(context, listen: false)
                                   .changeEmail(_oldPasswordController.text,
                                       _emailController.text, context);
                           if (result != "Error") {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/AuthenticationService.dart';
+import '../providers/auth_provider.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({Key key}) : super(key: key);
@@ -68,7 +68,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 ElevatedButton(
                   key: const ValueKey("Sign in"),
                   onPressed: () {
-                    context.read<Auth>().signIn(
+                    context.read<AuthProvider>().signIn(
                           email: emailController.text.trim(),
                           password: passwordController.text.trim(),
                         );
@@ -79,7 +79,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   key: const ValueKey("Sign up"),
                   style: ElevatedButton.styleFrom(primary: Colors.white),
                   onPressed: () {
-                    context.read<Auth>().signUp(
+                    context.read<AuthProvider>().signUp(
                           email: emailController.text.trim(),
                           password: passwordController.text.trim(),
                         );
@@ -91,7 +91,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   key: const ValueKey("DEVELOPER SIGNIN"),
                   style: ElevatedButton.styleFrom(primary: Colors.white),
                   onPressed: () {
-                    context.read<Auth>().devSignIn();
+                    context.read<AuthProvider>().devSignIn();
                   },
                   child: const Text("DEVELOPER SIGNIN",
                       style: TextStyle(color: Colors.red)),

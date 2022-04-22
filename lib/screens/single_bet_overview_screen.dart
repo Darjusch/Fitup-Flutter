@@ -4,6 +4,7 @@ import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/image_picker_helper.dart';
 import 'package:fitup/utils/time_helper.dart';
 import 'package:fitup/widgets/app_bar_widget.dart';
+import 'package:fitup/widgets/snack_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -201,8 +202,8 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                   .updateBetFile(bet.betID, result);
             }
             setState(() {
-              final snackBar = customSnackBar(result);
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              ScaffoldMessenger.of(context).showSnackBar(
+                  snackBarWidget(result, result == 'error' ? true : false));
             });
             Navigator.of(context).pop();
 
@@ -214,19 +215,6 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
           },
         ),
       ],
-    );
-  }
-
-  Widget customSnackBar(String result) {
-    return SnackBar(
-      content: Text(result != 'error' ? "Success" : result),
-      backgroundColor: result != 'error' ? Colors.green : Colors.red,
-      action: SnackBarAction(
-        label: 'Undo',
-        onPressed: () {
-          // Some code to undo the change.
-        },
-      ),
     );
   }
 }
