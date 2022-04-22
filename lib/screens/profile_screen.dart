@@ -51,65 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               top: 50.0.h, left: 40.w, right: 40.w, bottom: 15.h),
           child: Column(
             children: [
-              SizedBox(
-                height: 115.h,
-                width: 115.h,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  fit: StackFit.expand,
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: profilePicUrl == null
-                          ? const AssetImage(
-                              "assets/images/empty_profile_pic.png")
-                          : NetworkImage(profilePicUrl),
-                    ),
-                    Positioned(
-                        bottom: 0.h,
-                        right: -25.w,
-                        child: RawMaterialButton(
-                          onPressed: () async {
-                            try {
-                              // SELECT IMAGE
-                              String path = await ImagePickerHelper()
-                                  .getImageFrom(ImageSource.gallery);
-                              // Upload Image
-                              String result = await FirebaseHelper()
-                                  .uploadProfilePicFile(
-                                      path, currentUser.userID);
-
-                              // Update firebaseuser
-                              Provider.of<User>(context, listen: false)
-                                  .updatePhotoURL(result);
-
-                              // Update image
-                              if (result != "Error") {
-                                Provider.of<UserProvider>(context,
-                                        listen: false)
-                                    .updateProfilePic(result);
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    snackBarWidget(
-                                        "Successfully uploaded Image", false));
-
-                                // setState(() {});
-                              }
-                            } catch (err) {
-                              debugPrint(err.toString());
-                            }
-                          },
-                          elevation: 2.0,
-                          fillColor: const Color(0xFFF5F6F9),
-                          child: const Icon(
-                            LineIcons.camera,
-                            color: Colors.blue,
-                          ),
-                          padding: EdgeInsets.all(15.0.h),
-                          shape: const CircleBorder(),
-                        )),
-                  ],
-                ),
-              ),
+              profilePicture(),
               SizedBox(
                 height: 50.h,
               ),
@@ -159,10 +101,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ));
                       } else {
                         try {
-                          String result =
-                              await Provider.of<AuthProvider>(context, listen: false)
-                                  .changeEmail(_oldPasswordController.text,
-                                      _emailController.text, context);
+                          String result = await Provider.of<AuthProvider>(
+                                  context,
+                                  listen: false)
+                              .changeEmail(_oldPasswordController.text,
+                                  _emailController.text, context);
                           if (result != "Error") {
                             Provider.of<UserProvider>(context, listen: false)
                                 .updateEmailAddress(_emailController.text);
@@ -185,6 +128,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget profilePicture() {
+    return SizedBox(
+      height: 115.h,
+      width: 115.h,
+      child: Stack(
+        clipBehavior: Clip.none,
+        fit: StackFit.expand,
+        children: [
+          CircleAvatar(
+            backgroundImage: profilePicUrl == null
+                ? const AssetImage("assets/images/empty_profile_pic.png")
+                : NetworkImage(profilePicUrl),
+          ),
+          Positioned(
+              bottom: 0.h,
+              right: -25.w,
+              child: RawMaterialButton(
+                onPressed: () async {
+                  try {
+                    // SELECT IMAGE
+                    String path = await ImagePickerHelper()
+                        .getImageFrom(ImageSource.gallery);
+                    // Upload Image
+                    String result = await FirebaseHelper()
+                        .uploadProfilePicFile(path, currentUser.userID);
+
+                    // Update firebaseuser
+                    Provider.of<User>(context, listen: false)
+                        .updatePhotoURL(result);
+
+                    // Update image
+                    if (result != "Error") {
+                      Provider.of<UserProvider>(context, listen: false)
+                          .updateProfilePic(result);
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          snackBarWidget("Successfully uploaded Image", false));
+
+                      // setState(() {});
+                    }
+                  } catch (err) {
+                    debugPrint(err.toString());
+                  }
+                },
+                elevation: 2.0,
+                fillColor: const Color(0xFFF5F6F9),
+                child: const Icon(
+                  LineIcons.camera,
+                  color: Colors.blue,
+                ),
+                padding: EdgeInsets.all(15.0.h),
+                shape: const CircleBorder(),
+              )),
+        ],
       ),
     );
   }
