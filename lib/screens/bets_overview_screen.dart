@@ -14,12 +14,6 @@ class BetOverviewScreen extends StatefulWidget {
 }
 
 class _BetOverviewScreenState extends State<BetOverviewScreen> {
-  Map<String, String> actionToIcon = {
-    "Push-ups": "assets/icons/push-up.jpeg",
-    "Make bed": "assets/icons/make-bed.png",
-    "Wake up": "assets/icons/wake-up.png",
-    "Shower": "assets/icons/shower.jpeg",
-  };
   bool overview = true;
 
   @override
@@ -85,7 +79,8 @@ class _BetOverviewScreenState extends State<BetOverviewScreen> {
                       height: 25.h,
                       width: 25.w,
                       child: ImageIcon(
-                        AssetImage(actionToIcon[betItem.action]),
+                        AssetImage(Provider.of<BetProvider>(context)
+                            .getIconOfAction(betItem.action)),
                       ),
                     ),
                     title: Text(betItem.action),

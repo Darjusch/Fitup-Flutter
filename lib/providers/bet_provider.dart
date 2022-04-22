@@ -9,6 +9,24 @@ import 'package:uuid/uuid.dart';
 class BetProvider extends ChangeNotifier {
   var uuid = const Uuid();
 
+  Map<String, String> actionToIcon = {
+    "Push-ups": "assets/icons/push-up.jpeg",
+    "Make bed": "assets/icons/make-bed.png",
+    "Wake up": "assets/icons/wake-up.png",
+    "Shower": "assets/icons/shower.jpeg",
+  };
+
+  String getIconOfAction(String action) {
+    if (actionToIcon.containsKey(action)) {
+      return actionToIcon[action];
+    }
+    return "No Icon";
+  }
+
+  void addActionToIcon(String action, String icon) {
+    actionToIcon[action] = icon;
+  }
+
   final List<BetModel> _bets = [];
 
   UnmodifiableListView<BetModel> get bets => UnmodifiableListView(_bets);
