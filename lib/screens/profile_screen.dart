@@ -69,6 +69,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   .uploadProfilePicFile(
                                       path, currentUser.userID);
 
+                              // Update firebaseuser
+                              Provider.of<User>(context, listen: false).updatePhotoURL(result);
+
                               // Update image
                               if (result != "Error") {
                                 Provider.of<UserProvider>(context,
