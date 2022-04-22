@@ -19,14 +19,22 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   // final TextEditingController _username = TextEditingController();
-  final TextEditingController _email = TextEditingController();
-  final TextEditingController _newPassword = TextEditingController();
-  final TextEditingController _oldPassword = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _oldPasswordController = TextEditingController();
 
   String email;
   String profilePicUrl;
   User firebaseUser;
   UserModel currentUser;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _newPasswordController.dispose();
+    _oldPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +78,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       path, currentUser.userID);
 
                               // Update firebaseuser
-                              Provider.of<User>(context, listen: false).updatePhotoURL(result);
+                              Provider.of<User>(context, listen: false)
+                                  .updatePhotoURL(result);
 
                               // Update image
                               if (result != "Error") {
@@ -111,18 +120,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
               TextField(
                 decoration: InputDecoration(
                     hintText: Provider.of<UserProvider>(context).user.email),
-                controller: _email,
-              ),
-              TextField(
-                decoration: const InputDecoration(hintText: 'New Password'),
-                obscureText: true,
-                controller: _newPassword,
+                controller: _emailController,
               ),
               TextField(
                 decoration: const InputDecoration(hintText: 'Old Password'),
                 obscureText: true,
-                controller: _oldPassword,
+                controller: _oldPasswordController,
               ),
+              TextField(
+                decoration: const InputDecoration(hintText: 'New Password'),
+                obscureText: true,
+                controller: _newPasswordController,
+              ),
+
               SizedBox(
                 height: 150.h,
               ),
@@ -132,28 +142,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: TextButton(
                   onPressed: () async {
                     // Change Password
-                    if (_oldPassword.text.length >= 8 &&
-                        _newPassword.text.length > 8) {
+                    if (_oldPasswordController.text.length >= 8 &&
+                        _newPasswordController.text.length > 8) {
                       await Provider.of<Auth>(context, listen: false)
-                          .changePassword(_oldPassword.text.trim(),
-                              _newPassword.text.trim(), context);
+                          .changePassword(_oldPasswordController.text.trim(),
+                              _newPasswordController.text.trim(), context);
                     }
 
                     // Change Email
-                    if (_email.text != email) {
-                      try {
-                        Provider.of<User>(context, listen: false)
-                            .updateEmail(_email.text);
-                        Provider.of<UserProvider>(context, listen: false)
-                            .updateEmailAddress(_email.text);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text(
-                                    "Successfully changed Email Address")));
-                      } on FirebaseAuthException {
+                    if (_emailController.text != email) {
+                      if (_oldPasswordController.text.length <= 8) {
                         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                             content: Text(
-                                "invalid-email / email-already-in-use / need to login again")));
+                                "Old password is required to change email")));
+                      } else {
+                        try {
+                          String result =
+                              await Provider.of<Auth>(context, listen: false)
+                                  .changeEmail(_oldPasswordController.text,
+                                      _emailController.text, context);
+                          if (result != "Error") {
+                            Provider.of<UserProvider>(context, listen: false)
+                                .updateEmailAddress(_emailController.text);
+                          }
+                        } catch (err) {
+                          debugPrint(err.toString());
+                        }
                       }
                     }
                   },
