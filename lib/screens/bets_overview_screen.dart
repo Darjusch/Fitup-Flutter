@@ -28,6 +28,12 @@ class _BetOverviewScreenState extends State<BetOverviewScreen> {
     FirebaseHelper().updateBetActivityStatusAndCancelNotification(userID);
     FirebaseHelper().updateBetSuccessStatus(userID);
     Provider.of<BetProvider>(context, listen: false).loadInitalBets(userID);
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // TODO Bug bets are not shown with out clicking on overview or history
     // Probably the Provider doesnt have the bets at the point of time when the widget is build
 
@@ -35,12 +41,6 @@ class _BetOverviewScreenState extends State<BetOverviewScreen> {
         Provider.of<BetProvider>(context, listen: false).getActiveBets();
     inactiveBets =
         Provider.of<BetProvider>(context, listen: false).getInactiveBets();
-
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return SizedBox(
       height: 1000.h,
       width: double.infinity.w,
@@ -52,22 +52,8 @@ class _BetOverviewScreenState extends State<BetOverviewScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      overview = true;
-                    });
-                  },
-                  child: const Text("Active Bets"),
-                ),
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      overview = false;
-                    });
-                  },
-                  child: const Text("Bet History"),
-                ),
+                betSelectOverviewButton(true, "Active Bets"),
+                betSelectOverviewButton(false, "Bet History"),
               ],
             ),
           ),
@@ -79,43 +65,57 @@ class _BetOverviewScreenState extends State<BetOverviewScreen> {
                 itemBuilder: (context, index) {
                   final betItem =
                       overview ? activeBets[index] : inactiveBets[index];
-                  return ListTile(
-                    tileColor: overview
-                        ? null
-                        : betItem.success
-                            ? Colors.green
-                            : Colors.red,
-                    onTap: () {
-                      NavigationHelper()
-                          .goToSingleBetScreen(betItem.betID, context);
-                    },
-                    minLeadingWidth: 0,
-                    leading: SizedBox(
-                      height: 25.h,
-                      width: 25.w,
-                      child: ImageIcon(
-                        AssetImage(Provider.of<BetProvider>(context)
-                            .getIconOfAction(betItem.action)),
-                      ),
-                    ),
-                    title: Text(betItem.action),
-                    subtitle: InkWell(
-                      key: const ValueKey('betDetails'),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Time: ${betItem.time.format(context)}"),
-                          overview
-                              ? Text(
-                                  "Day: ${(betItem.duration - TimeHelper().betHasXDaysLeft(betItem.duration, betItem.startDate)) + 1} of ${betItem.duration}")
-                              : Text(betItem.success ? 'Success' : 'Failed')
-                        ],
-                      ),
-                    ),
-                  );
+                  return betInfoListTile(betItem);
                 }),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget betSelectOverviewButton(bool isOverview, String title) {
+    return TextButton(
+      onPressed: () {
+        setState(() {
+          overview = isOverview;
+        });
+      },
+      child: Text(title),
+    );
+  }
+
+  Widget betInfoListTile(BetModel betItem) {
+    return ListTile(
+      tileColor: overview
+          ? null
+          : betItem.success
+              ? Colors.green
+              : Colors.red,
+      onTap: () {
+        NavigationHelper().goToSingleBetScreen(betItem.betID, context);
+      },
+      minLeadingWidth: 0,
+      leading: SizedBox(
+        height: 25.h,
+        width: 25.w,
+        child: ImageIcon(
+          AssetImage(Provider.of<BetProvider>(context)
+              .getIconOfAction(betItem.action)),
+        ),
+      ),
+      title: Text(betItem.action),
+      subtitle: InkWell(
+        key: const ValueKey('betDetails'),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Time: ${betItem.time.format(context)}"),
+            overview
+                ? Text(
+                    "Day: ${(betItem.duration - TimeHelper().betHasXDaysLeft(betItem.duration, betItem.startDate)) + 1} of ${betItem.duration}")
+                : Text(betItem.success ? 'Success' : 'Failed')
+          ],
+        ),
       ),
     );
   }
