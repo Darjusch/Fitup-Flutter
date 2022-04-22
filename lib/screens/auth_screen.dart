@@ -32,75 +32,90 @@ class _AuthScreenState extends State<AuthScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              key: const ValueKey("emailField"),
-              controller: emailController,
-              decoration: const InputDecoration(
-                labelText: "Email",
-              ),
-            ),
-            TextField(
-              key: const ValueKey("passwordField"),
-              controller: passwordController,
-              obscureText: !_passwordVisible,
-              decoration: InputDecoration(
-                labelText: "Password",
-                hintText: 'Enter your password',
-                suffixIcon: IconButton(
-                    icon: Icon(
-                      // Based on passwordVisible state choose the icon
-                      _passwordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: Theme.of(context).primaryColorDark,
-                    ),
-                    onPressed: () {
-                      // Update the state i.e. toogle the state of passwordVisible variable
-                      setState(() {
-                        _passwordVisible = !_passwordVisible;
-                      });
-                    }),
-              ),
-            ),
+            emailField(),
+            passwordField(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
-                  key: const ValueKey("Sign in"),
-                  onPressed: () {
-                    context.read<AuthProvider>().signIn(
-                          email: emailController.text.trim(),
-                          password: passwordController.text.trim(),
-                        );
-                  },
-                  child: const Text("Sign in"),
-                ),
-                ElevatedButton(
-                  key: const ValueKey("Sign up"),
-                  style: ElevatedButton.styleFrom(primary: Colors.white),
-                  onPressed: () {
-                    context.read<AuthProvider>().signUp(
-                          email: emailController.text.trim(),
-                          password: passwordController.text.trim(),
-                        );
-                  },
-                  child: const Text("Sign Up",
-                      style: TextStyle(color: Colors.blue)),
-                ),
-                ElevatedButton(
-                  key: const ValueKey("DEVELOPER SIGNIN"),
-                  style: ElevatedButton.styleFrom(primary: Colors.white),
-                  onPressed: () {
-                    context.read<AuthProvider>().devSignIn();
-                  },
-                  child: const Text("DEVELOPER SIGNIN",
-                      style: TextStyle(color: Colors.red)),
-                ),
+                signInButton(),
+                singUpButton(),
+                developerSignInButton(),
               ],
             )
           ],
         ),
       ),
+    );
+  }
+
+  Widget emailField() {
+    return TextField(
+      key: const ValueKey("emailField"),
+      controller: emailController,
+      decoration: const InputDecoration(
+        labelText: "Email",
+      ),
+    );
+  }
+
+  Widget passwordField() {
+    return TextField(
+      key: const ValueKey("passwordField"),
+      controller: passwordController,
+      obscureText: !_passwordVisible,
+      decoration: InputDecoration(
+        labelText: "Password",
+        hintText: 'Enter your password',
+        suffixIcon: IconButton(
+            icon: Icon(
+              _passwordVisible ? Icons.visibility : Icons.visibility_off,
+              color: Theme.of(context).primaryColorDark,
+            ),
+            onPressed: () {
+              setState(() {
+                _passwordVisible = !_passwordVisible;
+              });
+            }),
+      ),
+    );
+  }
+
+  Widget signInButton() {
+    return ElevatedButton(
+      key: const ValueKey("Sign in"),
+      onPressed: () {
+        context.read<AuthProvider>().signIn(
+              email: emailController.text.trim(),
+              password: passwordController.text.trim(),
+            );
+      },
+      child: const Text("Sign in"),
+    );
+  }
+
+  Widget singUpButton() {
+    return ElevatedButton(
+      key: const ValueKey("Sign up"),
+      style: ElevatedButton.styleFrom(primary: Colors.white),
+      onPressed: () {
+        context.read<AuthProvider>().signUp(
+              email: emailController.text.trim(),
+              password: passwordController.text.trim(),
+            );
+      },
+      child: const Text("Sign Up", style: TextStyle(color: Colors.blue)),
+    );
+  }
+
+  Widget developerSignInButton() {
+    return ElevatedButton(
+      key: const ValueKey("DEVELOPER SIGNIN"),
+      style: ElevatedButton.styleFrom(primary: Colors.white),
+      onPressed: () {
+        context.read<AuthProvider>().devSignIn();
+      },
+      child:
+          const Text("DEVELOPER SIGNIN", style: TextStyle(color: Colors.red)),
     );
   }
 }
