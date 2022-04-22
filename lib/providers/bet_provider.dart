@@ -75,17 +75,18 @@ class BetProvider extends ChangeNotifier {
         activeBets.add(bet);
       }
     }
+
     return activeBets;
   }
 
   List<BetModel> getInactiveBets() {
-    List<BetModel> inActiveBets = [];
+    List<BetModel> inactiveBets = [];
     for (var bet in _bets) {
       if (bet.isActive == false) {
-        inActiveBets.add(bet);
+        inactiveBets.add(bet);
       }
     }
-    return inActiveBets;
+    return inactiveBets;
   }
 
   bool didUploadProofToday(BetModel bet) {
