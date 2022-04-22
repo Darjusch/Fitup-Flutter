@@ -117,7 +117,7 @@ class FirebaseHelper {
         .snapshots(includeMetadataChanges: true);
   }
 
-  void updateBetActivityStatus(String userID) {
+  void updateBetActivityStatusAndCancelNotification(String userID) {
     Stream<QuerySnapshot> snap = getAllBetsStream(userID);
     snap.forEach((element) {
       for (var doc in element.docs) {
@@ -135,5 +135,27 @@ class FirebaseHelper {
       }
     });
     return;
+  }
+
+  void updateBetSuccessStatus(String userID) {
+    try {
+      WriteBatch batch = FirebaseFirestore.instance.batch();
+
+      Stream<QuerySnapshot> snap = getInactiveBetsStream(userID);
+      snap.forEach((element) {
+        for (var doc in element.docs) {
+          if (doc['isActive'] == false && doc['success'] == null) {
+            if (doc['duration'] == doc['files'].entries.length) {
+              batch.update(doc.reference, {"success": true});
+            } else {
+              batch.update(doc.reference, {"success": false});
+            }
+          }
+        }
+      });
+      batch.commit().whenComplete(() => debugPrint("SUCCESS"));
+    } catch (err) {
+      debugPrint(err);
+    }
   }
 }
