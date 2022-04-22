@@ -1,6 +1,6 @@
-import 'package:fitup/screens/bet_overview_screen/bet_overview_screen.dart';
-import 'package:fitup/screens/create_bet_screen/create_bet_screen.dart';
-import 'package:fitup/screens/my_home_screen/my_home_screen.dart';
+import 'package:fitup/screens/bets_overview_screen.dart';
+import 'package:fitup/screens/create_bet_screen.dart';
+import 'package:fitup/screens/home_screen.dart';
 import 'package:fitup/screens/profile_screen.dart';
 import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';

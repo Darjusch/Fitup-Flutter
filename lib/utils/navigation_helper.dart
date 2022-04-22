@@ -1,13 +1,13 @@
-import 'package:fitup/screens/my_home_screen/my_home_screen.dart';
+import 'package:fitup/screens/home_screen.dart';
 // import 'package:fitup/screens/upload_file_screen/upload_screen.dart';
 // import 'package:fitup/screens/video_picker_screen/video_picker_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../screens/bet_overview_screen/bet_overview_screen.dart';
-import '../screens/create_bet_screen/create_bet_screen.dart';
-import '../screens/single_bet_screen/single_bet_screen.dart';
+import '../screens/bets_overview_screen.dart';
+import '../screens/create_bet_screen.dart';
+import '../screens/single_bet_overview_screen.dart';
 // import '../screens/image_picker_screen/image_picker_screen.dart';
-import '../screens/auth_screen/auth_screen.dart';
+import '../screens/auth_screen.dart';
 
 class NavigationHelper {
   // void goToUploadFileScreen(String betID, BuildContext context) {

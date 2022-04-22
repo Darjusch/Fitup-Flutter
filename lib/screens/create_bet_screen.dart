@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'dart:math';
 import 'package:uuid/uuid.dart';
 
-import '../../utils/time_helper.dart';
+import '../utils/time_helper.dart';
 
 class CreateBetScreen extends StatefulWidget {
   const CreateBetScreen({Key key}) : super(key: key);
