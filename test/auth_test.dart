@@ -19,7 +19,7 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {
 
 void main() {
   final MockFirebaseAuth mockFirebaseAuth = MockFirebaseAuth();
-  final Auth auth = Auth(auth: mockFirebaseAuth);
+  final AuthProvider auth = AuthProvider(auth: mockFirebaseAuth);
   String testEmail = "unit_test@fitup.de";
   String testPassword = "123456789";
 
