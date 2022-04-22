@@ -1,13 +1,16 @@
 import 'dart:io';
+import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/image_picker_helper.dart';
+import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class BetImagePicker extends StatefulWidget {
-  final String docId;
+  final String betID;
 
-  const BetImagePicker({Key key, @required this.docId}) : super(key: key);
+  const BetImagePicker({Key key, @required this.betID}) : super(key: key);
 
   @override
   State<BetImagePicker> createState() => _BetImagePickerState();
@@ -20,9 +23,8 @@ class _BetImagePickerState extends State<BetImagePicker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Image Picker"),
-        ),
+                appBar: customAppBar(title: "Image Picker Screen", context: context),
+
         body: SizedBox(
             height: 800,
             child: filePath == null || filePath == ''
@@ -80,15 +82,20 @@ class _BetImagePickerState extends State<BetImagePicker> {
                           height: 300,
                           width: 300,
                         ),
-                        //  TODO ONLY LET UPLOAD ONCE THEN NAVIGATE AWAY
                         ElevatedButton(
                             key: const ValueKey('uploadKey'),
                             onPressed: () async {
                               String result = await FirebaseHelper()
-                                  .uploadFile(filePath, widget.docId, fileType);
+                                  .uploadFile(filePath, widget.betID, fileType);
+                              if (result != 'error') {
+                                Provider.of<BetProvider>(context, listen: false)
+                                    .updateBetFile(widget.betID, result);
+                              }
+
                               final snackBar = SnackBar(
-                                content: Text(result),
-                                backgroundColor: result == "Success"
+                                content: Text(
+                                    result != 'error' ? "Success" : result),
+                                backgroundColor: result != 'error'
                                     ? Colors.green
                                     : Colors.red,
                                 action: SnackBarAction(

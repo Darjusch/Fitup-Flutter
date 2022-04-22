@@ -22,12 +22,11 @@ class ImagePickerHelper {
   }
 
   // Get video from gallery or camera
-  // TODO show warning that video can not be longer than 5 min
   Future<String> getVideoFrom(ImageSource source) async {
     try {
       XFile xfile = await ImagePicker().pickVideo(
         source: source,
-        maxDuration: const Duration(minutes: 5),
+        maxDuration: const Duration(seconds: 20),
       );
       if (xfile.path == null) {
         return '';

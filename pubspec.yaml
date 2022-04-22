@@ -36,12 +36,21 @@ dependencies:
   rxdart: ^0.27.3
   flutter_native_timezone: ^2.0.0
   video_player: ^2.3.0
+  uuid: ^3.0.6
+  flutter_speed_dial: ^5.1.0
+  google_nav_bar: ^5.0.6
+  line_icons: ^2.0.1
+  flutter_screenutil: ^5.4.0+1
 
 
   
 
 flutter:
   uses-material-design: true # Required if you use the Material icon font
+  assets:
+    - assets/images/
+    - assets/icons/
+
 
 flutter_icons:
   android: "launcher_icon"

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerWidget extends StatelessWidget {
@@ -11,8 +12,8 @@ class VideoPlayerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return controller != null && controller.value.isInitialized
-        ? SizedBox(height: 150, width: 150, child: buildVideo())
-        : const Icon(Icons.video_file, size: 120);
+        ? SizedBox(height: 150.h, width: 150.w, child: buildVideo())
+        : Icon(Icons.video_file, size: 120.h);
   }
 
   Widget buildVideo() => buildVideoPlayer();

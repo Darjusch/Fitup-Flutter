@@ -1,13 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitup/models/bet.dart';
+import 'package:fitup/models/bet_model.dart';
+import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/utils/firebase_helper.dart';
-import 'package:fitup/utils/navigation_helper.dart';
 import 'package:fitup/utils/notifications_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
+import 'package:uuid/uuid.dart';
 
 import '../../utils/time_helper.dart';
 
@@ -19,51 +21,35 @@ class CreateBetScreen extends StatefulWidget {
 }
 
 class _CreateBetScreenState extends State<CreateBetScreen> {
-  String dropdownActionValue = "Push-ups";
-  int dropdownDurationValue = 1;
+  String dropdownActionValue = "Wake up";
+  int dropdownDurationValue = 3;
   TimeOfDay _time = const TimeOfDay(hour: 8, minute: 0);
-  int _value = 0;
+  int _value = 15;
+  var uuid = const Uuid();
+  String userID;
+  String email;
+  @override
+  void initState() {
+    userID = Provider.of<User>(context, listen: false).uid;
+    email = Provider.of<User>(context, listen: false).email;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    String userID = context.watch<User>().uid;
-    String email = context.watch<User>().email;
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Create a Bet"),
-      ),
+      resizeToAvoidBottomInset: false,
       body: Padding(
-        padding: const EdgeInsets.all(40.0),
+        padding:
+            EdgeInsets.only(left: 50.w, right: 50.w, top: 20.h, bottom: 320.h),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 const Text("Bet Action"),
                 actionValueDropdown(),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                ElevatedButton(
-                  onPressed: () async {
-                    TimeOfDay newTime =
-                        await TimeHelper().selectTime(context, _time);
-                    setState(() {
-                      if (newTime != null) {
-                        _time = newTime;
-                      }
-                    });
-                  },
-                  child: const Text('SELECT TIME'),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Selected time: ${_time.format(context)}',
-                ),
               ],
             ),
             Row(
@@ -76,63 +62,73 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
+                const Text(
+                  'Bet Time',
+                ),
+                timePicker(),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
                 const Text("Bet Value"),
                 valueInput(),
               ],
             ),
-            FloatingActionButton(
-              onPressed: () async {
-                var rng = Random();
-                // TODO find a better way for creating the ID than random int
-
-                int randomID = rng.nextInt(1000000);
-                debugPrint("BET TIME ${_time.hour} - ${_time.minute}");
-                String docID = await FirebaseHelper().createBet(
-                  notificationID: randomID,
-                  now: DateTime.now(),
-                  context: context,
-                  dropdownActionValue: dropdownActionValue,
-                  time: _time,
-                  dropdownDurationValue: dropdownDurationValue,
-                  value: _value,
-                  userID: userID,
-                );
-                Provider.of<BetProvider>(context, listen: false).addBet(Bet(
-                  notificationID: randomID,
-                  now: DateTime.now(),
-                  context: context,
-                  dropdownActionValue: dropdownActionValue,
-                  time: _time,
-                  dropdownDurationValue: dropdownDurationValue,
-                  value: _value,
-                  userID: userID,
-                ));
-                if (docID == "Error") {
-                  final snackBar = SnackBar(
-                    content: const Text("Error"),
-                    action: SnackBarAction(
-                      label: 'Undo',
-                      onPressed: () {
-                        // Some code to undo the change.
-                      },
-                    ),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                } else {
-                  NavigationHelper().goToBetHistoryScreen(context);
-                  NotificationHelper.showScheduledNotification(
-                      id: randomID,
-                      title: email.split('@').first,
-                      body:
-                          'It\'s time for your scheduled $dropdownActionValue!',
-                      payload: docID,
-                      scheduledTime: Time(_time.hour, _time.minute));
-                }
-              },
-              child: const Icon(Icons.add),
-            )
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          var rng = Random();
+          int randomID = rng.nextInt(1000000);
+          String betID = uuid.v4();
+          debugPrint("BET TIME ${_time.hour} - ${_time.minute}");
+          BetModel bet = BetModel(
+            betID: betID,
+            notificationID: randomID,
+            startDate: DateTime.now(),
+            action: dropdownActionValue,
+            time: _time,
+            duration: dropdownDurationValue,
+            value: _value,
+            userID: userID,
+            files: {"initialized": "till we found a better approach"},
+          );
+          String docID = await FirebaseHelper().createBet(
+            bet: bet,
+            context: context,
+          );
+          Provider.of<BetProvider>(context, listen: false).addBet(bet);
+
+          if (docID == "Error") {
+            final snackBar = customSnackBar("Something went wrong");
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          } else {
+            NotificationHelper.showScheduledNotification(
+                id: randomID,
+                title: email.split('@').first,
+                body: 'It\'s time for your scheduled $dropdownActionValue!',
+                payload: betID,
+                scheduledTime: Time(_time.hour, _time.minute));
+            final snackBar = customSnackBar("Bet created successfully");
+
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget customSnackBar(String message) {
+    return SnackBar(
+      content: Text(message),
+      action: SnackBarAction(
+        label: 'Undo',
+        onPressed: () {
+          // Some code to undo the change.
+        },
       ),
     );
   }
@@ -156,6 +152,37 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
     );
   }
 
+  Widget timePicker() {
+    return TextButton(
+      onPressed: () async {
+        TimeOfDay newTime = await TimeHelper().selectTime(context, _time);
+        setState(() {
+          if (newTime != null) {
+            _time = newTime;
+          }
+        });
+      },
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.zero,
+      ),
+      child: Row(
+        children: [
+          Text(_time.format(context),
+              style: TextStyle(
+                  fontSize: 17.sp,
+                  decoration: TextDecoration.underline,
+                  color: (Colors.grey[700]),
+                  decorationThickness: 0.5,
+                  decorationColor: (Colors.grey[500]))),
+          Icon(
+            Icons.arrow_downward,
+            color: (Colors.grey[700]),
+          )
+        ],
+      ),
+    );
+  }
+
   Widget durationDropdown() {
     return DropdownButton<int>(
       value: dropdownDurationValue,
@@ -176,8 +203,8 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
 
   Widget valueInput() {
     return SizedBox(
-      height: 50.0,
-      width: 100.0,
+      height: 40.0.h,
+      width: 90.0.w,
       child: TextField(
         key: const ValueKey('betValueField'),
         onSubmitted: (text) => {
@@ -189,7 +216,10 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
           FilteringTextInputFormatter.digitsOnly
         ],
         decoration: InputDecoration(
-            border: const OutlineInputBorder(), hintText: "$_value €"),
+            contentPadding: const EdgeInsets.all(0.0),
+            border: const OutlineInputBorder(),
+            hintText: "$_value €"),
+        textAlign: TextAlign.center,
       ),
     );
   }

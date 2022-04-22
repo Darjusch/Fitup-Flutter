@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'package:fitup/providers/bet_provider.dart';
+import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:fitup/widgets/video_player_widget.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/image_picker_helper.dart';
@@ -7,9 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class BetVideoPicker extends StatefulWidget {
-  final String docId;
+  final String betID;
 
-  const BetVideoPicker({Key key, @required this.docId}) : super(key: key);
+  const BetVideoPicker({Key key, @required this.betID}) : super(key: key);
 
   @override
   State<BetVideoPicker> createState() => _BetVideoPickerState();
@@ -38,9 +41,7 @@ class _BetVideoPickerState extends State<BetVideoPicker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Video Picker"),
-        ),
+        appBar: customAppBar(title: "Video picker screen", context: context),
         body: SizedBox(
             height: 800,
             child: filePath == null || filePath == ''
@@ -75,16 +76,20 @@ class _BetVideoPickerState extends State<BetVideoPicker> {
                     width: 400,
                     child: Column(
                       children: [
-                        // TODO NAVIGATE AWAY AFTER UPLOAD
                         VideoPlayerWidget(controller: videoController),
                         ElevatedButton(
                             key: const ValueKey('uploadKey'),
                             onPressed: () async {
                               String result = await FirebaseHelper()
-                                  .uploadFile(filePath, widget.docId, fileType);
+                                  .uploadFile(filePath, widget.betID, fileType);
+                              if (result != 'error') {
+                                Provider.of<BetProvider>(context, listen: false)
+                                    .updateBetFile(widget.betID, result);
+                              }
                               final snackBar = SnackBar(
-                                content: Text(result),
-                                backgroundColor: result == "Success"
+                                content: Text(
+                                    result != 'error' ? "Success" : result),
+                                backgroundColor: result != 'error'
                                     ? Colors.green
                                     : Colors.red,
                                 action: SnackBarAction(
