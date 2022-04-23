@@ -28,7 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   User firebaseUser;
   UserModel currentUser;
 
-  String profileState = "User Details";
+  String profileState = "Change Email";
 
   @override
   void dispose() {
@@ -90,13 +90,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 50.h,
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                selectWhatToChangeButton("User Details"),
+                selectWhatToChangeButton("Change Email"),
                 selectWhatToChangeButton("Change Password"),
               ]),
               SizedBox(
                 height: 50.h,
               ),
-              if (profileState == "User Details")
+              if (profileState == "Change Email")
                 Column(
                   children: [
                     emailTextField(),
@@ -118,7 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 width: 150.w,
                 child: TextButton(
                   onPressed: () {
-                    profileState == "User Details"
+                    profileState == "Change Email"
                         ? changeEmail()
                         : changePassword();
                   },
