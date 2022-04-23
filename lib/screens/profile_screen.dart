@@ -19,7 +19,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // final TextEditingController _username = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _oldPasswordController = TextEditingController();
@@ -29,6 +28,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   User firebaseUser;
   UserModel currentUser;
 
+  String profileState = "User Details";
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -37,9 +38,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
+  void changePassword() async {
+    if (_oldPasswordController.text.length >= 8 &&
+        _newPasswordController.text.length > 8) {
+      await Provider.of<AuthProvider>(context, listen: false).changePassword(
+          _oldPasswordController.text.trim(),
+          _newPasswordController.text.trim(),
+          context);
+    }
+  }
+
+  void changeEmail() async {
+    if (_emailController.text != email) {
+      if (_oldPasswordController.text.length <= 8) {
+        ScaffoldMessenger.of(context).showSnackBar(snackBarWidget(
+          "Old password is required to change email",
+          true,
+        ));
+      } else {
+        try {
+          String result = await Provider.of<AuthProvider>(context,
+                  listen: false)
+              .changeEmail(
+                  _oldPasswordController.text, _emailController.text, context);
+          if (result != "Error") {
+            Provider.of<UserProvider>(context, listen: false)
+                .updateEmailAddress(_emailController.text);
+          }
+        } catch (err) {
+          debugPrint(err.toString());
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // String username = Provider.of<User>(context, listen: false).displayName;
     firebaseUser = Provider.of<User>(context);
     Provider.of<UserProvider>(context).signIn(firebaseUser);
     currentUser = Provider.of<UserProvider>(context).user;
@@ -55,26 +89,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(
                 height: 50.h,
               ),
-              // TextField(
-              //   decoration: const InputDecoration(hintText: 'Username'),
-              //   controller: _username,
-              // ),
-              TextField(
-                decoration: InputDecoration(
-                    hintText: Provider.of<UserProvider>(context).user.email),
-                controller: _emailController,
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                selectWhatToChangeButton("User Details"),
+                selectWhatToChangeButton("Change Password"),
+              ]),
+              SizedBox(
+                height: 50.h,
               ),
-              TextField(
-                decoration: const InputDecoration(hintText: 'Old Password'),
-                obscureText: true,
-                controller: _oldPasswordController,
-              ),
-              TextField(
-                decoration: const InputDecoration(hintText: 'New Password'),
-                obscureText: true,
-                controller: _newPasswordController,
-              ),
-
+              if (profileState == "User Details")
+                Column(
+                  children: [
+                    emailTextField(),
+                    oldPasswordTextField(),
+                  ],
+                ),
+              if (profileState == "Change Password")
+                Column(
+                  children: [
+                    newPasswordTextField(),
+                    oldPasswordTextField(),
+                  ],
+                ),
               SizedBox(
                 height: 150.h,
               ),
@@ -82,39 +117,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 40.h,
                 width: 150.w,
                 child: TextButton(
-                  onPressed: () async {
-                    // Change Password
-                    if (_oldPasswordController.text.length >= 8 &&
-                        _newPasswordController.text.length > 8) {
-                      await Provider.of<AuthProvider>(context, listen: false)
-                          .changePassword(_oldPasswordController.text.trim(),
-                              _newPasswordController.text.trim(), context);
-                    }
-
-                    // Change Email
-                    if (_emailController.text != email) {
-                      if (_oldPasswordController.text.length <= 8) {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(snackBarWidget(
-                          "Old password is required to change email",
-                          true,
-                        ));
-                      } else {
-                        try {
-                          String result = await Provider.of<AuthProvider>(
-                                  context,
-                                  listen: false)
-                              .changeEmail(_oldPasswordController.text,
-                                  _emailController.text, context);
-                          if (result != "Error") {
-                            Provider.of<UserProvider>(context, listen: false)
-                                .updateEmailAddress(_emailController.text);
-                          }
-                        } catch (err) {
-                          debugPrint(err.toString());
-                        }
-                      }
-                    }
+                  onPressed: () {
+                    profileState == "User Details"
+                        ? changeEmail()
+                        : changePassword();
                   },
                   child: const Text(
                     "Save",
@@ -129,6 +135,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget selectWhatToChangeButton(String title) {
+    return TextButton(
+      onPressed: () {
+        setState(() {
+          profileState = title;
+        });
+      },
+      child: Text(title),
+    );
+  }
+
+  Widget emailTextField() {
+    return TextField(
+      decoration: InputDecoration(
+          hintText: Provider.of<UserProvider>(context).user.email),
+      controller: _emailController,
+    );
+  }
+
+  Widget oldPasswordTextField() {
+    return TextField(
+      decoration: const InputDecoration(hintText: 'Old Password'),
+      obscureText: true,
+      controller: _oldPasswordController,
+    );
+  }
+
+  Widget newPasswordTextField() {
+    return TextField(
+      decoration: const InputDecoration(hintText: 'New Password'),
+      obscureText: true,
+      controller: _newPasswordController,
     );
   }
 
