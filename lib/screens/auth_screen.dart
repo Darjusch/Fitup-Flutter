@@ -12,8 +12,8 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
-
   final TextEditingController passwordController = TextEditingController();
   bool _passwordVisible;
 
@@ -28,40 +28,57 @@ class _AuthScreenState extends State<AuthScreen> {
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.only(
-            top: 40.0.h, bottom: 40.0.h, left: 40.0.w, right: 40.0.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            emailField(),
-            passwordField(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                signInButton(),
-                singUpButton(),
-                developerSignInButton(),
-              ],
-            )
-          ],
+            top: 40.0.h, bottom: 40.0.h, left: 45.0.w, right: 45.0.w),
+        child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              emailField(),
+              passwordField(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  signInButton(),
+                  singUpButton(),
+                  developerSignInButton(),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget emailField() {
-    return TextField(
+    return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       key: const ValueKey("emailField"),
       controller: emailController,
       decoration: const InputDecoration(
         labelText: "Email",
       ),
+      validator: (text) {
+        if (!(text.contains('@')) && text.isNotEmpty) {
+          return "Enter a valid email address!";
+        }
+        return null;
+      },
     );
   }
 
   Widget passwordField() {
-    return TextField(
+    return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       key: const ValueKey("passwordField"),
       controller: passwordController,
+      validator: (text) {
+        if (text.length <= 8 && text.isNotEmpty) {
+          return "Password has to be atleast 8 characters!";
+        }
+        return null;
+      },
       obscureText: !_passwordVisible,
       decoration: InputDecoration(
         labelText: "Password",
@@ -84,10 +101,12 @@ class _AuthScreenState extends State<AuthScreen> {
     return ElevatedButton(
       key: const ValueKey("Sign in"),
       onPressed: () {
-        context.read<AuthProvider>().signIn(
-              email: emailController.text.trim(),
-              password: passwordController.text.trim(),
-            );
+        if (formKey.currentState.validate()) {
+          context.read<AuthProvider>().signIn(
+                email: emailController.text.trim(),
+                password: passwordController.text.trim(),
+              );
+        }
       },
       child: const Text("Sign in"),
     );
@@ -98,10 +117,12 @@ class _AuthScreenState extends State<AuthScreen> {
       key: const ValueKey("Sign up"),
       style: ElevatedButton.styleFrom(primary: Colors.white),
       onPressed: () {
-        context.read<AuthProvider>().signUp(
-              email: emailController.text.trim(),
-              password: passwordController.text.trim(),
-            );
+        if (formKey.currentState.validate()) {
+          context.read<AuthProvider>().signUp(
+                email: emailController.text.trim(),
+                password: passwordController.text.trim(),
+              );
+        }
       },
       child: const Text("Sign Up", style: TextStyle(color: Colors.blue)),
     );
@@ -109,13 +130,12 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Widget developerSignInButton() {
     return ElevatedButton(
-      key: const ValueKey("DEVELOPER SIGNIN"),
+      key: const ValueKey("DEVELOPER"),
       style: ElevatedButton.styleFrom(primary: Colors.white),
       onPressed: () {
         context.read<AuthProvider>().devSignIn();
       },
-      child:
-          const Text("DEVELOPER SIGNIN", style: TextStyle(color: Colors.red)),
+      child: const Text("DEVELOPER", style: TextStyle(color: Colors.red)),
     );
   }
 }
