@@ -19,6 +19,9 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  GlobalKey<FormState> formKeyEmail = GlobalKey<FormState>();
+  GlobalKey<FormState> formKeyPassword = GlobalKey<FormState>();
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _oldPasswordController = TextEditingController();
@@ -39,35 +42,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void changePassword() async {
-    if (_oldPasswordController.text.length >= 8 &&
-        _newPasswordController.text.length > 8) {
-      await Provider.of<AuthProvider>(context, listen: false).changePassword(
-          _oldPasswordController.text.trim(),
-          _newPasswordController.text.trim(),
-          context);
+    if (formKeyPassword.currentState.validate()) {
+      try {
+        await Provider.of<AuthProvider>(context, listen: false).changePassword(
+            _oldPasswordController.text.trim(),
+            _newPasswordController.text.trim(),
+            context);
+      } catch (err) {
+        debugPrint(err.toString());
+      }
     }
   }
 
   void changeEmail() async {
-    if (_emailController.text != email) {
-      if (_oldPasswordController.text.length <= 8) {
-        ScaffoldMessenger.of(context).showSnackBar(snackBarWidget(
-          "Old password is required to change email",
-          true,
-        ));
-      } else {
-        try {
-          String result = await Provider.of<AuthProvider>(context,
-                  listen: false)
-              .changeEmail(
-                  _oldPasswordController.text, _emailController.text, context);
-          if (result != "Error") {
-            Provider.of<UserProvider>(context, listen: false)
-                .updateEmailAddress(_emailController.text);
-          }
-        } catch (err) {
-          debugPrint(err.toString());
+    if (formKeyEmail.currentState.validate()) {
+      try {
+        String result = await Provider.of<AuthProvider>(context, listen: false)
+            .changeEmail(
+                _oldPasswordController.text, _emailController.text, context);
+        if (result != "Error") {
+          Provider.of<UserProvider>(context, listen: false)
+              .updateEmailAddress(_emailController.text);
         }
+      } catch (err) {
+        debugPrint(err.toString());
       }
     }
   }
@@ -83,55 +81,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Padding(
           padding: EdgeInsets.only(
               top: 50.0.h, left: 40.w, right: 40.w, bottom: 15.h),
-          child: Column(
-            children: [
-              profilePicture(),
-              SizedBox(
-                height: 50.h,
-              ),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                selectWhatToChangeButton("Change Email"),
-                selectWhatToChangeButton("Change Password"),
-              ]),
-              SizedBox(
-                height: 50.h,
-              ),
-              if (profileState == "Change Email")
-                Column(
-                  children: [
-                    emailTextField(),
-                    oldPasswordTextField(),
-                  ],
+          child: SingleChildScrollView(
+            reverse: true,
+            child: Column(
+              children: [
+                profilePicture(),
+                SizedBox(
+                  height: 50.h,
                 ),
-              if (profileState == "Change Password")
-                Column(
-                  children: [
-                    newPasswordTextField(),
-                    oldPasswordTextField(),
-                  ],
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      selectWhatToChangeButton("Change Email"),
+                      selectWhatToChangeButton("Change Password"),
+                    ]),
+                SizedBox(
+                  height: 50.h,
                 ),
-              SizedBox(
-                height: 150.h,
-              ),
-              SizedBox(
-                height: 40.h,
-                width: 150.w,
-                child: TextButton(
-                  onPressed: () {
-                    profileState == "Change Email"
-                        ? changeEmail()
-                        : changePassword();
-                  },
-                  child: const Text(
-                    "Save",
-                    style: TextStyle(color: Colors.white),
+                if (profileState == "Change Email")
+                  Form(
+                    key: formKeyEmail,
+                    child: Column(
+                      children: [
+                        emailTextField(),
+                        oldPasswordTextField(),
+                      ],
+                    ),
                   ),
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                if (profileState == "Change Password")
+                  Form(
+                    key: formKeyPassword,
+                    child: Column(
+                      children: [
+                        newPasswordTextField(),
+                        oldPasswordTextField(),
+                      ],
+                    ),
                   ),
+                SizedBox(
+                  height: 100.h,
                 ),
-              )
-            ],
+                SizedBox(
+                  height: 40.h,
+                  width: 150.w,
+                  child: TextButton(
+                    onPressed: () {
+                      profileState == "Change Email"
+                          ? changeEmail()
+                          : changePassword();
+                    },
+                    child: const Text(
+                      "Save",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -150,27 +159,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget emailTextField() {
-    return TextField(
+    return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
-          hintText: Provider.of<UserProvider>(context).user.email),
+          labelText: Provider.of<UserProvider>(context).user.email),
       controller: _emailController,
+      validator: (text) {
+        if (!_emailController.text.contains('@') &&
+            _emailController.text.isNotEmpty) {
+          return "Enter valid Email Address";
+        }
+        return null;
+      },
     );
   }
 
   Widget oldPasswordTextField() {
-    return TextField(
-      decoration: const InputDecoration(hintText: 'Old Password'),
-      obscureText: true,
-      controller: _oldPasswordController,
+    return Padding(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: TextFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          decoration: const InputDecoration(labelText: 'Old Password'),
+          obscureText: true,
+          controller: _oldPasswordController,
+          validator: (text) {
+            if (_oldPasswordController.text.length <= 8) {
+              return "Password has to contain atleast 8 chars";
+            }
+            return null;
+          }),
     );
   }
 
   Widget newPasswordTextField() {
-    return TextField(
-      decoration: const InputDecoration(hintText: 'New Password'),
-      obscureText: true,
-      controller: _newPasswordController,
-    );
+    return TextFormField(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        decoration: const InputDecoration(labelText: 'New Password'),
+        obscureText: true,
+        controller: _newPasswordController,
+        validator: (text) {
+          if (_oldPasswordController.text.length <= 8) {
+            return "Password has to contain atleast 8 chars";
+          }
+          return null;
+        });
   }
 
   Widget profilePicture() {
