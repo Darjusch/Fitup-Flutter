@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/models/bet_model.dart';
 import 'package:fitup/providers/bet_provider.dart';
-import 'package:fitup/utils/firebase_helper.dart';
 import 'package:fitup/utils/navigation_helper.dart';
 import 'package:fitup/utils/time_helper.dart';
 import 'package:flutter/material.dart';
@@ -17,26 +15,11 @@ class BetOverviewScreen extends StatefulWidget {
 
 class _BetOverviewScreenState extends State<BetOverviewScreen> {
   bool overview = true;
-  String userID;
   List<BetModel> activeBets = [];
   List<BetModel> inactiveBets = [];
 
   @override
-  void initState() {
-    userID = Provider.of<User>(context, listen: false).uid;
-
-    FirebaseHelper().updateBetActivityStatusAndCancelNotification(userID);
-    FirebaseHelper().updateBetSuccessStatus(userID);
-    Provider.of<BetProvider>(context, listen: false).loadInitalBets(userID);
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    // TODO Bug bets are not shown with out clicking on overview or history
-    // Probably the Provider doesnt have the bets at the point of time when the widget is build
-
     activeBets =
         Provider.of<BetProvider>(context, listen: false).getActiveBets();
     inactiveBets =
