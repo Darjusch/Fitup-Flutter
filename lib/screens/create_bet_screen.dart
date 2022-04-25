@@ -1,11 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/models/bet_model.dart';
 import 'package:fitup/providers/bet_provider.dart';
-import 'package:fitup/utils/firebase_helper.dart';
+import 'package:fitup/apis/firebase_api.dart';
 import 'package:fitup/utils/notifications_helper.dart';
 import 'package:fitup/widgets/snack_bar_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -105,7 +104,7 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
       userID: userID,
       files: {"initialized": "till we found a better approach"},
     );
-    String docID = await FirebaseHelper().createBet(
+    String docID = await FirebaseApi().createBet(
       bet: bet,
       context: context,
     );
@@ -208,18 +207,27 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
       width: 90.0.w,
       child: TextField(
         key: const ValueKey('betValueField'),
-        onSubmitted: (text) => {
-          // TODO How to disallow - , .
-          _value = int.parse(text),
+        onSubmitted: (text) {
+          try {
+            // TODO How to disallow - , .
+            // TODO this doesn't work yet 
+            // Check this maybe https://stackoverflow.com/questions/49577781/how-to-create-number-input-field-in-flutter
+            final numeric = RegExp(r'^[0-9]+$');
+            if (numeric.hasMatch(text)) {
+              debugPrint("MATCH");
+              _value = int.parse(text);
+            } else {
+              debugPrint("NO MATCH");
+            }
+          } catch (err) {
+            debugPrint(err);
+          }
         },
-        keyboardType: TextInputType.number,
-        inputFormatters: <TextInputFormatter>[
-          FilteringTextInputFormatter.digitsOnly
-        ],
         decoration: InputDecoration(
-            contentPadding: const EdgeInsets.all(0.0),
-            border: const OutlineInputBorder(),
-            hintText: "$_value €"),
+          contentPadding: const EdgeInsets.all(0.0),
+          border: const OutlineInputBorder(),
+          hintText: "$_value €",
+        ),
         textAlign: TextAlign.center,
       ),
     );

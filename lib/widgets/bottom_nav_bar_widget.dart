@@ -4,7 +4,7 @@ import 'package:fitup/screens/bets_overview_screen.dart';
 import 'package:fitup/screens/create_bet_screen.dart';
 import 'package:fitup/screens/home_screen.dart';
 import 'package:fitup/screens/profile_screen.dart';
-import 'package:fitup/utils/firebase_helper.dart';
+import 'package:fitup/apis/firebase_api.dart';
 import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -41,8 +41,8 @@ class CustomNavigationWrapperState extends State<CustomNavigationWrapper> {
   void initState() {
     String userID = Provider.of<User>(context, listen: false).uid;
 
-    FirebaseHelper().updateBetActivityStatusAndCancelNotification(userID);
-    FirebaseHelper().updateBetSuccessStatus(userID);
+    FirebaseApi().updateBetActivityStatusAndCancelNotification(userID);
+    FirebaseApi().updateBetSuccessStatus(userID);
     Provider.of<BetProvider>(context, listen: false).loadInitalBets(userID);
     super.initState();
   }

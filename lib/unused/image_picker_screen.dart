@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:fitup/providers/bet_provider.dart';
-import 'package:fitup/utils/firebase_helper.dart';
+import 'package:fitup/apis/firebase_api.dart';
 import 'package:fitup/utils/image_picker_helper.dart';
 import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:fitup/widgets/snack_bar_widget.dart';
@@ -85,7 +85,7 @@ class _BetImagePickerState extends State<BetImagePicker> {
                         ElevatedButton(
                             key: const ValueKey('uploadKey'),
                             onPressed: () async {
-                              String result = await FirebaseHelper()
+                              String result = await FirebaseApi()
                                   .uploadFile(filePath, widget.betID, fileType);
                               if (result != 'error') {
                                 Provider.of<BetProvider>(context, listen: false)

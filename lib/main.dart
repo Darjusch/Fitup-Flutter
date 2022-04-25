@@ -19,14 +19,10 @@ Future<void> main() async {
 }
 
 // TODO IOS
-// auth screen to small in width overflow
+// auth screen to big in width -> overflow
 // in number input field there is no button to confirm so keyboard doesnt go down
 // -> There is no solution to this use the normal keyboard and have a validator that says only numbers
-// input fields sometimes dont open on ios
-// -> Solution Turns out if the hardware keyboard is connected,
-//it will suppress the software keyboard. cmd + shift + k disconnects the hardware keyboard
-// or cmd + k toggles the software keyboard.
-// load initial bets doesn't work after password and email change
+// load initial bets doesn't work after logging in again
 // -> Lets check if it is the same behaviour for android
 class MyApp extends StatelessWidget {
   const MyApp({Key key}) : super(key: key);

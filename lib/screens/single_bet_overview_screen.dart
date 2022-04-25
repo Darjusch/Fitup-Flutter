@@ -1,6 +1,6 @@
 import 'package:fitup/models/bet_model.dart';
 import 'package:fitup/providers/bet_provider.dart';
-import 'package:fitup/utils/firebase_helper.dart';
+import 'package:fitup/apis/firebase_api.dart';
 import 'package:fitup/utils/image_picker_helper.dart';
 import 'package:fitup/utils/time_helper.dart';
 import 'package:fitup/widgets/app_bar_widget.dart';
@@ -196,7 +196,7 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
             String path =
                 await ImagePickerHelper().getVideoFrom(ImageSource.gallery);
             String result =
-                await FirebaseHelper().uploadFile(path, bet.betID, 'videos');
+                await FirebaseApi().uploadFile(path, bet.betID, 'videos');
             if (result != 'error') {
               Provider.of<BetProvider>(context, listen: false)
                   .updateBetFile(bet.betID, result);
