@@ -8,7 +8,8 @@ Make yourself accountable by betting on your habits.
 
 ## Getting started
 
-// For the firebase connection you need to request the API Key from me.
+For the firebase connection you need to request the API Key from me.
+Alternativly you can setup your own: https://firebase.google.com/docs/flutter/setup?platform=android
 
 Requirements:
 Flutter, Dart
