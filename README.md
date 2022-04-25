@@ -4,6 +4,15 @@ Make yourself accountable by betting on your habits.
 
 ## Screenshots
 
+https://user-images.githubusercontent.com/32839416/165076630-2705233e-01ec-4004-a629-3383302fda7d.mov
+
+https://user-images.githubusercontent.com/32839416/165076554-b696cd1b-bd2b-4919-bf35-c50268d551d7.mov
+
+https://user-images.githubusercontent.com/32839416/165077113-cb5042d7-1f52-4336-95c5-59e2d7e96958.mov
+
+
+
+
 ## Features
 
 ## Getting started
