@@ -1,4 +1,4 @@
-import 'package:fitup/utils/time_helper.dart';
+import 'package:fitup/controller/time_helper.dart';
 import 'package:test/test.dart';
 
 void main() {

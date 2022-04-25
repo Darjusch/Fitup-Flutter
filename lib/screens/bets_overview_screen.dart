@@ -1,7 +1,7 @@
 import 'package:fitup/models/bet_model.dart';
 import 'package:fitup/providers/bet_provider.dart';
-import 'package:fitup/utils/navigation_helper.dart';
-import 'package:fitup/utils/time_helper.dart';
+import 'package:fitup/controller/navigation_helper.dart';
+import 'package:fitup/controller/time_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';

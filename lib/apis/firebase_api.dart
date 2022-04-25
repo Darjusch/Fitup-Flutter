@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:fitup/models/bet_model.dart';
-import 'package:fitup/utils/notifications_helper.dart';
-import 'package:fitup/utils/time_helper.dart';
+import 'package:fitup/controller/notifications_helper.dart';
+import 'package:fitup/controller/time_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;

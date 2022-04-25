@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fitup/models/bet_model.dart';
-import 'package:fitup/utils/time_helper.dart';
+import 'package:fitup/controller/time_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 

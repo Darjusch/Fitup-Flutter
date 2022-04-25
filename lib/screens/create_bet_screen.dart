@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/models/bet_model.dart';
 import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/apis/firebase_api.dart';
-import 'package:fitup/utils/notifications_helper.dart';
+import 'package:fitup/controller/notifications_helper.dart';
 import 'package:fitup/widgets/snack_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'dart:math';
 import 'package:uuid/uuid.dart';
 
-import '../utils/time_helper.dart';
+import '../controller/time_helper.dart';
 
 class CreateBetScreen extends StatefulWidget {
   const CreateBetScreen({Key key}) : super(key: key);

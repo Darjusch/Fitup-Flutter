@@ -1,5 +1,5 @@
-import 'package:fitup/utils/navigation_helper.dart';
-import 'package:fitup/utils/notifications_helper.dart';
+import 'package:fitup/controller/navigation_helper.dart';
+import 'package:fitup/controller/notifications_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

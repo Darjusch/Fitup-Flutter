@@ -3,7 +3,7 @@ import 'package:fitup/models/user_model.dart';
 import 'package:fitup/providers/auth_provider.dart';
 import 'package:fitup/providers/user_provider.dart';
 import 'package:fitup/apis/firebase_api.dart';
-import 'package:fitup/utils/image_picker_helper.dart';
+import 'package:fitup/controller/image_picker_helper.dart';
 import 'package:fitup/widgets/snack_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
