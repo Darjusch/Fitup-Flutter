@@ -202,8 +202,11 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
                   .updateBetFile(bet.betID, result);
             }
             setState(() {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  snackBarWidget(result, result == 'error' ? true : false));
+              ScaffoldMessenger.of(context).showSnackBar(snackBarWidget(
+                  result == 'error'
+                      ? 'There was a problem uploading the video!'
+                      : "Successfully uploaded the video!",
+                  result == 'error' ? true : false));
             });
             Navigator.of(context).pop();
 
