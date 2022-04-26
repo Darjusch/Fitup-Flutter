@@ -1,5 +1,3 @@
-import 'package:fitup/controller/navigation_helper.dart';
-import 'package:fitup/controller/notifications_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -11,21 +9,6 @@ class MyHomeScreen extends StatefulWidget {
 }
 
 class _MyHomeScreenState extends State<MyHomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-    NotificationHelper.init(initScheduled: true);
-    listenNotifications();
-  }
-
-  void listenNotifications() =>
-      NotificationHelper.onNotifications.stream.listen((onClickedNotification));
-
-  void onClickedNotification(String payload) {
-    debugPrint(payload);
-    NavigationHelper().goToSingleBetScreen(payload, context);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(

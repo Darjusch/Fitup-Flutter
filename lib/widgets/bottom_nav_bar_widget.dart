@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitup/controller/navigation_helper.dart';
+import 'package:fitup/controller/notifications_helper.dart';
 import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/screens/bets_overview_screen.dart';
 import 'package:fitup/screens/create_bet_screen.dart';
@@ -39,12 +41,23 @@ class CustomNavigationWrapperState extends State<CustomNavigationWrapper> {
 
   @override
   void initState() {
+    NotificationHelper.init(initScheduled: true);
+    listenNotifications();
+
     String userID = Provider.of<User>(context, listen: false).uid;
 
     FirebaseApi().updateBetActivityStatusAndCancelNotification(userID);
     FirebaseApi().updateBetSuccessStatus(userID);
     Provider.of<BetProvider>(context, listen: false).loadInitalBets(userID);
     super.initState();
+  }
+
+  void listenNotifications() =>
+      NotificationHelper.onNotifications.stream.listen((onClickedNotification));
+
+  void onClickedNotification(String payload) {
+    debugPrint(payload);
+    NavigationHelper().goToSingleBetScreen(payload, context);
   }
 
   @override
