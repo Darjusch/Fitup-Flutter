@@ -2,12 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/models/user_model.dart';
 import 'package:fitup/providers/auth_provider.dart';
 import 'package:fitup/providers/user_provider.dart';
-import 'package:fitup/apis/firebase_api.dart';
-import 'package:fitup/controller/image_picker_helper.dart';
 import 'package:fitup/widgets/snack_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +16,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  // TODO take this out into user provider OR maybe better create a own file for the state
   GlobalKey<FormState> formKeyEmail = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyPassword = GlobalKey<FormState>();
 
@@ -226,11 +224,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onPressed: () async {
                   try {
                     // SELECT IMAGE
-                    String path = await ImagePickerHelper()
-                        .getImageFrom(ImageSource.gallery);
+                    String path = await Provider.of(context, listen: false).selectImage();
                     // Upload Image
-                    String result = await FirebaseApi()
-                        .uploadProfilePicFile(path, currentUser.userID);
+                    String result =
+                        await Provider.of<UserProvider>(context, listen: false)
+                            .uploadProfilePicFile(path, currentUser.userID);
 
                     // Update firebaseuser
                     Provider.of<User>(context, listen: false)
@@ -243,8 +241,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                       ScaffoldMessenger.of(context).showSnackBar(
                           snackBarWidget("Successfully uploaded Image", false));
-
-                      // setState(() {});
                     }
                   } catch (err) {
                     debugPrint(err.toString());
