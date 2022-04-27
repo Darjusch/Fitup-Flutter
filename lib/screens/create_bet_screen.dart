@@ -104,11 +104,8 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
       userID: userID,
       files: {"initialized": "till we found a better approach"},
     );
-    String docID = await FirebaseApi().createBet(
-      bet: bet,
-      context: context,
-    );
-    Provider.of<BetProvider>(context, listen: false).addBet(bet);
+
+    String docID = await Provider.of<BetProvider>(context, listen: false).addBet(bet, context);
 
     if (docID == "Error") {
       ScaffoldMessenger.of(context).showSnackBar(snackBarWidget(
@@ -210,7 +207,7 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
         onSubmitted: (text) {
           try {
             // TODO How to disallow - , .
-            // TODO this doesn't work yet 
+            // TODO this doesn't work yet
             // Check this maybe https://stackoverflow.com/questions/49577781/how-to-create-number-input-field-in-flutter
             final numeric = RegExp(r'^[0-9]+$');
             if (numeric.hasMatch(text)) {
