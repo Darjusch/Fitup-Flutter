@@ -1,35 +1,13 @@
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fitup/apis/firebase_api.dart';
 import 'package:fitup/models/bet_model.dart';
 import 'package:fitup/controller/time_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 class BetProvider extends ChangeNotifier {
-  var uuid = const Uuid();
-
-  Map<String, String> actionToIcon = {
-    "Push-ups": "assets/icons/push-up.jpeg",
-    "Make bed": "assets/icons/make-bed.png",
-    "Wake up": "assets/icons/wake-up.png",
-    "Shower": "assets/icons/shower.jpeg",
-  };
-
-  List<String> actions = ["Push-ups", "Make bed", "Wake up", "Shower"];
-  List<int> duration = [1, 2, 3, 4, 5, 6, 7];
-
-  String getIconOfAction(String action) {
-    if (actionToIcon.containsKey(action)) {
-      return actionToIcon[action];
-    }
-    return "No Icon";
-  }
-
-  void addActionToIcon(String action, String icon) {
-    actionToIcon[action] = icon;
-  }
-
   final List<BetModel> _bets = [];
 
   UnmodifiableListView<BetModel> get bets => UnmodifiableListView(_bets);
@@ -132,33 +110,51 @@ class BetProvider extends ChangeNotifier {
     return images;
   }
 
-  void loadInitalBets(String userID) {
+  void loadInitalBets(String userID) async {
     if (_bets.isNotEmpty) {
       return;
     }
-    FirebaseFirestore.instance
-        .collection('bets')
-        .where('user_id', isEqualTo: userID)
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      for (var doc in querySnapshot.docs) {
-        Map<String, String> files = Map<String, String>.from(doc['files']);
-        _bets.add(BetModel(
-          betID: doc['betID'],
-          action: doc['action'],
-          duration: doc['duration'],
-          isActive: doc['isActive'],
-          notificationID: doc['notificationID'],
-          startDate: doc['startDate'].toDate(),
-          success: doc['success'],
-          time: TimeOfDay(
-              hour: int.parse(doc['time'].split(":")[0]),
-              minute: int.parse(doc['time'].split(":")[1])),
-          userID: doc['user_id'],
-          value: doc['value'],
-          files: files,
-        ));
-      }
-    });
+    QuerySnapshot querySnapshot = await FirebaseApi().getInitialBets(userID);
+    for (var doc in querySnapshot.docs) {
+      Map<String, String> files = Map<String, String>.from(doc['files']);
+      _bets.add(BetModel(
+        betID: doc['betID'],
+        action: doc['action'],
+        duration: doc['duration'],
+        isActive: doc['isActive'],
+        notificationID: doc['notificationID'],
+        startDate: doc['startDate'].toDate(),
+        success: doc['success'],
+        time: TimeOfDay(
+            hour: int.parse(doc['time'].split(":")[0]),
+            minute: int.parse(doc['time'].split(":")[1])),
+        userID: doc['user_id'],
+        value: doc['value'],
+        files: files,
+      ));
+    }
+  }
+
+  var uuid = const Uuid();
+
+  Map<String, String> actionToIcon = {
+    "Push-ups": "assets/icons/push-up.jpeg",
+    "Make bed": "assets/icons/make-bed.png",
+    "Wake up": "assets/icons/wake-up.png",
+    "Shower": "assets/icons/shower.jpeg",
+  };
+
+  List<String> actions = ["Push-ups", "Make bed", "Wake up", "Shower"];
+  List<int> duration = [1, 2, 3, 4, 5, 6, 7];
+
+  String getIconOfAction(String action) {
+    if (actionToIcon.containsKey(action)) {
+      return actionToIcon[action];
+    }
+    return "No Icon";
+  }
+
+  void addActionToIcon(String action, String icon) {
+    actionToIcon[action] = icon;
   }
 }

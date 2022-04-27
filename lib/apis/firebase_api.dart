@@ -158,4 +158,16 @@ class FirebaseApi {
       debugPrint(err);
     }
   }
+
+  Future<QuerySnapshot> getInitialBets(String userID) async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('bets')
+          .where('user_id', isEqualTo: userID)
+          .get();
+      return querySnapshot;
+    } catch (err) {
+      debugPrint(err);
+    }
+  }
 }
