@@ -12,9 +12,14 @@ class BetProvider extends ChangeNotifier {
 
   UnmodifiableListView<BetModel> get bets => UnmodifiableListView(_bets);
 
-  void addBet(BetModel bet) {
+  Future<String> addBet(BetModel bet, BuildContext context) async {
     _bets.add(bet);
+    String docID = await FirebaseApi().createBet(
+      bet: bet,
+      context: context,
+    );
     notifyListeners();
+    return docID;
   }
 
   BetModel getBet(String betID) {
