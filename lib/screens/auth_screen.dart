@@ -1,3 +1,4 @@
+import 'package:fitup/widgets/platform_aware/platform_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -98,8 +99,10 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   Widget signInButton() {
-    return ElevatedButton(
-      key: const ValueKey("Sign in"),
+    return PlatformButton(
+      buttonColor: Colors.blue,
+      textColor: Colors.white,
+      text: "Sign in",
       onPressed: () {
         if (formKey.currentState.validate()) {
           context.read<AuthProvider>().signIn(
@@ -108,14 +111,14 @@ class _AuthScreenState extends State<AuthScreen> {
               );
         }
       },
-      child: const Text("Sign in"),
     );
   }
 
   Widget singUpButton() {
-    return ElevatedButton(
-      key: const ValueKey("Sign up"),
-      style: ElevatedButton.styleFrom(primary: Colors.white),
+    return PlatformButton(
+      buttonColor: Colors.white,
+      textColor: Colors.blue,
+      text: "Sign Up",
       onPressed: () {
         if (formKey.currentState.validate()) {
           context.read<AuthProvider>().signUp(
@@ -124,18 +127,17 @@ class _AuthScreenState extends State<AuthScreen> {
               );
         }
       },
-      child: const Text("Sign Up", style: TextStyle(color: Colors.blue)),
     );
   }
 
   Widget developerSignInButton() {
-    return ElevatedButton(
-      key: const ValueKey("DEVELOPER"),
-      style: ElevatedButton.styleFrom(primary: Colors.white),
+    return PlatformButton(
+      buttonColor: Colors.white,
+      textColor: Colors.red,
+      text: "DEVELOPER",
       onPressed: () {
         context.read<AuthProvider>().devSignIn();
       },
-      child: const Text("DEVELOPER", style: TextStyle(color: Colors.red)),
     );
   }
 }
