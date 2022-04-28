@@ -1,13 +1,11 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/models/bet_model.dart';
 import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/controller/notifications_helper.dart';
 import 'package:fitup/utils/ui_state_restoration.dart';
+import 'package:fitup/widgets/platform_aware/platform_datepicker.dart';
 import 'package:fitup/widgets/platform_aware/platform_textField.dart';
 import 'package:fitup/widgets/snack_bar_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -97,11 +95,8 @@ class _CreateBetScreenState extends State<CreateBetScreen>
                 valueInput(),
               ],
             ),
-            const SizedBox(
-              height: 50,
-            ),
             SizedBox(
-              height: 150.h,
+              height: 100.h,
               width: double.infinity,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -109,23 +104,28 @@ class _CreateBetScreenState extends State<CreateBetScreen>
                   const Text(
                     'Bet Time',
                   ),
-                  Platform.isIOS
-                      ? SizedBox(
-                          height: 100.h,
-                          width: 200.h,
-                          child: CupertinoDatePicker(
-                            mode: CupertinoDatePickerMode.time,
-                            onDateTimeChanged: (newTime) {
-                              if (newTime != null) {
-                                setState(() {
-                                  _time = TimeOfDay.fromDateTime(newTime);
-                                });
-                              }
-                            },
-                            initialDateTime: DateTime.now(),
-                          ),
-                        )
-                      : timePicker(),
+                  SizedBox(
+                      height: 100.h,
+                      width: 200.h,
+                      child: PlatformDatePicker(
+                        onDateTimeChanged: (newTime) {
+                          if (newTime != null) {
+                            setState(() {
+                              _time = TimeOfDay.fromDateTime(newTime);
+                            });
+                          }
+                        },
+                        onPressed: () async {
+                          TimeOfDay newTime =
+                              await TimeHelper().selectTime(context, _time);
+                          setState(() {
+                            if (newTime != null) {
+                              _time = newTime;
+                            }
+                          });
+                        },
+                        selectedTime: _time,
+                      ))
                 ],
               ),
             ),
@@ -202,37 +202,6 @@ class _CreateBetScreenState extends State<CreateBetScreen>
           dropdownActionValue = newValue;
         });
       },
-    );
-  }
-
-  Widget timePicker() {
-    return TextButton(
-      onPressed: () async {
-        TimeOfDay newTime = await TimeHelper().selectTime(context, _time);
-        setState(() {
-          if (newTime != null) {
-            _time = newTime;
-          }
-        });
-      },
-      style: TextButton.styleFrom(
-        padding: EdgeInsets.zero,
-      ),
-      child: Row(
-        children: [
-          Text(_time.format(context),
-              style: TextStyle(
-                  fontSize: 17.sp,
-                  decoration: TextDecoration.underline,
-                  color: (Colors.grey[700]),
-                  decorationThickness: 0.5,
-                  decorationColor: (Colors.grey[500]))),
-          Icon(
-            Icons.arrow_downward,
-            color: (Colors.grey[700]),
-          )
-        ],
-      ),
     );
   }
 
