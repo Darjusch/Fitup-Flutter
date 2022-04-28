@@ -3,6 +3,7 @@ import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/apis/firebase_api.dart';
 import 'package:fitup/controller/image_picker_helper.dart';
 import 'package:fitup/controller/time_helper.dart';
+import 'package:fitup/utils/battery_status.dart';
 import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:fitup/widgets/snack_bar_widget.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,10 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
   @override
   void initState() {
     bet = Provider.of<BetProvider>(context, listen: false).getBet(widget.betID);
-
+    DeviceBatteryStatus().getBatteryHealth();
+    // Here we can now check if battery level is to low that we dont load videos or only 1 or something like that
+    // Maybe also not allow to record or upload video 
+    // Or only select image / video from gallery instead of camera 
     bet.files.forEach((key, value) {
       if (value.contains("mp4")) {
         videos.add(value);
