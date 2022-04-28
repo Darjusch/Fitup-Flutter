@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/models/user_model.dart';
 import 'package:fitup/providers/auth_provider.dart';
 import 'package:fitup/providers/user_provider.dart';
+import 'package:fitup/widgets/platform_aware/platform_button.dart';
 import 'package:fitup/widgets/snack_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -121,20 +122,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(
                   height: 40.h,
                   width: 150.w,
-                  child: TextButton(
-                    onPressed: () {
-                      profileState == "Change Email"
-                          ? changeEmail()
-                          : changePassword();
-                    },
-                    child: const Text(
-                      "Save",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                    ),
-                  ),
+
+                  child: PlatformButton(
+                      buttonColor: Colors.blue,
+                      textColor: Colors.white,
+                      text: "Save",
+                      onPressed: () {
+                        profileState == "Change Email"
+                            ? changeEmail()
+                            : changePassword();
+                      }),
+
                 )
               ],
             ),
@@ -223,7 +221,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onPressed: () async {
                   try {
                     // SELECT IMAGE
-                    String path = await Provider.of(context, listen: false).selectImage();
+                    String path =
+                        await Provider.of(context, listen: false).selectImage();
                     // Upload Image
                     String result =
                         await Provider.of<UserProvider>(context, listen: false)

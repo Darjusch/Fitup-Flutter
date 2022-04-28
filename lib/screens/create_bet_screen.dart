@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/models/bet_model.dart';
 import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/controller/notifications_helper.dart';
 import 'package:fitup/utils/ui_state_restoration.dart';
+import 'package:fitup/widgets/platform_aware/platform_textField.dart';
 import 'package:fitup/widgets/snack_bar_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,7 +26,6 @@ class CreateBetScreen extends StatefulWidget {
 
 class _CreateBetScreenState extends State<CreateBetScreen>
     with WidgetsBindingObserver {
-
   String dropdownActionValue;
   int dropdownDurationValue;
   TimeOfDay _time = const TimeOfDay(hour: 8, minute: 0);
@@ -69,7 +72,7 @@ class _CreateBetScreenState extends State<CreateBetScreen>
       resizeToAvoidBottomInset: false,
       body: Padding(
         padding:
-            EdgeInsets.only(left: 50.w, right: 50.w, top: 20.h, bottom: 320.h),
+            EdgeInsets.only(left: 50.w, right: 50.w, top: 20.h, bottom: 200.h),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -90,18 +93,41 @@ class _CreateBetScreenState extends State<CreateBetScreen>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                const Text(
-                  'Bet Time',
-                ),
-                timePicker(),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
                 const Text("Bet Value"),
                 valueInput(),
               ],
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            SizedBox(
+              height: 150.h,
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  const Text(
+                    'Bet Time',
+                  ),
+                  Platform.isIOS
+                      ? SizedBox(
+                          height: 100.h,
+                          width: 200.h,
+                          child: CupertinoDatePicker(
+                            mode: CupertinoDatePickerMode.time,
+                            onDateTimeChanged: (newTime) {
+                              if (newTime != null) {
+                                setState(() {
+                                  _time = TimeOfDay.fromDateTime(newTime);
+                                });
+                              }
+                            },
+                            initialDateTime: DateTime.now(),
+                          ),
+                        )
+                      : timePicker(),
+                ],
+              ),
             ),
           ],
         ),
@@ -141,7 +167,7 @@ class _CreateBetScreenState extends State<CreateBetScreen>
         true,
       ));
     } else {
-      // Setting initial values again 
+      // Setting initial values again
       UiStateRestoration.setAction("Wake up");
       UiStateRestoration.setDuration(3);
       UiStateRestoration.setValue(15);
@@ -232,33 +258,20 @@ class _CreateBetScreenState extends State<CreateBetScreen>
 
   Widget valueInput() {
     return SizedBox(
-      height: 40.0.h,
-      width: 90.0.w,
-      child: TextField(
-        key: const ValueKey('betValueField'),
-        onSubmitted: (text) {
-          try {
-            // TODO How to disallow - , .
-            // TODO this doesn't work yet
-            // Check this maybe https://stackoverflow.com/questions/49577781/how-to-create-number-input-field-in-flutter
-            final numeric = RegExp(r'^[0-9]+$');
-            if (numeric.hasMatch(text)) {
-              debugPrint("MATCH");
+        height: 40.0.h,
+        width: 90.0.w,
+        child: PlatformTextField(
+          textInputType: TextInputType.number,
+          onSubmitted: (text) {
+            try {
+              // TODO How to disallow - , .
+
               _value = int.parse(text);
-            } else {
-              debugPrint("NO MATCH");
+            } catch (err) {
+              debugPrint(err.toString());
             }
-          } catch (err) {
-            debugPrint(err);
-          }
-        },
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.all(0.0),
-          border: const OutlineInputBorder(),
-          hintText: "$_value €",
-        ),
-        textAlign: TextAlign.center,
-      ),
-    );
+          },
+          text: "$_value €",
+        ));
   }
 }
