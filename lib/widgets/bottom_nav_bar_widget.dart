@@ -29,10 +29,6 @@ class CustomNavigationWrapperState extends State<CustomNavigationWrapper>
 
   @override
   void initState() {
-    // TODO for this UI restoration we can set _selected index each time on button press
-    // and save it in to sharedpreferences and then get it here in init state
-    // if it is empty we set it to 0
-    // on logout we set it to 0
     WidgetsBinding.instance.addObserver(this);
     _selectedIndex = UiStateRestoration.getRouteIndex() ?? 0;
     NotificationHelper.init(initScheduled: true);

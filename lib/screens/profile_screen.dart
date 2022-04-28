@@ -16,7 +16,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // TODO take this out into user provider OR maybe better create a own file for the state
   GlobalKey<FormState> formKeyEmail = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyPassword = GlobalKey<FormState>();
 
