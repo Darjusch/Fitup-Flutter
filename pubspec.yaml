@@ -28,10 +28,8 @@ dependencies:
     sdk: flutter
     version: ^0.0.0
 
-  #Statemanagement
   provider: ^6.0.2
 
-  #Pushnotifications
   flutter_local_notifications: ^9.4.0
   rxdart: ^0.27.3
   flutter_native_timezone: ^2.0.0
@@ -41,6 +39,7 @@ dependencies:
   google_nav_bar: ^5.0.6
   line_icons: ^2.0.1
   flutter_screenutil: ^5.4.0+1
+  shared_preferences: ^2.0.13
 
 
   

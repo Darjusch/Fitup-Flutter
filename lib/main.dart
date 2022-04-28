@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/providers/bet_provider.dart';
 import 'package:fitup/providers/user_provider.dart';
 import 'package:fitup/screens/auth_screen.dart';
+import 'package:fitup/utils/ui_state_restoration.dart';
 import 'package:fitup/widgets/bottom_nav_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -15,18 +16,18 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await UiStateRestoration.init();
   runApp(const MyApp());
 }
 
-// TODO IOS
-// auth screen to big in width -> overflow
-// in number input field there is no button to confirm so keyboard doesnt go down
-// -> There is no solution to this use the normal keyboard and have a validator that says only numbers
-// load initial bets doesn't work after logging in again
-// -> Lets check if it is the same behaviour for android
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key key}) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(

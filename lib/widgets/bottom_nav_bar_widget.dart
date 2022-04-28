@@ -7,6 +7,7 @@ import 'package:fitup/screens/create_bet_screen.dart';
 import 'package:fitup/screens/home_screen.dart';
 import 'package:fitup/screens/profile_screen.dart';
 import 'package:fitup/apis/firebase_api.dart';
+import 'package:fitup/utils/ui_state_restoration.dart';
 import 'package:fitup/widgets/app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,8 +23,50 @@ class CustomNavigationWrapper extends StatefulWidget {
       CustomNavigationWrapperState();
 }
 
-class CustomNavigationWrapperState extends State<CustomNavigationWrapper> {
-  int _selectedIndex = 0;
+class CustomNavigationWrapperState extends State<CustomNavigationWrapper>
+    with WidgetsBindingObserver {
+  int _selectedIndex;
+
+  @override
+  void initState() {
+    // TODO for this UI restoration we can set _selected index each time on button press
+    // and save it in to sharedpreferences and then get it here in init state
+    // if it is empty we set it to 0
+    // on logout we set it to 0
+    WidgetsBinding.instance.addObserver(this);
+    _selectedIndex = UiStateRestoration.getRouteIndex() ?? 0;
+    NotificationHelper.init(initScheduled: true);
+    listenNotifications();
+
+    String userID = Provider.of<User>(context, listen: false).uid;
+
+    FirebaseApi().updateBetActivityStatusAndCancelNotification(userID);
+    FirebaseApi().updateBetSuccessStatus(userID);
+    Provider.of<BetProvider>(context, listen: false).loadInitalBets(userID);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.detached) return;
+    final isBackground = state == AppLifecycleState.paused;
+    if (isBackground) {
+      debugPrint("BACKGROUND!!!");
+      UiStateRestoration.setRouteIndex(_selectedIndex);
+    } else {
+      debugPrint("FORGROUND!!!");
+    }
+  }
+
 
   static final List<Widget> _screens = <Widget>[
     const MyHomeScreen(),
@@ -38,19 +81,6 @@ class CustomNavigationWrapperState extends State<CustomNavigationWrapper> {
     'Bet overview',
     'Profile',
   ];
-
-  @override
-  void initState() {
-    NotificationHelper.init(initScheduled: true);
-    listenNotifications();
-
-    String userID = Provider.of<User>(context, listen: false).uid;
-
-    FirebaseApi().updateBetActivityStatusAndCancelNotification(userID);
-    FirebaseApi().updateBetSuccessStatus(userID);
-    Provider.of<BetProvider>(context, listen: false).loadInitalBets(userID);
-    super.initState();
-  }
 
   void listenNotifications() =>
       NotificationHelper.onNotifications.stream.listen((onClickedNotification));

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/models/bet_model.dart';
 import 'package:fitup/providers/bet_provider.dart';
-import 'package:fitup/apis/firebase_api.dart';
 import 'package:fitup/controller/notifications_helper.dart';
+import 'package:fitup/utils/ui_state_restoration.dart';
 import 'package:fitup/widgets/snack_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -20,20 +20,47 @@ class CreateBetScreen extends StatefulWidget {
   State<CreateBetScreen> createState() => _CreateBetScreenState();
 }
 
-class _CreateBetScreenState extends State<CreateBetScreen> {
-  String dropdownActionValue = "Wake up";
-  int dropdownDurationValue = 3;
+class _CreateBetScreenState extends State<CreateBetScreen>
+    with WidgetsBindingObserver {
+
+  String dropdownActionValue;
+  int dropdownDurationValue;
   TimeOfDay _time = const TimeOfDay(hour: 8, minute: 0);
-  int _value = 15;
+  int _value;
   var uuid = const Uuid();
   String userID;
   String email;
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    dropdownActionValue = UiStateRestoration.getAction() ?? "Wake up";
+    dropdownDurationValue = UiStateRestoration.getDuration() ?? 3;
+    _value = UiStateRestoration.getValue() ?? 15;
     userID = Provider.of<User>(context, listen: false).uid;
     email = Provider.of<User>(context, listen: false).email;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.detached) return;
+    final isBackground = state == AppLifecycleState.paused;
+    if (isBackground) {
+      UiStateRestoration.setAction(dropdownActionValue);
+      UiStateRestoration.setDuration(dropdownDurationValue);
+      UiStateRestoration.setValue(_value);
+    } else {
+      debugPrint("FORGROUND!!!");
+    }
   }
 
   @override
@@ -105,7 +132,8 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
       files: {"initialized": "till we found a better approach"},
     );
 
-    String docID = await Provider.of<BetProvider>(context, listen: false).addBet(bet, context);
+    String docID = await Provider.of<BetProvider>(context, listen: false)
+        .addBet(bet, context);
 
     if (docID == "Error") {
       ScaffoldMessenger.of(context).showSnackBar(snackBarWidget(
@@ -113,6 +141,10 @@ class _CreateBetScreenState extends State<CreateBetScreen> {
         true,
       ));
     } else {
+      // Setting initial values again 
+      UiStateRestoration.setAction("Wake up");
+      UiStateRestoration.setDuration(3);
+      UiStateRestoration.setValue(15);
       NotificationHelper.showScheduledNotification(
           id: randomID,
           title: email.split('@').first,
