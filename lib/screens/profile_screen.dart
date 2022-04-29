@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitup/models/user_model.dart';
 import 'package:fitup/providers/auth_provider.dart';
 import 'package:fitup/providers/user_provider.dart';
+import 'package:fitup/utils/battery_status.dart';
 import 'package:fitup/widgets/platform_aware/platform_button.dart';
 import 'package:fitup/widgets/snack_bar_widget.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,8 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen>
+    with WidgetsBindingObserver {
   GlobalKey<FormState> formKeyEmail = GlobalKey<FormState>();
   GlobalKey<FormState> formKeyPassword = GlobalKey<FormState>();
 
@@ -30,13 +32,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
   User firebaseUser;
   UserModel currentUser;
 
+  bool systemLowOnMemory = false;
+
   String profileState = "Change Email";
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
     _newPasswordController.dispose();
     _oldPasswordController.dispose();
+    systemLowOnMemory = false;
+    WidgetsBinding.instance.removeObserver(this);
+
     super.dispose();
+  }
+
+  @override
+  void didHaveMemoryPressure() {
+    debugPrint("Low on memory");
+    setState(() {
+      systemLowOnMemory = true;
+    });
+    super.didHaveMemoryPressure();
   }
 
   void changePassword() async {
@@ -70,6 +92,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void uploadImage(ImageSource imageSource) async {
     try {
+      if (systemLowOnMemory) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            snackBarWidget("Your system is low on memory", true));
+      }
+      if (await DeviceBatteryStatus().isBatteryHealthOkay() != true) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(snackBarWidget("Please charge your phone", true));
+        return;
+      }
       String path = await Provider.of<UserProvider>(context, listen: false)
           .selectImage(imageSource);
       if (path == null) {

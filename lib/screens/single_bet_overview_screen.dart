@@ -38,7 +38,7 @@ class _SingleBetScreenState extends State<SingleBetScreen> {
   @override
   void initState() {
     bet = Provider.of<BetProvider>(context, listen: false).getBet(widget.betID);
-    DeviceBatteryStatus().getBatteryHealth();
+    DeviceBatteryStatus().isBatteryHealthOkay();
     // Here we can now check if battery level is to low that we dont load videos or only 1 or something like that
     // Maybe also not allow to record or upload video 
     // Or only select image / video from gallery instead of camera 
