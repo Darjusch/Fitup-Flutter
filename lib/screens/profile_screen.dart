@@ -6,6 +6,7 @@ import 'package:fitup/widgets/platform_aware/platform_button.dart';
 import 'package:fitup/widgets/snack_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +31,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   UserModel currentUser;
 
   String profileState = "Change Email";
-
   @override
   void dispose() {
     _emailController.dispose();
@@ -65,6 +65,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
       } catch (err) {
         debugPrint(err.toString());
       }
+    }
+  }
+
+  void uploadImage(ImageSource imageSource) async {
+    try {
+      String path = await Provider.of<UserProvider>(context, listen: false)
+          .selectImage(imageSource);
+      if (path == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            snackBarWidget("There was a problem uploading the Image", true));
+        return;
+      }
+      // Upload Image
+      String result = await Provider.of<UserProvider>(context, listen: false)
+          .uploadProfilePicFile(path, currentUser.userID);
+
+      // Update firebaseuser
+      Provider.of<User>(context, listen: false).updatePhotoURL(result);
+
+      // Update image
+      if (result != "Error") {
+        Provider.of<UserProvider>(context, listen: false)
+            .updateProfilePic(result);
+
+        ScaffoldMessenger.of(context)
+            .showSnackBar(snackBarWidget("Successfully uploaded Image", false));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            snackBarWidget("There was a problem uploading the Image", true));
+      }
+    } catch (err) {
+      debugPrint(err.toString());
     }
   }
 
@@ -122,7 +154,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(
                   height: 40.h,
                   width: 150.w,
-
                   child: PlatformButton(
                       buttonColor: Colors.blue,
                       textColor: Colors.white,
@@ -132,7 +163,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ? changeEmail()
                             : changePassword();
                       }),
-
                 )
               ],
             ),
@@ -219,30 +249,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
               right: -25.w,
               child: RawMaterialButton(
                 onPressed: () async {
-                  try {
-                    // SELECT IMAGE
-                    String path =
-                        await Provider.of(context, listen: false).selectImage();
-                    // Upload Image
-                    String result =
-                        await Provider.of<UserProvider>(context, listen: false)
-                            .uploadProfilePicFile(path, currentUser.userID);
-
-                    // Update firebaseuser
-                    Provider.of<User>(context, listen: false)
-                        .updatePhotoURL(result);
-
-                    // Update image
-                    if (result != "Error") {
-                      Provider.of<UserProvider>(context, listen: false)
-                          .updateProfilePic(result);
-
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          snackBarWidget("Successfully uploaded Image", false));
-                    }
-                  } catch (err) {
-                    debugPrint(err.toString());
-                  }
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (context) => FractionallySizedBox(
+                            heightFactor: 0.4,
+                            child: ListView(children: [
+                              ListTile(
+                                leading: const Icon(Icons.camera_alt),
+                                title: const Text("Camera"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  uploadImage(ImageSource.camera);
+                                },
+                              ),
+                              ListTile(
+                                leading: const Icon(Icons.photo_album),
+                                title: const Text("Gallery"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  uploadImage(ImageSource.gallery);
+                                },
+                              ),
+                              ListTile(
+                                leading: const Icon(Icons.cancel),
+                                title: const Text("Cancel"),
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                              )
+                            ]),
+                          ));
                 },
                 elevation: 2.0,
                 fillColor: const Color(0xFFF5F6F9),

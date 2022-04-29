@@ -45,8 +45,7 @@ class UserProvider extends ChangeNotifier {
     return result;
   }
 
-  Future<String> selectImage() async {
-    String path = await ImagePickerHelper().getImageFrom(ImageSource.gallery);
-    return path;
+  Future<String> selectImage(ImageSource imageSource) async {
+    return await ImagePickerHelper().getImageFrom(imageSource);
   }
 }
