@@ -42,6 +42,9 @@ In the root folder of the repository:
 then connect your device and you are ready to go.
 
 ## Architecture
+![Screenshot 2022-04-30 at 22 10 25](https://user-images.githubusercontent.com/32839416/166121142-df79390d-c4b6-4c94-badc-9b9d719ded26.png)
+
+
 ![Screenshot 2022-04-25 at 10 55 12](https://user-images.githubusercontent.com/32839416/165055488-7e8b652f-8e41-4e51-93fb-54363ab1e473.png)
 - assets/ -> images and icons used by the app
 - test/ -> unit tests
